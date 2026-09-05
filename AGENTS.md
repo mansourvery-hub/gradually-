@@ -43,7 +43,9 @@ consuming Chinese directly. This is success, not churn.
    Visual, audio, and pinyin support diminish as capability grows.
 6. **Local/offline-first core.** Opening content, lookup, known-word
    determination, review, and selection never depend on a live backend or a
-   real-time AI call.
+   real-time AI call. Optional opt-in synchronization of explicit learner
+   data may exist later (post-MVP); it never becomes a dependency of the
+   core loop, and local storage remains the source of truth (E-14).
 7. **No surveillance.** See §6.
 8. **Content Selector ≠ Review System.** Two subsystems, two questions
    ("what's next?" / "what's due?"). They share learner state; they are

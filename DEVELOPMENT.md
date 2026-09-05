@@ -178,7 +178,7 @@ Changes to any of these are learning-system changes and require appropriate regr
 - curated content metadata
 - curriculum ordering
 
-See `ARCHITECTURE.md` for the product-critical test categories.
+See `ARCHITECTURE.md` §7 for the product-critical test categories.
 
 ## 9. Content is code-equivalent
 

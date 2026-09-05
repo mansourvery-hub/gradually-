@@ -11,7 +11,7 @@ and later import. Read with `AGENTS.md`. Requirements unless marked
 Incorrect tokenization, bad vocabulary metadata, weak recycling, unnatural
 Chinese, excessive irrelevant words, or wrong difficulty labeling damage the
 curriculum directly. Content data is versioned and regression-tested like
-code (`ARCHITECTURE.md` §10). Curriculum lives in data, never in widget
+code (`ARCHITECTURE.md` §7). Curriculum lives in data, never in widget
 conditionals.
 
 ## 2. Progression

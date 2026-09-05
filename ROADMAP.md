@@ -50,6 +50,8 @@ Deviate only for a strong technical reason, stated in the PR/commit.
 - Leveled Chinese-only dictionary definitions
 - EPUB / TXT import (same tokenizer pipeline)
 - Podcast / native MP3 listening modality
+- Optional opt-in sync of explicit learner data for progress portability
+  across devices / reinstalls (E-14; local stays primary)
 - Additional learner-model evidence (rereading, long-term exposure, grammar)
 
 ## Current focus

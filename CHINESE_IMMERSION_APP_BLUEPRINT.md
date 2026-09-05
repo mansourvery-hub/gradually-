@@ -905,6 +905,18 @@ Persist locally:
 
 Avoid unnecessary server dependence.
 
+### Local-first, not local-only
+
+Local-first means the core loop never *depends* on a server. It does not mean
+learner progress may only ever live on one device: browsers may evict local
+web storage, and learners change phones or move between phone and desktop.
+Progress must be portable. An optional, opt-in sync of explicit learning data
+(known vocabulary, SRS state, completion, reading position — never behavioral
+data, which is never collected at all) may exist later as a post-MVP
+capability. It is a portability layer, not a dependency: the app stays fully
+functional offline and local storage remains the source of truth (see
+`DECISIONS.md` E-14).
+
 ---
 
 ## 17. Adaptive Local Dictionary

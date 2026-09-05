@@ -56,8 +56,12 @@ Definitions (single, shared):
 - **Known** — a learner-model state computed in one place from mastery
   evidence. [PROPOSED] V1: a small function over review/recognition outcomes;
   keep the rule in the learner model only. Never surfaced as colors or counts.
-- **Exposure record** — item + sentence + content item (+ count or timestamp).
-  Records *what was encountered*, not behavior.
+- **Exposure data** — bounded per-word aggregates (encounter count, distinct
+  content items, first/last seen), updated **in place**; never an append-only
+  event log. Rereading a story increments counters; it does not add rows.
+  Sentence context is captured where it is used: on the SRS card at promotion
+  time, and derived from content + completion history for future dictionary
+  examples. Records *what was encountered*, not behavior.
 
 ## 3. Acquisition Pipeline
 
@@ -161,4 +165,4 @@ Required behaviors:
 - Completed content remains eligible (rereading is progression, not failure).
 - Imported content (later) is offered only when learner state supports it.
 
-Protect with golden progression fixtures (`ARCHITECTURE.md` §10).
+Protect with golden progression fixtures (`ARCHITECTURE.md` §7).
