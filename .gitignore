@@ -48,3 +48,9 @@ Thumbs.db
 # Local worktree directory
 
 .worktrees/
+
+# FVM Version Cache
+.fvm/
+
+# Opencode local tooling
+.opencode/

@@ -1430,6 +1430,8 @@ When an agent is uncertain about an implementation, use this order:
 
 If a proposed feature conflicts with the philosophy, the philosophy wins.
 
+If an agent encounters a critical task or decision that requires human intervention (for example, the choice of what stories, books, or texts to include), they are free and expected to ask the user directly, who will respond.
+
 ---
 
 ## 28. What Agents Must Not Do Without a Strong Product Reason

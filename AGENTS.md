@@ -132,6 +132,12 @@ explicit learning/content data.
 - **Respect `ROADMAP.md` ordering.** State the reason if you deviate.
 - **Content is part of the algorithm.** Poor content cannot be fully repaired
   by a smarter selector. Content data gets regression tests like code.
+- **Ask on critical decisions needing human intervention.** If an agent
+  encounters a critical task or choice that requires human intervention or
+  judgment (for example, selecting which specific stories, books, or texts to
+  include in the curriculum), they are free and expected to ask the user, who
+  will respond. Do not make high-stakes product or editorial decisions in
+  isolation.
 
 ## 8. When uncertain, ask in this order
 
@@ -143,6 +149,8 @@ explicit learning/content data.
 6. Is it the simplest thing that still allows evolution?
 
 If a feature conflicts with the philosophy, the philosophy wins.
+If an issue requires human judgment (such as content selection or editorial
+direction), ask the user directly.
 
 > **Less UI, less configuration, less friction, more native Chinese, cleaner
 > automated progression.**

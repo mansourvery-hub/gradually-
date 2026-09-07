@@ -78,6 +78,11 @@ separate modality.
 Content metadata may mark vocabulary as curriculum-critical so the acquisition
 pipeline and selector can weight it. It is never shown to the learner.
 
+Selecting which specific stories, books, or reading materials to include in the
+curriculum is a critical task requiring human judgment. Agents facing choices
+about which texts to include are free and expected to ask the user, who will
+respond.
+
 ## 6. Scaffold decay
 
 Scaffolds (visuals, narration, pinyin, sentence-mode reading, lookup depth)

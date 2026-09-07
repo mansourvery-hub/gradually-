@@ -198,6 +198,8 @@ Therefore content changes should be reviewed and tested with the same seriousnes
 
 Do not casually edit vocabulary metadata, tokenization data, prerequisites, or curriculum ordering.
 
+When a task involves critical decisions that require human intervention—such as selecting which stories, books, or texts to include in the curriculum—agents are free and expected to ask the user, who will respond.
+
 ## 10. Learner data and database safety
 
 Never commit a user's local learner database or private learner state.
