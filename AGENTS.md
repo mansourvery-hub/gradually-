@@ -23,6 +23,8 @@ consuming Chinese directly. This is success, not churn.
 | Content schema, curriculum data, media, reader presentation | `CONTENT.md` |
 | Subsystem boundaries, persistence, tokenizer, tests | `ARCHITECTURE.md` |
 | Scope / "should this exist yet?" | `ROADMAP.md` |
+| Master execution graph / task decomposition | `dev_graph.json` |
+| Numerical parameters, editorial & asset pipelines | `CHOICES.md` |
 | Technology choice or anything marked [OPEN] | `DECISIONS.md` |
 
 ## 3. Non-negotiable invariants

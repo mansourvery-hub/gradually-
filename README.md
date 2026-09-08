@@ -15,6 +15,8 @@ Platform: Flutter — iOS, Android, Web. Offline-first core.
 | `ARCHITECTURE.md` | Touching subsystem boundaries, persistence, tokenizer, tests. |
 | `LEARNING_ENGINE.md` | Touching learner model, acquisition, SRS/review, content selection. |
 | `CONTENT.md` | Touching content schema, curriculum data, media, reader presentation. |
+| `dev_graph.json` | Master execution graph, 4-tier task decomposition (282 nodes), and dependency DAG. |
+| `CHOICES.md` | Numerical parameters, target-led vocabulary choices, asset pipelines. |
 | `ROADMAP.md` | Deciding what to build now vs later. |
 | `DECISIONS.md` | Before choosing a technology or resolving anything marked [OPEN]. |
 | `CHINESE_IMMERSION_APP_BLUEPRINT.md` | Master product spec (human reference). Consult only when the shorter docs don't answer. |
