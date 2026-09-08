@@ -56,6 +56,6 @@ Deviate only for a strong technical reason, stated in the PR/commit.
 
 ## Current focus
 
-_Update this line as work progresses._ Currently: Build order step 2 complete
-(content schema + first curated data + AssetContentRepository); step 3 (content
-selection V1 + golden fixtures) next.
+_Update this line as work progresses._ Currently: Build order steps 1–4
+complete (core learning state, content schema, content selector V1, and
+beginner reader experience); step 5 (acquisition pipeline + SRS promotion) next.

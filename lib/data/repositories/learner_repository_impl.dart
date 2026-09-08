@@ -34,12 +34,11 @@ final class DriftLearnerRepository implements LearnerRepository {
 
   @override
   Stream<LearnerState> watchLearnerState() {
-    // Combine table change streams into a single LearnerState stream.
-    final exposuresStream = _db.select(_db.exposures).watch();
-    final progressStream = _db.select(_db.contentProgresses).watch();
-    final evidenceStream = _db.select(_db.masteryEvidences).watch();
-
     return Stream.multi((controller) {
+      final exposuresStream = _db.select(_db.exposures).watch();
+      final progressStream = _db.select(_db.contentProgresses).watch();
+      final evidenceStream = _db.select(_db.masteryEvidences).watch();
+
       List<ExposureRow>? latestExposures;
       List<ContentProgressRow>? latestProgress;
       List<MasteryEvidenceRow>? latestEvidence;
@@ -47,7 +46,8 @@ final class DriftLearnerRepository implements LearnerRepository {
       void emitIfReady() {
         if (latestExposures != null &&
             latestProgress != null &&
-            latestEvidence != null) {
+            latestEvidence != null &&
+            !controller.isClosed) {
           controller.add(
             _buildLearnerState(
               exposureRows: latestExposures!,
