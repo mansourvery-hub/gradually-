@@ -1,0 +1,114 @@
+{
+  "version": "1.0.0",
+  "project": "渐入 (JianRu)",
+  "nodes": {
+    "T01_PERSISTENCE": {
+      "id": "T01_PERSISTENCE",
+      "name": "Local Persistence & Bounded Aggregate Tables",
+      "subsystem": "data",
+      "dependencies": [],
+      "status": "completed",
+      "parallelGroup": "infrastructure",
+      "description": "Drift SQLite database with bounded aggregate rows for word exposure, content progress, and mastery evidence."
+    },
+    "T02_TOKENIZER_SERVICE": {
+      "id": "T02_TOKENIZER_SERVICE",
+      "name": "Chinese Tokenizer & Golden Segmentation",
+      "subsystem": "tokenizer",
+      "dependencies": [],
+      "status": "completed",
+      "parallelGroup": "infrastructure",
+      "description": "Single deterministic tokenizer (dart_jieba) with embedded dictionary."
+    },
+    "T03_STORY_EDITORIAL_CHOICE": {
+      "id": "T03_STORY_EDITORIAL_CHOICE",
+      "name": "Curate Target Stories Corpus",
+      "subsystem": "content",
+      "dependencies": [],
+      "status": "in_progress",
+      "parallelGroup": "editorial",
+      "description": "Human decision & selection of the initial ~10 core short stories from which all beginner vocabulary is backward-derived."
+    },
+    "T04_TARGET_LEXICON_EXTRACTION": {
+      "id": "T04_TARGET_LEXICON_EXTRACTION",
+      "name": "Extract Target Lexicon for Bootstrap",
+      "subsystem": "content",
+      "dependencies": ["T03_STORY_EDITORIAL_CHOICE", "T02_TOKENIZER_SERVICE"],
+      "status": "in_progress",
+      "parallelGroup": "editorial",
+      "description": "Tokenize selected stories and extract the exact ~100-150 core Hanzi/words required to achieve 100% i+1 comprehension."
+    },
+    "T05_AUDIO_ASSET_PIPELINE": {
+      "id": "T05_AUDIO_ASSET_PIPELINE",
+      "name": "Produce Native Pronunciation Audio",
+      "subsystem": "assets",
+      "dependencies": ["T04_TARGET_LEXICON_EXTRACTION"],
+      "status": "pending",
+      "parallelGroup": "creative_assets",
+      "description": "Source/record clean native audio for target Hanzi and sentence narration (independent parallel creative task)."
+    },
+    "T06_VISUAL_ASSET_PIPELINE": {
+      "id": "T06_VISUAL_ASSET_PIPELINE",
+      "name": "Produce Concept Visuals & Story Illustrations",
+      "subsystem": "assets",
+      "dependencies": ["T03_STORY_EDITORIAL_CHOICE", "T04_TARGET_LEXICON_EXTRACTION"],
+      "status": "pending",
+      "parallelGroup": "creative_assets",
+      "description": "Create minimalist illustrations and concept visual assets for bootstrap items and story scenes (independent parallel task)."
+    },
+    "T07_BOOTSTRAP_EXPOSURE_CORPUS": {
+      "id": "T07_BOOTSTRAP_EXPOSURE_CORPUS",
+      "name": "Author Bootstrap Exposure JSON Corpus",
+      "subsystem": "content",
+      "dependencies": ["T04_TARGET_LEXICON_EXTRACTION", "T05_AUDIO_ASSET_PIPELINE", "T06_VISUAL_ASSET_PIPELINE"],
+      "status": "pending",
+      "parallelGroup": "content_authoring",
+      "description": "Generate pre-tokenized JSON content items for ~100-150 target words with exact offsets, audio refs, and visual refs."
+    },
+    "T08_PURE_EXPOSURE_ENGINE": {
+      "id": "T08_PURE_EXPOSURE_ENGINE",
+      "name": "Pure Exposure Phase & Repetition Accumulator",
+      "subsystem": "learning_engine",
+      "dependencies": ["T01_PERSISTENCE"],
+      "status": "in_progress",
+      "parallelGroup": "engine",
+      "description": "Accumulate ~600 exposures across bootstrap vocabulary without testing or SRS interruption."
+    },
+    "T09_BUTTONLESS_ZEN_READER": {
+      "id": "T09_BUTTONLESS_ZEN_READER",
+      "name": "Button-Free Zen Reader UI",
+      "subsystem": "reader",
+      "dependencies": ["T08_PURE_EXPOSURE_ENGINE"],
+      "status": "in_progress",
+      "parallelGroup": "ui",
+      "description": "Zero button bars, zero Anki grades; seamless screen tap/gesture progression on calm paper canvas."
+    },
+    "T10_LEVEL_INJECTION_HOOK": {
+      "id": "T10_LEVEL_INJECTION_HOOK",
+      "name": "Simulated Level Testing Hook (0..100)",
+      "subsystem": "testing_tooling",
+      "dependencies": ["T01_PERSISTENCE"],
+      "status": "in_progress",
+      "parallelGroup": "tooling",
+      "description": "Support --dart-define=LEVEL=0..100 to instantly simulate any learner knowledge state for rapid testing."
+    },
+    "T11_CONTENT_SELECTOR_V2": {
+      "id": "T11_CONTENT_SELECTOR_V2",
+      "name": "Content Selector V2 (i+1 Story Orchestration)",
+      "subsystem": "selector",
+      "dependencies": ["T07_BOOTSTRAP_EXPOSURE_CORPUS", "T08_PURE_EXPOSURE_ENGINE"],
+      "status": "pending",
+      "parallelGroup": "engine",
+      "description": "Orchestrate transition from pure exposure units to the target short stories once exposure threshold is met."
+    },
+    "T12_POST_EXPOSURE_SUBORDINATE_SRS": {
+      "id": "T12_POST_EXPOSURE_SUBORDINATE_SRS",
+      "name": "Subordinate Sentence-Based SRS",
+      "subsystem": "review",
+      "dependencies": ["T08_PURE_EXPOSURE_ENGINE", "T11_CONTENT_SELECTOR_V2"],
+      "status": "pending",
+      "parallelGroup": "engine",
+      "description": "Unlock non-intrusive sentence-based FSRS review only after the ~600 exposure bootstrap threshold is passed."
+    }
+  }
+}

@@ -17,8 +17,8 @@ final class FsrsReviewSystem implements ReviewSystem {
   FsrsReviewSystem({
     required ReviewRepository repository,
     fsrs.Scheduler? scheduler,
-  })  : _repository = repository,
-        _scheduler = scheduler ?? fsrs.Scheduler();
+  }) : _repository = repository,
+       _scheduler = scheduler ?? fsrs.Scheduler();
 
   final ReviewRepository _repository;
   final fsrs.Scheduler _scheduler;
@@ -56,7 +56,8 @@ final class FsrsReviewSystem implements ReviewSystem {
     // 1. Reconstitute FSRS Card from opaque JSON
     fsrs.Card fsrsCard;
     try {
-      final map = jsonDecode(cardRecord.fsrsCardStateJson) as Map<String, dynamic>;
+      final map =
+          jsonDecode(cardRecord.fsrsCardStateJson) as Map<String, dynamic>;
       fsrsCard = fsrs.Card.fromMap(map);
     } catch (_) {
       fsrsCard = fsrs.Card(cardId: cardRecord.card.id.hashCode);
@@ -64,10 +65,7 @@ final class FsrsReviewSystem implements ReviewSystem {
 
     // 2. Compute next schedule with FSRS
     final rating = gradeToRating(grade);
-    final (:card, :reviewLog) = _scheduler.reviewCard(
-      fsrsCard,
-      rating,
-    );
+    final (:card, :reviewLog) = _scheduler.reviewCard(fsrsCard, rating);
 
     // 3. Serialize updated card state
     final updatedRecord = ReviewCardRecord(

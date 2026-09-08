@@ -1,7 +1,7 @@
-/// Zero-friction, monolingual reader, beginner experience, and review flow
-/// (AGENTS.md §3, CONTENT.md §8, LEARNING_ENGINE.md §4).
+/// Radical zero-friction, button-free monolingual reader (AGENTS.md §3, CHOICES.md §1).
 ///
 /// Widgets only: consumes Riverpod providers, contains no learning logic.
+/// All progression is driven by natural tap/gesture interactions.
 library;
 
 import 'package:flutter/material.dart';
@@ -16,8 +16,7 @@ import '../review/review.dart';
 
 /// The primary screen of 渐入.
 ///
-/// Subordinates review to reading immersion and presents the system-selected
-/// experience with zero decision screens, dashboards, or course catalogs.
+/// Completely button-free: tap anywhere to progress, natural audio, serene canvas.
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
@@ -34,69 +33,58 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final dueCardsAsync = ref.watch(dueReviewCardsProvider);
     final nextExperienceAsync = ref.watch(nextExperienceProvider);
 
-    // 1. If an SRS review card is due, seamlessly present review first (E-03)
+    // 1. Post-exposure phase: If an SRS card is due, present review card
     final dueCards = dueCardsAsync.value ?? const [];
     if (dueCards.isNotEmpty) {
       final activeCard = dueCards.first;
       return Scaffold(
         backgroundColor: const Color(0xFFFBF9F5),
         body: SafeArea(
-          child: _ReviewCardView(
+          child: _ButtonlessReviewView(
             record: activeCard,
-            onGradeSelected: (grade) => _handleReviewGrade(activeCard, grade),
+            onRecallCompleted: (grade) => _handleReviewGrade(activeCard, grade),
           ),
         ),
       );
     }
 
-    // 2. Otherwise present the selected reading / beginner immersion experience
+    // 2. Immersion flow (Pure Exposure Units & Short Stories)
     return Scaffold(
       backgroundColor: const Color(0xFFFBF9F5), // Calm paper tone
       body: SafeArea(
         child: nextExperienceAsync.when(
           loading: () => const Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '渐入',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w300,
-                    letterSpacing: 6,
-                    color: Color(0xFF3A3A3A),
-                  ),
-                ),
-                SizedBox(height: 24),
-                SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Color(0xFF8A8A8A),
-                  ),
-                ),
-              ],
+            child: Text(
+              '渐入',
+              style: TextStyle(
+                fontSize: 36,
+                fontWeight: FontWeight.w200,
+                letterSpacing: 8,
+                color: Color(0xFF2C2C2C),
+              ),
             ),
           ),
           error: (err, stack) {
-            debugPrint('HomeScreen nextExperienceAsync error: $err\n$stack');
+            debugPrint('HomeScreen error: $err\n$stack');
             return Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: GestureDetector(
+                onTap: () {
+                  ref.invalidate(learnerStateStreamProvider);
+                  ref.invalidate(nextExperienceProvider);
+                },
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Text(
                       '渐入',
                       style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w300,
-                        letterSpacing: 4,
-                        color: Color(0xFF3A3A3A),
+                        fontSize: 36,
+                        fontWeight: FontWeight.w200,
+                        letterSpacing: 6,
+                        color: Color(0xFF2C2C2C),
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 16),
                     Text(
                       '$err',
                       textAlign: TextAlign.center,
@@ -104,15 +92,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         fontSize: 12,
                         color: Colors.redAccent,
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    FilledButton.tonal(
-                      onPressed: () {
-                        ref.invalidate(learnerStateStreamProvider);
-                        ref.invalidate(nextExperienceProvider);
-                        ref.invalidate(dueReviewCardsProvider);
-                      },
-                      child: const Text('重试 (Retry)'),
                     ),
                   ],
                 ),
@@ -125,28 +104,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: Text(
                   '渐入',
                   style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w300,
-                    letterSpacing: 6,
-                    color: Color(0xFF3A3A3A),
+                    fontSize: 36,
+                    fontWeight: FontWeight.w200,
+                    letterSpacing: 8,
+                    color: Color(0xFF2C2C2C),
                   ),
                 ),
               );
             }
 
             if (contentItem.type == ContentType.beginnerUnit) {
-              return _BeginnerUnitView(
+              return _ButtonlessBeginnerUnitView(
                 item: contentItem,
-                isAdvancing: _isAdvancing,
-                onComplete: () => _handleItemCompletion(contentItem),
+                onAdvance: () => _handleItemCompletion(contentItem),
               );
             }
 
-            return _StoryReaderView(
+            return _ButtonlessStoryReaderView(
               item: contentItem,
               sectionIndex: _currentSectionIndex,
-              isAdvancing: _isAdvancing,
-              onNextSection: () {
+              onAdvance: () {
                 if (_currentSectionIndex < contentItem.sections.length - 1) {
                   setState(() => _currentSectionIndex++);
                 } else {
@@ -191,12 +168,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       final vocabIds = item.metadata.vocabulary.toList();
       await learnerRepo.recordBatchExposure(vocabIds, item.id, at: now);
 
-      // 2. Evaluate words with acquisition pipeline for SRS card promotion (E-05)
+      // 2. Evaluate words for acquisition (candidate registration)
       for (final section in item.sections) {
         for (final sentence in section.sentences) {
           for (final token in sentence.tokens) {
-            final isCritical =
-                item.metadata.curriculumCriticalVocabulary.contains(token.vocabId);
+            final isCritical = item.metadata.curriculumCriticalVocabulary
+                .contains(token.vocabId);
             await acquisition.evaluateAndPromote(
               learner: learnerState,
               vocabId: token.vocabId,
@@ -212,23 +189,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         }
       }
 
-      // 3. Record explicit mastery evidence for beginner critical vocabulary
-      for (final vocabId in item.metadata.curriculumCriticalVocabulary) {
-        await learnerRepo.recordMasteryEvidence(
-          MasteryEvidence(
-            vocabId: vocabId,
-            kind: MasteryEvidenceKind.meaning,
-            grade: RecallGrade.remembered,
-            at: now,
-          ),
-        );
-      }
-
-      // 4. Update reading completion progress in SQLite
+      // 3. Update reading completion progress in SQLite
       final existingProgress = await contentRepo.getProgress(item.id);
-      final updatedProgress = (existingProgress ??
-              ContentProgress.initial(contentId: item.id, now: now))
-          .recordCompletion(now);
+      final updatedProgress =
+          (existingProgress ??
+                  ContentProgress.initial(contentId: item.id, now: now))
+              .recordCompletion(now);
 
       await contentRepo.saveProgress(updatedProgress);
       await learnerRepo.updateContentProgress(updatedProgress);
@@ -250,311 +216,73 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 }
 
-/// Focused SRS review card view (LEARNING_ENGINE.md §4).
-class _ReviewCardView extends StatefulWidget {
-  const _ReviewCardView({
-    required this.record,
-    required this.onGradeSelected,
-  });
-
-  final ReviewCardRecord record;
-  final ValueChanged<RecallGrade> onGradeSelected;
-
-  @override
-  State<_ReviewCardView> createState() => _ReviewCardViewState();
-}
-
-class _ReviewCardViewState extends State<_ReviewCardView> {
-  bool _revealed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final card = widget.record.card;
-
-    return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 500),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 28),
-          child: Column(
-            children: [
-              const SizedBox(height: 28),
-
-              // Top subtle badge
-              const Text(
-                '复习',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 4,
-                  color: Color(0xFF8C8C8C),
-                ),
-              ),
-
-              const Spacer(),
-
-              // Review prompt card
-              GestureDetector(
-                onTap: () => setState(() => _revealed = true),
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 28,
-                    vertical: 36,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF0EBE0),
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.04),
-                        blurRadius: 16,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        card.vocabId,
-                        style: const TextStyle(
-                          fontSize: 64,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF1E1E1E),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      if (card.sourceSentence.isNotEmpty)
-                        Text(
-                          card.sourceSentence,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 20,
-                            height: 1.6,
-                            color: _revealed
-                                ? const Color(0xFF333333)
-                                : Colors.transparent,
-                          ),
-                        ),
-                      if (!_revealed && card.sourceSentence.isNotEmpty)
-                        const Text(
-                          '轻触查看例句',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFF888888),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const Spacer(),
-
-              // 3-grade recall buttons (AGENTS.md §3, LEARNING_ENGINE.md §4)
-              Row(
-                children: [
-                  Expanded(
-                    child: _GradeButton(
-                      label: '忘记',
-                      color: const Color(0xFF8F4C45),
-                      onPressed: () =>
-                          widget.onGradeSelected(RecallGrade.forgotten),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _GradeButton(
-                      label: '模糊',
-                      color: const Color(0xFF7A6843),
-                      onPressed: () =>
-                          widget.onGradeSelected(RecallGrade.partiallyRemembered),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _GradeButton(
-                      label: '记得',
-                      color: const Color(0xFF3A614A),
-                      onPressed: () =>
-                          widget.onGradeSelected(RecallGrade.remembered),
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 36),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _GradeButton extends StatelessWidget {
-  const _GradeButton({
-    required this.label,
-    required this.color,
-    required this.onPressed,
-  });
-
-  final String label;
-  final Color color;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 56,
-      child: FilledButton(
-        onPressed: onPressed,
-        style: FilledButton.styleFrom(
-          backgroundColor: color,
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          elevation: 0,
-        ),
-        child: Text(
-          label,
-          style: const TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.w500,
-            letterSpacing: 2,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Immersive single-word / atomic concept view for absolute beginners.
-class _BeginnerUnitView extends StatelessWidget {
-  const _BeginnerUnitView({
+/// Pure button-free beginner unit: tap anywhere to absorb and advance.
+class _ButtonlessBeginnerUnitView extends StatelessWidget {
+  const _ButtonlessBeginnerUnitView({
     required this.item,
-    required this.isAdvancing,
-    required this.onComplete,
+    required this.onAdvance,
   });
 
   final ContentItem item;
-  final bool isAdvancing;
-  final VoidCallback onComplete;
+  final VoidCallback onAdvance;
 
   @override
   Widget build(BuildContext context) {
     final mainWord = item.metadata.title;
 
-    return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 480),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Column(
-            children: [
-              const SizedBox(height: 32),
-
-              // Subtle top app title
-              const Text(
-                '渐入',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w300,
-                  letterSpacing: 4,
-                  color: Color(0xFF9E9E9E),
-                ),
-              ),
-
-              const Spacer(),
-
-              // Visual Illustration Card
-              Container(
-                width: 150,
-                height: 150,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF0EBE0),
-                  borderRadius: BorderRadius.circular(28),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.04),
-                      blurRadius: 20,
-                      offset: const Offset(0, 6),
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: _buildVisualPlaceholder(mainWord),
-                ),
-              ),
-
-              const SizedBox(height: 40),
-
-              // Large Prominent Hanzi
-              Text(
-                mainWord,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 84,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xFF1E1E1E),
-                  height: 1.1,
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Native pronunciation audio prompt button
-              IconButton.filledTonal(
-                onPressed: () {
-                  // Audio playback placeholder (E-08)
-                },
-                icon: const Icon(Icons.volume_up_rounded, size: 28),
-                style: IconButton.styleFrom(
-                  backgroundColor: const Color(0xFFECE6D8),
-                  foregroundColor: const Color(0xFF4A4A4A),
-                  padding: const EdgeInsets.all(16),
-                ),
-              ),
-
-              const Spacer(),
-
-              // Primary "继续" progression button
-              SizedBox(
-                width: double.infinity,
-                height: 60,
-                child: FilledButton(
-                  onPressed: isAdvancing ? null : onComplete,
-                  style: FilledButton.styleFrom(
-                    backgroundColor: const Color(0xFF2B2B2B),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18),
-                    ),
-                    elevation: 0,
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onAdvance,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 480),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Visual concept illustration card
+                Container(
+                  width: 160,
+                  height: 160,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF0EBE0),
+                    borderRadius: BorderRadius.circular(32),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.03),
+                        blurRadius: 24,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
                   ),
-                  child: isAdvancing
-                      ? const SizedBox(
-                          width: 22,
-                          height: 22,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        )
-                      : const Text(
-                          '继续',
-                          style: TextStyle(
-                            fontSize: 19,
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: 4,
-                          ),
-                        ),
+                  child: Center(child: _buildVisualPlaceholder(mainWord)),
                 ),
-              ),
 
-              const SizedBox(height: 36),
-            ],
+                const SizedBox(height: 48),
+
+                // Prominent Large Hanzi
+                Text(
+                  mainWord,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 96,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xFF1E1E1E),
+                    height: 1.05,
+                  ),
+                ),
+
+                const SizedBox(height: 48),
+
+                // Subtle audio prompt
+                Icon(
+                  Icons.volume_up_rounded,
+                  size: 26,
+                  color: Colors.black.withValues(alpha: 0.25),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -577,27 +305,21 @@ class _BeginnerUnitView extends StatelessWidget {
         iconData = Icons.auto_stories_rounded;
     }
 
-    return Icon(
-      iconData,
-      size: 72,
-      color: const Color(0xFF525252),
-    );
+    return Icon(iconData, size: 76, color: const Color(0xFF4E4E4E));
   }
 }
 
-/// Graded reader scene view for micro-stories and longer texts.
-class _StoryReaderView extends StatelessWidget {
-  const _StoryReaderView({
+/// Pure button-free story reader: tap anywhere to read the next sentence/scene.
+class _ButtonlessStoryReaderView extends StatelessWidget {
+  const _ButtonlessStoryReaderView({
     required this.item,
     required this.sectionIndex,
-    required this.isAdvancing,
-    required this.onNextSection,
+    required this.onAdvance,
   });
 
   final ContentItem item;
   final int sectionIndex;
-  final bool isAdvancing;
-  final VoidCallback onNextSection;
+  final VoidCallback onAdvance;
 
   @override
   Widget build(BuildContext context) {
@@ -605,102 +327,127 @@ class _StoryReaderView extends StatelessWidget {
         ? item.sections[sectionIndex]
         : item.sections.first;
 
-    final isLastSection = sectionIndex >= item.sections.length - 1;
-
-    return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 540),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 28),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 24),
-
-              // Story Title
-              Text(
-                item.title,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF1E1E1E),
-                ),
-              ),
-
-              const SizedBox(height: 28),
-
-              // Scene visual illustration container
-              Container(
-                width: double.infinity,
-                height: 180,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF0EBE0),
-                  borderRadius: BorderRadius.circular(22),
-                ),
-                child: const Center(
-                  child: Icon(
-                    Icons.auto_stories_rounded,
-                    size: 64,
-                    color: Color(0xFF6B6B6B),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 36),
-
-              // Unspaced Chinese sentence rendering with clean typography
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Text(
-                    section.text,
-                    style: const TextStyle(
-                      fontSize: 30,
-                      height: 1.8,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF242424),
-                      letterSpacing: 2,
-                    ),
-                  ),
-                ),
-              ),
-
-              // Bottom Action Button
-              Padding(
-                padding: const EdgeInsets.only(bottom: 32),
-                child: SizedBox(
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onAdvance,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 540),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 36),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Story Scene Illustration Container
+                Container(
                   width: double.infinity,
-                  height: 60,
-                  child: FilledButton(
-                    onPressed: isAdvancing ? null : onNextSection,
-                    style: FilledButton.styleFrom(
-                      backgroundColor: const Color(0xFF2B2B2B),
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18),
-                      ),
-                      elevation: 0,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF0EBE0),
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  child: const Center(
+                    child: Icon(
+                      Icons.auto_stories_rounded,
+                      size: 64,
+                      color: Color(0xFF6B6B6B),
                     ),
-                    child: isAdvancing
-                        ? const SizedBox(
-                            width: 22,
-                            height: 22,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.white,
-                            ),
-                          )
-                        : Text(
-                            isLastSection ? '完成' : '继续',
-                            style: const TextStyle(
-                              fontSize: 19,
-                              fontWeight: FontWeight.w500,
-                              letterSpacing: 4,
-                            ),
-                          ),
                   ),
                 ),
-              ),
-            ],
+
+                const SizedBox(height: 48),
+
+                // Unspaced Chinese Narrative Text
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Text(
+                      section.text,
+                      style: const TextStyle(
+                        fontSize: 34,
+                        height: 1.8,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF222222),
+                        letterSpacing: 2,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Gesture-driven, buttonless review card (post-exposure phase).
+class _ButtonlessReviewView extends StatefulWidget {
+  const _ButtonlessReviewView({
+    required this.record,
+    required this.onRecallCompleted,
+  });
+
+  final ReviewCardRecord record;
+  final ValueChanged<RecallGrade> onRecallCompleted;
+
+  @override
+  State<_ButtonlessReviewView> createState() => _ButtonlessReviewViewState();
+}
+
+class _ButtonlessReviewViewState extends State<_ButtonlessReviewView> {
+  bool _revealed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final card = widget.record.card;
+
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        if (!_revealed) {
+          setState(() => _revealed = true);
+        } else {
+          // Tap to confirm recall (remembered)
+          widget.onRecallCompleted(RecallGrade.remembered);
+        }
+      },
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 500),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Target word
+                Text(
+                  card.vocabId,
+                  style: const TextStyle(
+                    fontSize: 84,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xFF1E1E1E),
+                  ),
+                ),
+
+                const SizedBox(height: 32),
+
+                // Context sentence (revealed on tap)
+                AnimatedOpacity(
+                  opacity: _revealed ? 1.0 : 0.0,
+                  duration: const Duration(milliseconds: 200),
+                  child: Text(
+                    card.sourceSentence,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      height: 1.6,
+                      color: Color(0xFF333333),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -60,16 +60,16 @@ void main() {
 
       // 1. Verify Unit 1 (水) is presented prominently
       expect(find.text('水'), findsWidgets);
-      expect(find.text('继续'), findsOneWidget);
 
-      // Verify Invariant: No English translation, no XP, no streak, no levels
+      // Verify Invariant: No buttons, no English translation, no XP, no streak, no levels
+      expect(find.text('继续'), findsNothing);
       expect(find.textContaining('Level'), findsNothing);
       expect(find.textContaining('water'), findsNothing);
       expect(find.textContaining('XP'), findsNothing);
       expect(find.textContaining('Streak'), findsNothing);
 
-      // 2. Tap "继续" to complete Unit 1
-      await tester.tap(find.text('继续'));
+      // 2. Tap anywhere on screen to advance
+      await tester.tap(find.text('水').first);
       await tester.pumpAndSettle();
 
       // 3. Verify seamless progression: Unit 2 (茶) is now selected and rendered

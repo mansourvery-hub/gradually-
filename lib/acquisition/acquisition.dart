@@ -83,8 +83,8 @@ final class V1AcquisitionPipeline implements AcquisitionPipeline {
   const V1AcquisitionPipeline({
     required ReviewRepository reviewRepository,
     V1PromotionRule promotionRule = const V1PromotionRule(),
-  })  : _reviewRepository = reviewRepository,
-        _promotionRule = promotionRule;
+  }) : _reviewRepository = reviewRepository,
+       _promotionRule = promotionRule;
 
   final ReviewRepository _reviewRepository;
   final V1PromotionRule _promotionRule;
@@ -117,10 +117,7 @@ final class V1AcquisitionPipeline implements AcquisitionPipeline {
     // 3. Construct acquisition candidate from current exposure aggregate
     final agg = learner.exposure[vocabId];
     final encounterCount = (agg?.encounterCount ?? 0) + 1;
-    final distinctContentItems = {
-      ...?agg?.contentItemIds,
-      contentId,
-    }.length;
+    final distinctContentItems = {...?agg?.contentItemIds, contentId}.length;
 
     final candidate = AcquisitionCandidate(
       vocabId: vocabId,

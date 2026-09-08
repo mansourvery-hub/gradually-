@@ -13,6 +13,7 @@ import '../acquisition/acquisition.dart';
 import '../content/bootstrap_corpus.dart';
 import '../content/content.dart';
 import '../content/content_repository.dart';
+import '../core/simulated_level.dart';
 import '../data/database.dart';
 import '../data/repositories/content_repository_impl.dart';
 import '../data/repositories/learner_repository_impl.dart';
@@ -68,12 +69,32 @@ final acquisitionPipelineProvider = Provider<AcquisitionPipeline>((ref) {
 
 /// Reactive stream of the consolidated [LearnerState].
 final learnerStateStreamProvider = StreamProvider<LearnerState>((ref) {
+  // If simulated level override is injected via --dart-define=LEVEL=...
+  if (kSimulatedLevel > 0) {
+    return Stream.value(buildSimulatedLearnerState(kSimulatedLevel));
+  }
   final repo = ref.watch(learnerRepositoryProvider);
   return repo.watchLearnerState();
 });
 
-/// Provides cards currently due for review.
-final dueReviewCardsProvider = FutureProvider<List<ReviewCardRecord>>((ref) async {
+/// Provides cards currently due for review (only active after pure exposure threshold, CHOICES §1).
+final dueReviewCardsProvider = FutureProvider<List<ReviewCardRecord>>((
+  ref,
+) async {
+  final learnerStateAsync = ref.watch(learnerStateStreamProvider);
+  final learnerState = learnerStateAsync.value ?? const LearnerState();
+
+  // Pure exposure phase check: count total exposures
+  final totalExposures = learnerState.exposure.values.fold<int>(
+    0,
+    (sum, agg) => sum + agg.encounterCount,
+  );
+
+  // During pure exposure phase (0..threshold), no SRS reviews occur (CHOICES §1)
+  if (totalExposures < kPureExposureThreshold) {
+    return const [];
+  }
+
   final reviewSystem = ref.watch(reviewSystemProvider);
   return reviewSystem.fetchDueCards(now: DateTime.now());
 });
@@ -86,10 +107,7 @@ final contentSelectorProvider = Provider<ContentSelector>((ref) {
 /// Provides the [ContentRepository] loaded with the curated bootstrap corpus.
 final contentRepositoryProvider = Provider<ContentRepository>((ref) {
   final db = ref.watch(databaseProvider);
-  return AssetContentRepository(
-    db: db,
-    initialItems: bootstrapCurriculum,
-  );
+  return AssetContentRepository(db: db, initialItems: bootstrapCurriculum);
 });
 
 /// The single selected [ContentItem] for the learner to experience next (E-02, E-06).
