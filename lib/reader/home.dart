@@ -59,30 +59,45 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ],
             ),
           ),
-          error: (err, stack) => Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  '渐入',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w300,
-                    letterSpacing: 4,
-                    color: Color(0xFF3A3A3A),
-                  ),
+          error: (err, stack) {
+            debugPrint('HomeScreen nextExperienceAsync error: $err\n$stack');
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      '渐入',
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w300,
+                        letterSpacing: 4,
+                        color: Color(0xFF3A3A3A),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      '$err',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.redAccent,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    FilledButton.tonal(
+                      onPressed: () {
+                        ref.invalidate(learnerStateStreamProvider);
+                        ref.invalidate(nextExperienceProvider);
+                      },
+                      child: const Text('重试 (Retry)'),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 16),
-                TextButton(
-                  onPressed: () => ref.invalidate(nextExperienceProvider),
-                  child: const Text(
-                    '重试',
-                    style: TextStyle(color: Color(0xFF5A5A5A)),
-                  ),
-                ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
           data: (contentItem) {
             if (contentItem == null) {
               return const Center(
