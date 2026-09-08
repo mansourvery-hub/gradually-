@@ -68,13 +68,24 @@ final acquisitionPipelineProvider = Provider<AcquisitionPipeline>((ref) {
 });
 
 /// Reactive stream of the consolidated [LearnerState].
-final learnerStateStreamProvider = StreamProvider<LearnerState>((ref) {
-  // If simulated level override is injected via --dart-define=LEVEL=...
-  if (kSimulatedLevel > 0) {
-    return Stream.value(buildSimulatedLearnerState(kSimulatedLevel));
-  }
+final learnerStateStreamProvider = StreamProvider<LearnerState>((ref) async* {
   final repo = ref.watch(learnerRepositoryProvider);
-  return repo.watchLearnerState();
+
+  // 1. Yield initial state immediately on Frame 1 (Zero-delay startup)
+  if (kSimulatedLevel > 0) {
+    yield buildSimulatedLearnerState(kSimulatedLevel);
+  } else {
+    // Attempt fast initial read from database
+    try {
+      final initialState = await repo.getLearnerState();
+      yield initialState;
+    } catch (_) {
+      yield const LearnerState();
+    }
+  }
+
+  // 2. Stream subsequent updates reactively from SQLite
+  yield* repo.watchLearnerState();
 });
 
 /// Provides cards currently due for review (only active after pure exposure threshold, CHOICES §1).
@@ -115,7 +126,11 @@ final nextExperienceProvider = FutureProvider<ContentItem?>((ref) async {
   try {
     final contentRepo = ref.watch(contentRepositoryProvider);
     final learnerStateAsync = ref.watch(learnerStateStreamProvider);
-    final learnerState = learnerStateAsync.value ?? const LearnerState();
+    final learnerState =
+        learnerStateAsync.value ??
+        (kSimulatedLevel > 0
+            ? buildSimulatedLearnerState(kSimulatedLevel)
+            : const LearnerState());
     final selector = ref.watch(contentSelectorProvider);
 
     final candidates = await contentRepo.getCandidateContents();

@@ -53,12 +53,7 @@ final class JiebaTokenizer implements Tokenizer {
       }
 
       tokens.add(
-        Token(
-          vocabId: trimmed,
-          surface: trimmed,
-          start: start,
-          end: end,
-        ),
+        Token(vocabId: trimmed, surface: trimmed, start: start, end: end),
       );
     }
 

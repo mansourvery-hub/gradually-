@@ -37,10 +37,10 @@ LearnerState buildSimulatedLearnerState(int level) {
 
   // Fraction of curriculum completed based on level (0..100)
   final double fraction = (level.clamp(0, 100)) / 100.0;
-  final int completedItemsCount = (allItemIds.length * fraction).round();
-  final int knownVocabCount = (vocabList.length * fraction).round();
+  final int completedItemsCount = (allItemIds.length * fraction).floor();
+  final int knownVocabCount = (vocabList.length * fraction).floor();
 
-  // 1. Seed progress
+  // 1. Seed progress for completed items up to level
   for (int i = 0; i < completedItemsCount; i++) {
     final id = allItemIds[i];
     progressMap[id] = ContentProgress.initial(
@@ -54,7 +54,7 @@ LearnerState buildSimulatedLearnerState(int level) {
     final vocab = vocabList[i];
     final isLearned = i < knownVocabCount;
     final encounterCount = isLearned
-        ? (4 + (fraction * 10).round())
+        ? (5 + (fraction * 15).round())
         : (fraction > 0.2 ? 1 : 0);
 
     if (encounterCount > 0) {

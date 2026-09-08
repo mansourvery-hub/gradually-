@@ -49,90 +49,84 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     }
 
     // 2. Immersion flow (Pure Exposure Units & Short Stories)
+    final contentItem = nextExperienceAsync.value;
+
     return Scaffold(
       backgroundColor: const Color(0xFFFBF9F5), // Calm paper tone
       body: SafeArea(
-        child: nextExperienceAsync.when(
-          loading: () => const Center(
-            child: Text(
-              '渐入',
-              style: TextStyle(
-                fontSize: 36,
-                fontWeight: FontWeight.w200,
-                letterSpacing: 8,
-                color: Color(0xFF2C2C2C),
-              ),
-            ),
-          ),
-          error: (err, stack) {
-            debugPrint('HomeScreen error: $err\n$stack');
-            return Center(
-              child: GestureDetector(
-                onTap: () {
-                  ref.invalidate(learnerStateStreamProvider);
-                  ref.invalidate(nextExperienceProvider);
-                },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      '渐入',
-                      style: TextStyle(
-                        fontSize: 36,
-                        fontWeight: FontWeight.w200,
-                        letterSpacing: 6,
-                        color: Color(0xFF2C2C2C),
-                      ),
+        child: contentItem != null
+            ? (contentItem.type == ContentType.beginnerUnit
+                  ? _ButtonlessBeginnerUnitView(
+                      item: contentItem,
+                      onAdvance: () => _handleItemCompletion(contentItem),
+                    )
+                  : _ButtonlessStoryReaderView(
+                      item: contentItem,
+                      sectionIndex: _currentSectionIndex,
+                      onAdvance: () {
+                        if (_currentSectionIndex <
+                            contentItem.sections.length - 1) {
+                          setState(() => _currentSectionIndex++);
+                        } else {
+                          _handleItemCompletion(contentItem);
+                        }
+                      },
+                    ))
+            : nextExperienceAsync.when(
+                loading: () => const Center(
+                  child: Text(
+                    '渐入',
+                    style: TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.w200,
+                      letterSpacing: 8,
+                      color: Color(0xFF2C2C2C),
                     ),
-                    const SizedBox(height: 16),
-                    Text(
-                      '$err',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.redAccent,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-          data: (contentItem) {
-            if (contentItem == null) {
-              return const Center(
-                child: Text(
-                  '渐入',
-                  style: TextStyle(
-                    fontSize: 36,
-                    fontWeight: FontWeight.w200,
-                    letterSpacing: 8,
-                    color: Color(0xFF2C2C2C),
                   ),
                 ),
-              );
-            }
-
-            if (contentItem.type == ContentType.beginnerUnit) {
-              return _ButtonlessBeginnerUnitView(
-                item: contentItem,
-                onAdvance: () => _handleItemCompletion(contentItem),
-              );
-            }
-
-            return _ButtonlessStoryReaderView(
-              item: contentItem,
-              sectionIndex: _currentSectionIndex,
-              onAdvance: () {
-                if (_currentSectionIndex < contentItem.sections.length - 1) {
-                  setState(() => _currentSectionIndex++);
-                } else {
-                  _handleItemCompletion(contentItem);
-                }
-              },
-            );
-          },
-        ),
+                error: (err, stack) => Center(
+                  child: GestureDetector(
+                    onTap: () {
+                      ref.invalidate(learnerStateStreamProvider);
+                      ref.invalidate(nextExperienceProvider);
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          '渐入',
+                          style: TextStyle(
+                            fontSize: 36,
+                            fontWeight: FontWeight.w200,
+                            letterSpacing: 6,
+                            color: Color(0xFF2C2C2C),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          '$err',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.redAccent,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                data: (_) => const Center(
+                  child: Text(
+                    '渐入',
+                    style: TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.w200,
+                      letterSpacing: 8,
+                      color: Color(0xFF2C2C2C),
+                    ),
+                  ),
+                ),
+              ),
       ),
     );
   }
