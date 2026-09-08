@@ -175,3 +175,12 @@ direction), ask the user directly.
 * Never destroy persisted learner data simply to simplify development.
 * See `DEVELOPMENT.md` for the complete Git/worktree/CI workflow.
 
+## 10. Sub-agent handoff & task prompts
+
+When identifying or handing off parallel tasks from `dev_graph.json`, agents must **never** output thin, single-line task summaries. Always provide a **complete, self-contained, high-context execution prompt** ready for copy-pasting to a fresh AI agent. Each prompt must include:
+* Target node ID(s) from `dev_graph.json` and assigned role.
+* Non-negotiable invariants applicable to the task.
+* Exact input and output file paths.
+* Concrete implementation steps, commands, and code contracts.
+* Clear validation commands and automated acceptance criteria.
+
