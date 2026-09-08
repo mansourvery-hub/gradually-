@@ -24,6 +24,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   int _currentSectionIndex = 0;
+  bool _isAdvancing = false;
 
   @override
   Widget build(BuildContext context) {
@@ -34,20 +35,52 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       body: SafeArea(
         child: nextExperienceAsync.when(
           loading: () => const Center(
-            child: Text(
-              '渐入',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.w300,
-                letterSpacing: 4,
-                color: Color(0xFF2C2C2C),
-              ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '渐入',
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w300,
+                    letterSpacing: 6,
+                    color: Color(0xFF3A3A3A),
+                  ),
+                ),
+                SizedBox(height: 24),
+                SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Color(0xFF8A8A8A),
+                  ),
+                ),
+              ],
             ),
           ),
-          error: (err, _) => Center(
-            child: Text(
-              '渐入',
-              style: TextStyle(fontSize: 24, color: Colors.grey.shade400),
+          error: (err, stack) => Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  '渐入',
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w300,
+                    letterSpacing: 4,
+                    color: Color(0xFF3A3A3A),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextButton(
+                  onPressed: () => ref.invalidate(nextExperienceProvider),
+                  child: const Text(
+                    '重试',
+                    style: TextStyle(color: Color(0xFF5A5A5A)),
+                  ),
+                ),
+              ],
             ),
           ),
           data: (contentItem) {
@@ -58,8 +91,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.w300,
-                    letterSpacing: 4,
-                    color: Color(0xFF2C2C2C),
+                    letterSpacing: 6,
+                    color: Color(0xFF3A3A3A),
                   ),
                 ),
               );
@@ -68,6 +101,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             if (contentItem.type == ContentType.beginnerUnit) {
               return _BeginnerUnitView(
                 item: contentItem,
+                isAdvancing: _isAdvancing,
                 onComplete: () => _handleItemCompletion(contentItem),
               );
             }
@@ -75,6 +109,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             return _StoryReaderView(
               item: contentItem,
               sectionIndex: _currentSectionIndex,
+              isAdvancing: _isAdvancing,
               onNextSection: () {
                 if (_currentSectionIndex < contentItem.sections.length - 1) {
                   setState(() => _currentSectionIndex++);
@@ -90,150 +125,182 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Future<void> _handleItemCompletion(ContentItem item) async {
-    final now = DateTime.now();
-    final learnerRepo = ref.read(learnerRepositoryProvider);
-    final contentRepo = await ref.read(contentRepositoryProvider.future);
+    if (_isAdvancing) return;
+    setState(() => _isAdvancing = true);
 
-    // 1. Record vocabulary exposure for all words in the content
-    final vocabIds = item.metadata.vocabulary.toList();
-    await learnerRepo.recordBatchExposure(vocabIds, item.id, at: now);
+    try {
+      final now = DateTime.now();
+      final learnerRepo = ref.read(learnerRepositoryProvider);
+      final contentRepo = ref.read(contentRepositoryProvider);
 
-    // 2. Record explicit mastery evidence for critical vocabulary
-    for (final vocabId in item.metadata.curriculumCriticalVocabulary) {
-      await learnerRepo.recordMasteryEvidence(
-        MasteryEvidence(
-          vocabId: vocabId,
-          kind: MasteryEvidenceKind.meaning,
-          grade: RecallGrade.remembered,
-          at: now,
-        ),
-      );
+      // 1. Record vocabulary exposure for all words in the content
+      final vocabIds = item.metadata.vocabulary.toList();
+      await learnerRepo.recordBatchExposure(vocabIds, item.id, at: now);
+
+      // 2. Record explicit mastery evidence for critical vocabulary
+      for (final vocabId in item.metadata.curriculumCriticalVocabulary) {
+        await learnerRepo.recordMasteryEvidence(
+          MasteryEvidence(
+            vocabId: vocabId,
+            kind: MasteryEvidenceKind.meaning,
+            grade: RecallGrade.remembered,
+            at: now,
+          ),
+        );
+      }
+
+      // 3. Update reading completion progress in SQLite
+      final existingProgress = await contentRepo.getProgress(item.id);
+      final updatedProgress =
+          (existingProgress ??
+                  ContentProgress.initial(contentId: item.id, now: now))
+              .recordCompletion(now);
+
+      await contentRepo.saveProgress(updatedProgress);
+      await learnerRepo.updateContentProgress(updatedProgress);
+
+      if (mounted) {
+        setState(() {
+          _currentSectionIndex = 0;
+          _isAdvancing = false;
+        });
+      }
+
+      ref.invalidate(nextExperienceProvider);
+    } catch (_) {
+      if (mounted) {
+        setState(() => _isAdvancing = false);
+      }
     }
-
-    // 3. Update reading completion progress in SQLite
-    final existingProgress = await contentRepo.getProgress(item.id);
-    final updatedProgress =
-        (existingProgress ??
-                ContentProgress.initial(contentId: item.id, now: now))
-            .recordCompletion(now);
-
-    await contentRepo.saveProgress(updatedProgress);
-    await learnerRepo.updateContentProgress(updatedProgress);
-
-    // Reset section index for the next content
-    if (mounted) {
-      setState(() => _currentSectionIndex = 0);
-    }
-
-    // Refresh next experience
-    ref.invalidate(nextExperienceProvider);
   }
 }
 
 /// Immersive single-word / atomic concept view for absolute beginners.
 class _BeginnerUnitView extends StatelessWidget {
-  const _BeginnerUnitView({required this.item, required this.onComplete});
+  const _BeginnerUnitView({
+    required this.item,
+    required this.isAdvancing,
+    required this.onComplete,
+  });
 
   final ContentItem item;
+  final bool isAdvancing;
   final VoidCallback onComplete;
 
   @override
   Widget build(BuildContext context) {
     final mainWord = item.metadata.title;
 
-    return Column(
-      children: [
-        // Top subtle branding
-        const Padding(
-          padding: EdgeInsets.only(top: 24),
-          child: Text(
-            '渐入',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w300,
-              letterSpacing: 2,
-              color: Color(0xFF8C8C8C),
-            ),
-          ),
-        ),
-        const Spacer(),
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 480),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32),
+          child: Column(
+            children: [
+              const SizedBox(height: 32),
 
-        // Visual Placeholder / Illustration Card
-        Container(
-          width: 140,
-          height: 140,
-          decoration: BoxDecoration(
-            color: const Color(0xFFF0ECE1),
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.04),
-                blurRadius: 16,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Center(child: _buildVisualPlaceholder(mainWord)),
-        ),
-
-        const SizedBox(height: 36),
-
-        // Large prominent Hanzi character
-        Text(
-          mainWord,
-          style: const TextStyle(
-            fontSize: 72,
-            fontWeight: FontWeight.w500,
-            color: Color(0xFF1F1F1F),
-            height: 1.1,
-          ),
-        ),
-
-        const SizedBox(height: 12),
-
-        // Native audio pronunciation prompt
-        IconButton.filledTonal(
-          onPressed: () {
-            // Native audio playback placeholder (E-08)
-          },
-          icon: const Icon(Icons.volume_up_rounded, size: 28),
-          style: IconButton.styleFrom(
-            backgroundColor: const Color(0xFFEBE5D8),
-            foregroundColor: const Color(0xFF4A4A4A),
-            padding: const EdgeInsets.all(16),
-          ),
-        ),
-
-        const Spacer(),
-
-        // Bottom continue action
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 32),
-          child: SizedBox(
-            width: double.infinity,
-            height: 56,
-            child: FilledButton(
-              onPressed: onComplete,
-              style: FilledButton.styleFrom(
-                backgroundColor: const Color(0xFF2C2C2C),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                elevation: 0,
-              ),
-              child: const Text(
-                '继续',
+              // Subtle top app title
+              const Text(
+                '渐入',
                 style: TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 2,
+                  fontWeight: FontWeight.w300,
+                  letterSpacing: 4,
+                  color: Color(0xFF9E9E9E),
                 ),
               ),
-            ),
+
+              const Spacer(),
+
+              // Visual Illustration Card
+              Container(
+                width: 150,
+                height: 150,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF0EBE0),
+                  borderRadius: BorderRadius.circular(28),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.04),
+                      blurRadius: 20,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
+                ),
+                child: Center(child: _buildVisualPlaceholder(mainWord)),
+              ),
+
+              const SizedBox(height: 40),
+
+              // Large Prominent Hanzi
+              Text(
+                mainWord,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 84,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xFF1E1E1E),
+                  height: 1.1,
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              // Native pronunciation audio prompt button
+              IconButton.filledTonal(
+                onPressed: () {
+                  // Audio playback placeholder (E-08)
+                },
+                icon: const Icon(Icons.volume_up_rounded, size: 28),
+                style: IconButton.styleFrom(
+                  backgroundColor: const Color(0xFFECE6D8),
+                  foregroundColor: const Color(0xFF4A4A4A),
+                  padding: const EdgeInsets.all(16),
+                ),
+              ),
+
+              const Spacer(),
+
+              // Primary "继续" progression button
+              SizedBox(
+                width: double.infinity,
+                height: 60,
+                child: FilledButton(
+                  onPressed: isAdvancing ? null : onComplete,
+                  style: FilledButton.styleFrom(
+                    backgroundColor: const Color(0xFF2B2B2B),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: isAdvancing
+                      ? const SizedBox(
+                          width: 22,
+                          height: 22,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text(
+                          '继续',
+                          style: TextStyle(
+                            fontSize: 19,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 4,
+                          ),
+                        ),
+                ),
+              ),
+
+              const SizedBox(height: 36),
+            ],
           ),
         ),
-      ],
+      ),
     );
   }
 
@@ -253,7 +320,7 @@ class _BeginnerUnitView extends StatelessWidget {
         iconData = Icons.auto_stories_rounded;
     }
 
-    return Icon(iconData, size: 64, color: const Color(0xFF5A5A5A));
+    return Icon(iconData, size: 72, color: const Color(0xFF525252));
   }
 }
 
@@ -262,11 +329,13 @@ class _StoryReaderView extends StatelessWidget {
   const _StoryReaderView({
     required this.item,
     required this.sectionIndex,
+    required this.isAdvancing,
     required this.onNextSection,
   });
 
   final ContentItem item;
   final int sectionIndex;
+  final bool isAdvancing;
   final VoidCallback onNextSection;
 
   @override
@@ -277,87 +346,102 @@ class _StoryReaderView extends StatelessWidget {
 
     final isLastSection = sectionIndex >= item.sections.length - 1;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 28),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 20),
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 540),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 28),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 24),
 
-          // Story Title
-          Text(
-            item.title,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF1F1F1F),
-            ),
-          ),
-
-          const SizedBox(height: 32),
-
-          // Scene visual illustration container
-          Container(
-            width: double.infinity,
-            height: 160,
-            decoration: BoxDecoration(
-              color: const Color(0xFFF0ECE1),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: const Center(
-              child: Icon(
-                Icons.auto_stories_rounded,
-                size: 56,
-                color: Color(0xFF6B6B6B),
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 36),
-
-          // Unspaced Chinese sentence rendering with clean typography
-          Expanded(
-            child: SingleChildScrollView(
-              child: Text(
-                section.text,
+              // Story Title
+              Text(
+                item.title,
                 style: const TextStyle(
-                  fontSize: 28,
-                  height: 1.8,
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xFF242424),
-                  letterSpacing: 1.5,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF1E1E1E),
                 ),
               ),
-            ),
-          ),
 
-          // Bottom Action Button
-          Padding(
-            padding: const EdgeInsets.only(bottom: 28),
-            child: SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: FilledButton(
-                onPressed: onNextSection,
-                style: FilledButton.styleFrom(
-                  backgroundColor: const Color(0xFF2C2C2C),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
+              const SizedBox(height: 28),
+
+              // Scene visual illustration container
+              Container(
+                width: double.infinity,
+                height: 180,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF0EBE0),
+                  borderRadius: BorderRadius.circular(22),
                 ),
-                child: Text(
-                  isLastSection ? '完成' : '继续',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 2,
+                child: const Center(
+                  child: Icon(
+                    Icons.auto_stories_rounded,
+                    size: 64,
+                    color: Color(0xFF6B6B6B),
                   ),
                 ),
               ),
-            ),
+
+              const SizedBox(height: 36),
+
+              // Unspaced Chinese sentence rendering with clean typography
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Text(
+                    section.text,
+                    style: const TextStyle(
+                      fontSize: 30,
+                      height: 1.8,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF242424),
+                      letterSpacing: 2,
+                    ),
+                  ),
+                ),
+              ),
+
+              // Bottom Action Button
+              Padding(
+                padding: const EdgeInsets.only(bottom: 32),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 60,
+                  child: FilledButton(
+                    onPressed: isAdvancing ? null : onNextSection,
+                    style: FilledButton.styleFrom(
+                      backgroundColor: const Color(0xFF2B2B2B),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: isAdvancing
+                        ? const SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : Text(
+                            isLastSection ? '完成' : '继续',
+                            style: const TextStyle(
+                              fontSize: 19,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: 4,
+                            ),
+                          ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

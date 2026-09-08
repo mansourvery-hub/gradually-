@@ -5,9 +5,9 @@
 library;
 
 import 'package:drift_flutter/drift_flutter.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../content/bootstrap_corpus.dart';
 import '../content/content.dart';
 import '../content/content_repository.dart';
 import '../data/database.dart';
@@ -41,37 +41,15 @@ final contentSelectorProvider = Provider<ContentSelector>((ref) {
   return const V1ContentSelector();
 });
 
-/// Provides the [ContentRepository] loaded with the curated assets corpus.
-final contentRepositoryProvider = FutureProvider<AssetContentRepository>((
-  ref,
-) async {
+/// Provides the [ContentRepository] loaded with the curated bootstrap corpus.
+final contentRepositoryProvider = Provider<ContentRepository>((ref) {
   final db = ref.watch(databaseProvider);
-  final repo = AssetContentRepository(db: db);
-
-  // Curated bootstrap unit paths
-  const curatedPaths = [
-    'assets/content/unit_001_water.json',
-    'assets/content/unit_002_tea.json',
-    'assets/content/unit_003_drink.json',
-    'assets/content/unit_004_eat.json',
-    'assets/content/story_001_tea_and_rice.json',
-  ];
-
-  for (final path in curatedPaths) {
-    try {
-      final jsonStr = await rootBundle.loadString(path);
-      repo.registerJson(jsonStr);
-    } catch (_) {
-      // Graceful fallback for non-bundled environments
-    }
-  }
-
-  return repo;
+  return AssetContentRepository(db: db, initialItems: bootstrapCurriculum);
 });
 
 /// The single selected [ContentItem] for the learner to experience next (E-02, E-06).
 final nextExperienceProvider = FutureProvider<ContentItem?>((ref) async {
-  final contentRepo = await ref.watch(contentRepositoryProvider.future);
+  final contentRepo = ref.watch(contentRepositoryProvider);
   final learnerState =
       ref.watch(learnerStateStreamProvider).value ?? const LearnerState();
   final selector = ref.watch(contentSelectorProvider);
