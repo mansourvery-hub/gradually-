@@ -22,7 +22,7 @@ final class ReviewCard {
     this.wordAudio,
   });
 
-  final String id;
+  final CardId id;
   final VocabId vocabId;
 
   /// Full source sentence (sentence-based cards, later phase).
@@ -38,6 +38,25 @@ final class ReviewCard {
   final String? wordAudio;
 }
 
+/// A complete record storing a [ReviewCard] and its scheduler state
+/// (separated per D-04, E-03).
+final class ReviewCardRecord {
+  const ReviewCardRecord({
+    required this.card,
+    required this.fsrsCardStateJson,
+    required this.due,
+  });
+
+  final ReviewCard card;
+
+  /// Opaque JSON representation of FSRS Card state (D-04).
+  /// Internals never leak into learner state or UI.
+  final String fsrsCardStateJson;
+
+  /// When this card is due for review.
+  final DateTime due;
+}
+
 /// Review outcome → mastery evidence emitted to the learner model.
 final class ReviewOutcome {
   const ReviewOutcome({
@@ -47,7 +66,7 @@ final class ReviewOutcome {
     required this.at,
   });
 
-  final String cardId;
+  final CardId cardId;
   final VocabId vocabId;
   final RecallGrade grade;
   final DateTime at;

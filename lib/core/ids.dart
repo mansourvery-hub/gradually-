@@ -9,3 +9,6 @@ typedef ContentId = String;
 
 /// Stable identifier for a sentence within a content item.
 typedef SentenceId = String;
+
+/// Stable identifier for an SRS review card.
+typedef CardId = String;

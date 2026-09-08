@@ -56,4 +56,6 @@ Deviate only for a strong technical reason, stated in the PR/commit.
 
 ## Current focus
 
-_Update this line as work progresses._ Currently: Build order step 1.
+_Update this line as work progresses._ Currently: Build order step 1 complete
+(shared types + drift persistence + repositories); step 2 (content schema +
+first curated data) next.

@@ -8,6 +8,7 @@ library;
 
 import '../core/hanzi.dart';
 import '../core/ids.dart';
+import '../core/progress.dart';
 
 /// Bounded per-word exposure aggregate (LEARNING_ENGINE.md §2).
 ///
@@ -54,6 +55,23 @@ final class ExposureAggregate {
       lastSeen: now,
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ExposureAggregate &&
+          runtimeType == other.runtimeType &&
+          vocabId == other.vocabId &&
+          encounterCount == other.encounterCount &&
+          firstSeen == other.firstSeen &&
+          lastSeen == other.lastSeen;
+
+  @override
+  int get hashCode =>
+      vocabId.hashCode ^
+      encounterCount.hashCode ^
+      firstSeen.hashCode ^
+      lastSeen.hashCode;
 }
 
 /// Learner-level knowledge state. Computed from mastery evidence; the "known"
@@ -63,6 +81,7 @@ final class LearnerState {
     this.knownVocabulary = const {},
     this.knownHanzi = const {},
     this.exposure = const {},
+    this.progress = const {},
   });
 
   /// All words ever encountered, as bounded aggregates.
@@ -71,13 +90,20 @@ final class LearnerState {
   /// Vocabulary ids the learner knows, derived from mastery evidence.
   final Set<VocabId> knownVocabulary;
 
-  /// Hanzi the learner knows (V1 [PROPOSED]: derived from known vocabulary
+  /// Hanzi the learner knows (V1: derived from known vocabulary
   /// plus beginner recognition outcomes).
   final Set<Hanzi> knownHanzi;
 
-  /// Words never encountered by this learner.
-  ///
-  /// Derived on demand from corpus vocabulary — the corpus is not stored
-  /// here, so this accessor is intentionally absent; selectors compute
-  /// unknowns against candidate content directly.
+  /// Content reading progress and completion history across all content items.
+  final Map<ContentId, ContentProgress> progress;
+
+  /// Whether a vocabulary item is known by this learner.
+  bool isVocabKnown(VocabId vocabId) => knownVocabulary.contains(vocabId);
+
+  /// Whether a Hanzi character is known by this learner.
+  bool isHanziKnown(Hanzi hanzi) => knownHanzi.contains(hanzi);
+
+  /// Whether a content item has been completed by this learner.
+  bool isContentCompleted(ContentId contentId) =>
+      progress[contentId]?.isCompleted ?? false;
 }
