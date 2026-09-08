@@ -16,6 +16,15 @@ final class Token {
     required this.end,
   });
 
+  factory Token.fromJson(Map<String, dynamic> json) {
+    return Token(
+      vocabId: json['vocabId'] as String,
+      surface: json['surface'] as String,
+      start: json['start'] as int,
+      end: json['end'] as int,
+    );
+  }
+
   /// The stable vocabulary id this token maps to.
   final VocabId vocabId;
 
@@ -27,4 +36,25 @@ final class Token {
 
   /// Character offset one past the last character.
   final int end;
+
+  Map<String, dynamic> toJson() => {
+    'vocabId': vocabId,
+    'surface': surface,
+    'start': start,
+    'end': end,
+  };
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Token &&
+          runtimeType == other.runtimeType &&
+          vocabId == other.vocabId &&
+          surface == other.surface &&
+          start == other.start &&
+          end == other.end;
+
+  @override
+  int get hashCode =>
+      vocabId.hashCode ^ surface.hashCode ^ start.hashCode ^ end.hashCode;
 }

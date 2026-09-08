@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "id": "unit-003-drink",
+    "title": "喝",
+    "type": "beginnerUnit",
+    "curriculumOrder": 3,
+    "prerequisiteIds": ["unit-002-tea"],
+    "difficultyEstimate": 2,
+    "vocabulary": ["喝", "喝水", "喝茶"],
+    "curriculumCriticalVocabulary": ["喝"]
+  },
+  "sections": [
+    {
+      "id": "sec-1",
+      "text": "喝水。喝茶。",
+      "visualAsset": "assets/images/drink.png",
+      "sentences": [
+        {
+          "id": "unit-003-s1",
+          "text": "喝水。",
+          "tokens": [
+            {
+              "vocabId": "喝",
+              "surface": "喝",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "水",
+              "surface": "水",
+              "start": 1,
+              "end": 2
+            }
+          ],
+          "criticalVocabIds": ["喝"]
+        },
+        {
+          "id": "unit-003-s2",
+          "text": "喝茶。",
+          "tokens": [
+            {
+              "vocabId": "喝",
+              "surface": "喝",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "茶",
+              "surface": "茶",
+              "start": 1,
+              "end": 2
+            }
+          ],
+          "criticalVocabIds": ["喝"]
+        }
+      ]
+    }
+  ]
+}
