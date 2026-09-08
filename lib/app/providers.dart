@@ -9,14 +9,19 @@ import 'package:drift_flutter/drift_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../acquisition/acquisition.dart';
 import '../content/bootstrap_corpus.dart';
 import '../content/content.dart';
 import '../content/content_repository.dart';
 import '../data/database.dart';
 import '../data/repositories/content_repository_impl.dart';
 import '../data/repositories/learner_repository_impl.dart';
+import '../data/repositories/review_repository_impl.dart';
 import '../learner/learner_repository.dart';
 import '../learner/learner_state.dart';
+import '../review/fsrs_review_system.dart';
+import '../review/review.dart';
+import '../review/review_repository.dart';
 import '../selector/selector.dart';
 
 /// Constructs a multiplatform Drift database executor.
@@ -43,10 +48,34 @@ final learnerRepositoryProvider = Provider<LearnerRepository>((ref) {
   return DriftLearnerRepository(db);
 });
 
+/// Provides the [ReviewRepository] implementation.
+final reviewRepositoryProvider = Provider<ReviewRepository>((ref) {
+  final db = ref.watch(databaseProvider);
+  return DriftReviewRepository(db);
+});
+
+/// Provides the FSRS spaced repetition system adapter.
+final reviewSystemProvider = Provider<FsrsReviewSystem>((ref) {
+  final repo = ref.watch(reviewRepositoryProvider);
+  return FsrsReviewSystem(repository: repo);
+});
+
+/// Provides the word acquisition pipeline.
+final acquisitionPipelineProvider = Provider<AcquisitionPipeline>((ref) {
+  final reviewRepo = ref.watch(reviewRepositoryProvider);
+  return V1AcquisitionPipeline(reviewRepository: reviewRepo);
+});
+
 /// Reactive stream of the consolidated [LearnerState].
 final learnerStateStreamProvider = StreamProvider<LearnerState>((ref) {
   final repo = ref.watch(learnerRepositoryProvider);
   return repo.watchLearnerState();
+});
+
+/// Provides cards currently due for review.
+final dueReviewCardsProvider = FutureProvider<List<ReviewCardRecord>>((ref) async {
+  final reviewSystem = ref.watch(reviewSystemProvider);
+  return reviewSystem.fetchDueCards(now: DateTime.now());
 });
 
 /// Provides the [ContentSelector] algorithm instance.

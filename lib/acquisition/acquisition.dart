@@ -5,8 +5,15 @@
 /// records are separate from cards and from learner state.
 library;
 
+import 'dart:convert';
+
+import 'package:fsrs/fsrs.dart' as fsrs;
+
 import '../core/ids.dart';
+import '../core/token.dart';
 import '../learner/learner_state.dart';
+import '../review/review.dart';
+import '../review/review_repository.dart';
 
 /// A word under consideration for promotion to SRS.
 final class AcquisitionCandidate {
@@ -56,12 +63,95 @@ final class V1PromotionRule {
 }
 
 /// Consumes encounters from reading; creates candidates; promotes to SRS.
-/// [PROPOSED] V1 pipeline service skeleton.
 abstract interface class AcquisitionPipeline {
-  /// Called when the learner reads a word that is not yet known.
-  void onUnknownEncounter(
-    LearnerState learner,
-    VocabId vocabId,
-    ContentId contentId,
-  );
+  /// Evaluates an encountered vocabulary item for SRS card promotion.
+  Future<ReviewCardRecord?> evaluateAndPromote({
+    required LearnerState learner,
+    required VocabId vocabId,
+    required ContentId contentId,
+    required String sourceSentenceText,
+    required Token token,
+    bool isCurriculumCritical = false,
+    String? visualAsset,
+    String? audioAsset,
+    DateTime? now,
+  });
+}
+
+/// V1 implementation of the acquisition pipeline (E-05, LEARNING_ENGINE.md §3).
+final class V1AcquisitionPipeline implements AcquisitionPipeline {
+  const V1AcquisitionPipeline({
+    required ReviewRepository reviewRepository,
+    V1PromotionRule promotionRule = const V1PromotionRule(),
+  })  : _reviewRepository = reviewRepository,
+        _promotionRule = promotionRule;
+
+  final ReviewRepository _reviewRepository;
+  final V1PromotionRule _promotionRule;
+
+  @override
+  Future<ReviewCardRecord?> evaluateAndPromote({
+    required LearnerState learner,
+    required VocabId vocabId,
+    required ContentId contentId,
+    required String sourceSentenceText,
+    required Token token,
+    bool isCurriculumCritical = false,
+    String? visualAsset,
+    String? audioAsset,
+    DateTime? now,
+  }) async {
+    final currentTime = now ?? DateTime.now();
+
+    // 1. If already known by the learner model, do not create duplicate cards
+    if (learner.isVocabKnown(vocabId)) {
+      return null;
+    }
+
+    // 2. If a review card already exists in the SRS, do not duplicate
+    final existingCard = await _reviewRepository.getCardByVocabId(vocabId);
+    if (existingCard != null) {
+      return null;
+    }
+
+    // 3. Construct acquisition candidate from current exposure aggregate
+    final agg = learner.exposure[vocabId];
+    final encounterCount = (agg?.encounterCount ?? 0) + 1;
+    final distinctContentItems = {
+      ...?agg?.contentItemIds,
+      contentId,
+    }.length;
+
+    final candidate = AcquisitionCandidate(
+      vocabId: vocabId,
+      encounterCount: encounterCount,
+      distinctContentItems: distinctContentItems,
+      curriculumCritical: isCurriculumCritical,
+    );
+
+    // 4. Test promotion rule (never unknown == flashcard)
+    if (!_promotionRule.shouldPromote(candidate)) {
+      return null;
+    }
+
+    // 5. Promote: build initial SRS review card preserving richest context
+    final cardId = 'card-$vocabId';
+    final initialFsrsCard = fsrs.Card(cardId: cardId.hashCode);
+
+    final cardRecord = ReviewCardRecord(
+      card: ReviewCard(
+        id: cardId,
+        vocabId: vocabId,
+        sourceSentence: sourceSentenceText,
+        targetEmphasis: (start: token.start, end: token.end),
+        visualAsset: visualAsset,
+        wordAudio: audioAsset,
+      ),
+      fsrsCardStateJson: jsonEncode(initialFsrsCard.toMap()),
+      due: currentTime,
+    );
+
+    await _reviewRepository.saveCard(cardRecord);
+    return cardRecord;
+  }
 }
