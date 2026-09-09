@@ -19,7 +19,18 @@ class JianruApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: '渐入',
-      theme: ThemeData(useMaterial3: true),
+      theme: ThemeData(
+        useMaterial3: true,
+        fontFamilyFallback: const [
+          'PingFang SC',
+          'Hiragino Sans GB',
+          'Microsoft YaHei',
+          'WenQuanYi Micro Hei',
+          'Noto Sans SC',
+          'Noto Sans CJK SC',
+          'sans-serif',
+        ],
+      ),
       home: const HomeScreen(),
     );
   }
