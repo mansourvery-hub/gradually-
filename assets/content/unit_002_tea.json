@@ -4,16 +4,22 @@
     "title": "茶",
     "type": "beginnerUnit",
     "curriculumOrder": 2,
-    "prerequisiteIds": ["unit-001-water"],
+    "prerequisiteIds": [
+      "unit-001-water"
+    ],
     "difficultyEstimate": 1,
-    "vocabulary": ["茶"],
-    "curriculumCriticalVocabulary": ["茶"]
+    "vocabulary": [
+      "茶"
+    ],
+    "curriculumCriticalVocabulary": [
+      "茶"
+    ]
   },
   "sections": [
     {
       "id": "sec-1",
       "text": "茶",
-      "visualAsset": "assets/images/tea.png",
+      "visualAsset": "assets/images/concepts/茶.svg",
       "audioAsset": "assets/audio/cha.mp3",
       "sentences": [
         {
@@ -27,7 +33,9 @@
               "end": 1
             }
           ],
-          "criticalVocabIds": ["茶"]
+          "criticalVocabIds": [
+            "茶"
+          ]
         }
       ]
     }

@@ -4,16 +4,25 @@
     "title": "吃",
     "type": "beginnerUnit",
     "curriculumOrder": 4,
-    "prerequisiteIds": ["unit-003-drink"],
+    "prerequisiteIds": [
+      "unit-003-drink"
+    ],
     "difficultyEstimate": 2,
-    "vocabulary": ["吃", "米饭", "吃饭"],
-    "curriculumCriticalVocabulary": ["吃", "米饭"]
+    "vocabulary": [
+      "吃",
+      "米饭",
+      "吃饭"
+    ],
+    "curriculumCriticalVocabulary": [
+      "吃",
+      "米饭"
+    ]
   },
   "sections": [
     {
       "id": "sec-1",
       "text": "吃米饭。吃饭。",
-      "visualAsset": "assets/images/rice.png",
+      "visualAsset": "assets/images/concepts/吃.svg",
       "sentences": [
         {
           "id": "unit-004-s1",
@@ -32,7 +41,10 @@
               "end": 3
             }
           ],
-          "criticalVocabIds": ["吃", "米饭"]
+          "criticalVocabIds": [
+            "吃",
+            "米饭"
+          ]
         },
         {
           "id": "unit-004-s2",
@@ -45,7 +57,9 @@
               "end": 2
             }
           ],
-          "criticalVocabIds": ["吃"]
+          "criticalVocabIds": [
+            "吃"
+          ]
         }
       ]
     }

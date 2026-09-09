@@ -6,14 +6,18 @@
     "curriculumOrder": 1,
     "prerequisiteIds": [],
     "difficultyEstimate": 1,
-    "vocabulary": ["水"],
-    "curriculumCriticalVocabulary": ["水"]
+    "vocabulary": [
+      "水"
+    ],
+    "curriculumCriticalVocabulary": [
+      "水"
+    ]
   },
   "sections": [
     {
       "id": "sec-1",
       "text": "水",
-      "visualAsset": "assets/images/water.png",
+      "visualAsset": "assets/images/concepts/水.svg",
       "audioAsset": "assets/audio/shui.mp3",
       "sentences": [
         {
@@ -27,7 +31,9 @@
               "end": 1
             }
           ],
-          "criticalVocabIds": ["水"]
+          "criticalVocabIds": [
+            "水"
+          ]
         }
       ]
     }

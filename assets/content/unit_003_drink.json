@@ -4,16 +4,24 @@
     "title": "喝",
     "type": "beginnerUnit",
     "curriculumOrder": 3,
-    "prerequisiteIds": ["unit-002-tea"],
+    "prerequisiteIds": [
+      "unit-002-tea"
+    ],
     "difficultyEstimate": 2,
-    "vocabulary": ["喝", "喝水", "喝茶"],
-    "curriculumCriticalVocabulary": ["喝"]
+    "vocabulary": [
+      "喝",
+      "喝水",
+      "喝茶"
+    ],
+    "curriculumCriticalVocabulary": [
+      "喝"
+    ]
   },
   "sections": [
     {
       "id": "sec-1",
       "text": "喝水。喝茶。",
-      "visualAsset": "assets/images/drink.png",
+      "visualAsset": "assets/images/concepts/喝.svg",
       "sentences": [
         {
           "id": "unit-003-s1",
@@ -32,7 +40,9 @@
               "end": 2
             }
           ],
-          "criticalVocabIds": ["喝"]
+          "criticalVocabIds": [
+            "喝"
+          ]
         },
         {
           "id": "unit-003-s2",
@@ -51,7 +61,9 @@
               "end": 2
             }
           ],
-          "criticalVocabIds": ["喝"]
+          "criticalVocabIds": [
+            "喝"
+          ]
         }
       ]
     }

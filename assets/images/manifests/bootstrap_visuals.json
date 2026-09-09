@@ -1,0 +1,199 @@
+{
+  "version": "1.0.0",
+  "description": "Minimalist zen visual assets for bootstrap concepts and story scenes (CHOICES.md §3)",
+  "concepts": {
+    "水": {
+      "path": "assets/images/concepts/水.svg",
+      "concept": "water"
+    },
+    "茶": {
+      "path": "assets/images/concepts/茶.svg",
+      "concept": "tea"
+    },
+    "喝": {
+      "path": "assets/images/concepts/喝.svg",
+      "concept": "drink"
+    },
+    "吃": {
+      "path": "assets/images/concepts/吃.svg",
+      "concept": "eat"
+    },
+    "米饭": {
+      "path": "assets/images/concepts/米饭.svg",
+      "concept": "rice"
+    },
+    "我": {
+      "path": "assets/images/concepts/我.svg",
+      "concept": "I / me"
+    },
+    "想": {
+      "path": "assets/images/concepts/想.svg",
+      "concept": "want / think"
+    },
+    "也": {
+      "path": "assets/images/concepts/也.svg",
+      "concept": "also / too"
+    },
+    "我们": {
+      "path": "assets/images/concepts/我们.svg",
+      "concept": "we / us"
+    },
+    "一起": {
+      "path": "assets/images/concepts/一起.svg",
+      "concept": "together"
+    },
+    "很": {
+      "path": "assets/images/concepts/很.svg",
+      "concept": "very"
+    },
+    "好喝": {
+      "path": "assets/images/concepts/好喝.svg",
+      "concept": "delicious to drink"
+    },
+    "好吃": {
+      "path": "assets/images/concepts/好吃.svg",
+      "concept": "delicious to eat"
+    },
+    "好": {
+      "path": "assets/images/concepts/好.svg",
+      "concept": "good"
+    },
+    "猫": {
+      "path": "assets/images/concepts/猫.svg",
+      "concept": "cat"
+    },
+    "大": {
+      "path": "assets/images/concepts/大.svg",
+      "concept": "big"
+    },
+    "小": {
+      "path": "assets/images/concepts/小.svg",
+      "concept": "small / little"
+    },
+    "看": {
+      "path": "assets/images/concepts/看.svg",
+      "concept": "look / see"
+    },
+    "要": {
+      "path": "assets/images/concepts/要.svg",
+      "concept": "want / need"
+    },
+    "鱼": {
+      "path": "assets/images/concepts/鱼.svg",
+      "concept": "fish"
+    },
+    "这里": {
+      "path": "assets/images/concepts/这里.svg",
+      "concept": "here"
+    },
+    "有": {
+      "path": "assets/images/concepts/有.svg",
+      "concept": "have / there is"
+    },
+    "一": {
+      "path": "assets/images/concepts/一.svg",
+      "concept": "one"
+    },
+    "只": {
+      "path": "assets/images/concepts/只.svg",
+      "concept": "measure word for animals"
+    },
+    "和": {
+      "path": "assets/images/concepts/和.svg",
+      "concept": "and"
+    },
+    "它们": {
+      "path": "assets/images/concepts/它们.svg",
+      "concept": "they (animals)"
+    },
+    "是": {
+      "path": "assets/images/concepts/是.svg",
+      "concept": "is / are"
+    },
+    "朋友": {
+      "path": "assets/images/concepts/朋友.svg",
+      "concept": "friend"
+    },
+    "天天": {
+      "path": "assets/images/concepts/天天.svg",
+      "concept": "every day"
+    },
+    "在": {
+      "path": "assets/images/concepts/在.svg",
+      "concept": "at / in"
+    },
+    "跑": {
+      "path": "assets/images/concepts/跑.svg",
+      "concept": "run"
+    },
+    "今天": {
+      "path": "assets/images/concepts/今天.svg",
+      "concept": "today"
+    },
+    "天气": {
+      "path": "assets/images/concepts/天气.svg",
+      "concept": "weather"
+    },
+    "不": {
+      "path": "assets/images/concepts/不.svg",
+      "concept": "not"
+    },
+    "下雨": {
+      "path": "assets/images/concepts/下雨.svg",
+      "concept": "rain"
+    },
+    "了": {
+      "path": "assets/images/concepts/了.svg",
+      "concept": "aspect particle"
+    },
+    "家": {
+      "path": "assets/images/concepts/家.svg",
+      "concept": "home"
+    },
+    "里": {
+      "path": "assets/images/concepts/里.svg",
+      "concept": "inside"
+    },
+    "书": {
+      "path": "assets/images/concepts/书.svg",
+      "concept": "book"
+    },
+    "热": {
+      "path": "assets/images/concepts/热.svg",
+      "concept": "hot / warm"
+    },
+    "爸爸": {
+      "path": "assets/images/concepts/爸爸.svg",
+      "concept": "father"
+    },
+    "妈妈": {
+      "path": "assets/images/concepts/妈妈.svg",
+      "concept": "mother"
+    },
+    "回来": {
+      "path": "assets/images/concepts/回来.svg",
+      "concept": "come back"
+    },
+    "雨伞": {
+      "path": "assets/images/concepts/雨伞.svg",
+      "concept": "umbrella"
+    },
+    "冷": {
+      "path": "assets/images/concepts/冷.svg",
+      "concept": "cold"
+    }
+  },
+  "scenes": {
+    "story_001_sec1": "assets/images/stories/story_001_sec1.svg",
+    "story_001_sec2": "assets/images/stories/story_001_sec2.svg",
+    "story_001_sec3": "assets/images/stories/story_001_sec3.svg",
+    "story_002_sec1": "assets/images/stories/story_002_sec1.svg",
+    "story_002_sec2": "assets/images/stories/story_002_sec2.svg",
+    "story_002_sec3": "assets/images/stories/story_002_sec3.svg",
+    "story_002_sec4": "assets/images/stories/story_002_sec4.svg",
+    "story_003_sec1": "assets/images/stories/story_003_sec1.svg",
+    "story_003_sec2": "assets/images/stories/story_003_sec2.svg",
+    "story_003_sec3": "assets/images/stories/story_003_sec3.svg",
+    "story_003_sec4": "assets/images/stories/story_003_sec4.svg"
+  }
+}

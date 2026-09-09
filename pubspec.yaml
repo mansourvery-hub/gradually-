@@ -13,6 +13,7 @@ dependencies:
   drift_flutter: ^0.3.1
   dart_jieba: ^1.0.1
   flutter_riverpod: ^3.4.3
+  flutter_svg: ^2.2.0
   fsrs: ^2.0.1
 
 dev_dependencies:
@@ -27,3 +28,6 @@ flutter:
   assets:
     - assets/dict.dgz
     - assets/content/
+    - assets/images/concepts/
+    - assets/images/stories/
+    - assets/images/manifests/

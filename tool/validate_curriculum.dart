@@ -117,6 +117,29 @@ void main(List<String> args) {
     errors.add('Found duplicate curriculumOrder values among content items.');
   }
 
+  // 4. Validate optional media references resolve (T_DATA_021 contract).
+  //    Media are optional capabilities (E-08), but a *declared* reference
+  //    must resolve to a bundled file.
+  int totalVisualRefs = 0;
+  for (final item in items) {
+    for (final section in item.sections) {
+      final visual = section.visualAsset;
+      if (visual == null) continue;
+      totalVisualRefs++;
+      if (!File(visual).existsSync()) {
+        errors.add(
+          'Missing visual asset declared by "${item.id}" section '
+          '"${section.id}": $visual does not exist',
+        );
+      } else if (!visual.endsWith('.svg') && !visual.endsWith('.png')) {
+        errors.add(
+          'Unsupported visual asset type declared by "${item.id}" section '
+          '"${section.id}": $visual',
+        );
+      }
+    }
+  }
+
   // Summary
   if (errors.isNotEmpty) {
     stderr.writeln(
@@ -132,5 +155,6 @@ void main(List<String> args) {
   stdout.writeln('  • $totalItems Content Items parsed');
   stdout.writeln('  • $totalSentences Sentences checked');
   stdout.writeln('  • $totalTokens Pre-tokenized tokens verified');
+  stdout.writeln('  • $totalVisualRefs Visual asset references resolved');
   stdout.writeln('  • 100% token offset bounds exact and non-overlapping\n');
 }

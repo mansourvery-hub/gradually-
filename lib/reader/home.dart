@@ -7,6 +7,7 @@ library;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../app/providers.dart';
 import '../content/bootstrap_corpus.dart';
@@ -219,7 +220,8 @@ class _ButtonlessBeginnerUnitView extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Visual concept illustration card
+                // Visual concept illustration card (SVG per CHOICES §3;
+                // serene paper fallback when asset is absent, E-08)
                 Container(
                   width: 160,
                   height: 160,
@@ -234,7 +236,12 @@ class _ButtonlessBeginnerUnitView extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  child: Center(child: _buildVisualPlaceholder(mainWord)),
+                  child: Center(
+                    child: VisualAssetView(
+                      assetPath: item.sections.firstOrNull?.visualAsset,
+                      size: 120,
+                    ),
+                  ),
                 ),
 
                 const SizedBox(height: 52),
@@ -273,43 +280,34 @@ class _ButtonlessBeginnerUnitView extends ConsumerWidget {
     );
   }
 
-  Widget _buildVisualPlaceholder(String word) {
-    IconData iconData;
-    switch (word) {
-      case '水':
-        iconData = Icons.water_drop_rounded;
-      case '茶':
-      case '好喝':
-        iconData = Icons.emoji_food_beverage_rounded;
-      case '喝':
-        iconData = Icons.local_cafe_rounded;
-      case '吃':
-      case '好吃':
-      case '米饭':
-        iconData = Icons.rice_bowl_rounded;
-      case '猫':
-        iconData = Icons.pets_rounded;
-      case '鱼':
-        iconData = Icons.set_meal_rounded;
-      case '跑':
-        iconData = Icons.directions_run_rounded;
-      case '下雨':
-      case '雨伞':
-      case '天气':
-        iconData = Icons.umbrella_rounded;
-      case '家':
-        iconData = Icons.home_rounded;
-      case '书':
-        iconData = Icons.menu_book_rounded;
-      case '热':
-        iconData = Icons.whatshot_rounded;
-      case '冷':
-        iconData = Icons.ac_unit_rounded;
-      default:
-        iconData = Icons.auto_stories_rounded;
-    }
+}
 
-    return Icon(iconData, size: 76, color: const Color(0xFF4E4E4E));
+/// Renders an optional visual asset (SVG) with a serene paper-tone
+/// fallback when absent or unloadable (E-08: media are optional).
+class VisualAssetView extends StatelessWidget {
+  const VisualAssetView({
+    super.key,
+    required this.assetPath,
+    this.size,
+    this.fit = BoxFit.contain,
+  });
+
+  final String? assetPath;
+  final double? size;
+  final BoxFit fit;
+
+  @override
+  Widget build(BuildContext context) {
+    if (assetPath == null) {
+      return const SizedBox.shrink();
+    }
+    return SvgPicture.asset(
+      assetPath!,
+      width: size,
+      height: size,
+      fit: fit,
+      placeholderBuilder: (_) => const SizedBox.shrink(),
+    );
   }
 }
 
@@ -343,7 +341,7 @@ class _ButtonlessStoryReaderView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Story Scene Illustration Container
+                // Story Scene Illustration (optional SVG per scene, E-08)
                 Container(
                   width: double.infinity,
                   height: 200,
@@ -351,11 +349,11 @@ class _ButtonlessStoryReaderView extends StatelessWidget {
                     color: const Color(0xFFF0EBE0),
                     borderRadius: BorderRadius.circular(24),
                   ),
-                  child: const Center(
-                    child: Icon(
-                      Icons.auto_stories_rounded,
-                      size: 64,
-                      color: Color(0xFF6B6B6B),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: VisualAssetView(
+                      assetPath: section.visualAsset,
+                      fit: BoxFit.contain,
                     ),
                   ),
                 ),

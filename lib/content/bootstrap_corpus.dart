@@ -84,7 +84,7 @@ List<ContentItem> _buildBootstrapUnits() {
           ContentSection(
             id: 'sec-1',
             text: item.surface,
-            visualAsset: 'assets/images/concepts/${item.id}.png',
+            visualAsset: 'assets/images/concepts/${item.id}.svg',
             audioAsset: 'assets/audio/words/${item.id}.mp3',
             sentences: [
               ContentSentence(
@@ -145,7 +145,7 @@ final List<ContentItem> bootstrapCurriculum = [
       ContentSection(
         id: 'sec-1',
         text: '我想喝水。我也想喝茶。',
-        visualAsset: 'assets/images/story_001_sec1.png',
+        visualAsset: 'assets/images/story_001_sec1.svg',
         sentences: [
           ContentSentence(
             id: 's1-1',
@@ -175,7 +175,7 @@ final List<ContentItem> bootstrapCurriculum = [
       ContentSection(
         id: 'sec-2',
         text: '我们一起喝茶，吃米饭。',
-        visualAsset: 'assets/images/story_001_sec2.png',
+        visualAsset: 'assets/images/story_001_sec2.svg',
         sentences: [
           ContentSentence(
             id: 's1-3',
@@ -195,7 +195,7 @@ final List<ContentItem> bootstrapCurriculum = [
       ContentSection(
         id: 'sec-3',
         text: '茶很好喝，米饭很好吃。',
-        visualAsset: 'assets/images/story_001_sec3.png',
+        visualAsset: 'assets/images/story_001_sec3.svg',
         sentences: [
           ContentSentence(
             id: 's1-4',
@@ -253,7 +253,7 @@ final List<ContentItem> bootstrapCurriculum = [
       ContentSection(
         id: 'sec-1',
         text: '这里有一只大猫和一只小猫。',
-        visualAsset: 'assets/images/story_002_sec1.png',
+        visualAsset: 'assets/images/story_002_sec1.svg',
         sentences: [
           ContentSentence(
             id: 's2-1',
@@ -278,7 +278,7 @@ final List<ContentItem> bootstrapCurriculum = [
       ContentSection(
         id: 'sec-2',
         text: '大猫看小猫，小猫看大猫。',
-        visualAsset: 'assets/images/story_002_sec2.png',
+        visualAsset: 'assets/images/story_002_sec2.svg',
         sentences: [
           ContentSentence(
             id: 's2-2',
@@ -302,7 +302,7 @@ final List<ContentItem> bootstrapCurriculum = [
       ContentSection(
         id: 'sec-3',
         text: '小猫要喝水，大猫要吃鱼。',
-        visualAsset: 'assets/images/story_002_sec3.png',
+        visualAsset: 'assets/images/story_002_sec3.svg',
         sentences: [
           ContentSentence(
             id: 's2-3',
@@ -326,7 +326,7 @@ final List<ContentItem> bootstrapCurriculum = [
       ContentSection(
         id: 'sec-4',
         text: '它们是好朋友，天天在一起跑。',
-        visualAsset: 'assets/images/story_002_sec4.png',
+        visualAsset: 'assets/images/story_002_sec4.svg',
         sentences: [
           ContentSentence(
             id: 's2-4',
@@ -403,7 +403,7 @@ final List<ContentItem> bootstrapCurriculum = [
       ContentSection(
         id: 'sec-1',
         text: '今天天气不好，天下雨了。',
-        visualAsset: 'assets/images/story_003_sec1.png',
+        visualAsset: 'assets/images/story_003_sec1.svg',
         sentences: [
           ContentSentence(
             id: 's3-1',
@@ -423,7 +423,7 @@ final List<ContentItem> bootstrapCurriculum = [
       ContentSection(
         id: 'sec-2',
         text: '我在家里看书，喝热茶。',
-        visualAsset: 'assets/images/story_003_sec2.png',
+        visualAsset: 'assets/images/story_003_sec2.svg',
         sentences: [
           ContentSentence(
             id: 's3-2',
@@ -446,7 +446,7 @@ final List<ContentItem> bootstrapCurriculum = [
       ContentSection(
         id: 'sec-3',
         text: '爸爸妈妈回来了，他们拿着雨伞。',
-        visualAsset: 'assets/images/story_003_sec3.png',
+        visualAsset: 'assets/images/story_003_sec3.svg',
         sentences: [
           ContentSentence(
             id: 's3-3',
@@ -467,7 +467,7 @@ final List<ContentItem> bootstrapCurriculum = [
       ContentSection(
         id: 'sec-4',
         text: '外面很冷，快来喝茶。',
-        visualAsset: 'assets/images/story_003_sec4.png',
+        visualAsset: 'assets/images/story_003_sec4.svg',
         sentences: [
           ContentSentence(
             id: 's3-4',
