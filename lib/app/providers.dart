@@ -14,7 +14,7 @@ import '../content/bootstrap_corpus.dart';
 import '../content/content.dart';
 import '../content/content_repository.dart';
 import '../content/media_capabilities.dart';
-import '../core/simulated_level.dart';
+import '../core/simulated_level.dart' show applySimulatedCompletion, buildSimulatedLearnerState, kPureExposureThreshold, kSimulatedLevel;
 import '../data/database.dart';
 import '../data/repositories/content_repository_impl.dart';
 import '../data/repositories/learner_repository_impl.dart';
@@ -73,6 +73,32 @@ final acquisitionPipelineProvider = Provider<AcquisitionPipeline>((ref) {
   return V1AcquisitionPipeline(reviewRepository: reviewRepo);
 });
 
+/// Reactive learner state. Synchronously yields state on Frame 1 (zero-delay
+/// startup). At simulated levels this Notifier advances in memory as the
+/// learner completes items; at LEVEL=0 it mirrors the persisted SQLite stream.
+class SimulatedLearnerNotifier extends Notifier<LearnerState> {
+  @override
+  LearnerState build() {
+    if (kSimulatedLevel > 0) {
+      return buildSimulatedLearnerState(kSimulatedLevel);
+    }
+    // LEVEL=0: mirror the persisted DB stream.
+    return ref.watch(learnerStateStreamProvider).value ?? const LearnerState();
+  }
+
+  /// Records in-session completion of [item] at simulated levels.
+  /// No-op at LEVEL=0 where the SQLite stream owns the state.
+  void completeItem(ContentItem item) {
+    if (kSimulatedLevel == 0) return;
+    state = applySimulatedCompletion(state, item);
+  }
+}
+
+/// Provides the active learner state — simulated in-memory at LEVEL>0,
+/// streamed from SQLite at LEVEL=0.
+final activeLearnerStateProvider = NotifierProvider<SimulatedLearnerNotifier,
+    LearnerState>(SimulatedLearnerNotifier.new);
+
 /// Reactive stream of the consolidated [LearnerState].
 ///
 /// Never blocks initial render: synchronously yields immediate state on Frame 1.
@@ -98,12 +124,7 @@ final learnerStateStreamProvider = StreamProvider<LearnerState>((ref) async* {
 final dueReviewCardsProvider = FutureProvider<List<ReviewCardRecord>>((
   ref,
 ) async {
-  final learnerStateAsync = ref.watch(learnerStateStreamProvider);
-  final learnerState =
-      learnerStateAsync.value ??
-      (kSimulatedLevel > 0
-          ? buildSimulatedLearnerState(kSimulatedLevel)
-          : const LearnerState());
+  final learnerState = ref.watch(activeLearnerStateProvider);
 
   // Pure exposure phase check: count total exposures
   final totalExposures = learnerState.exposure.values.fold<int>(
@@ -149,12 +170,7 @@ final audioPlaybackControllerProvider = Provider<AudioPlaybackController>((ref) 
 final nextExperienceProvider = FutureProvider<ContentItem?>((ref) async {
   try {
     final contentRepo = ref.watch(contentRepositoryProvider);
-    final learnerStateAsync = ref.watch(learnerStateStreamProvider);
-    final learnerState =
-        learnerStateAsync.value ??
-        (kSimulatedLevel > 0
-            ? buildSimulatedLearnerState(kSimulatedLevel)
-            : const LearnerState());
+    final learnerState = ref.watch(activeLearnerStateProvider);
     final selector = ref.watch(contentSelectorProvider);
 
     final candidates = await contentRepo.getCandidateContents();

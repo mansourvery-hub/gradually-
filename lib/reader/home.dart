@@ -14,7 +14,6 @@ import '../content/content.dart';
 import '../core/progress.dart';
 import '../core/simulated_level.dart';
 import '../learner/known.dart';
-import '../learner/learner_state.dart';
 import '../review/review.dart';
 
 /// The primary screen of 渐入.
@@ -123,11 +122,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     try {
       final now = DateTime.now();
-      final learnerState =
-          ref.read(learnerStateStreamProvider).value ?? const LearnerState();
+      final learnerState = ref.read(activeLearnerStateProvider);
 
-      // At simulated levels, skip real DB writes — state is already synthetic
-      if (kSimulatedLevel == 0) {
+      // Simulated level: advance the in-memory state; skip real DB writes.
+      if (kSimulatedLevel > 0) {
+        ref.read(activeLearnerStateProvider.notifier).completeItem(item);
+      } else {
         final learnerRepo = ref.read(learnerRepositoryProvider);
         final contentRepo = ref.read(contentRepositoryProvider);
         final acquisition = ref.read(acquisitionPipelineProvider);

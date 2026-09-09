@@ -5,6 +5,7 @@
 library;
 
 import '../content/bootstrap_corpus.dart';
+import '../content/content.dart';
 import '../learner/learner_state.dart';
 import 'ids.dart';
 import 'progress.dart';
@@ -76,5 +77,53 @@ LearnerState buildSimulatedLearnerState(int level) {
     knownVocabulary: knownVocab,
     exposure: exposureMap,
     progress: progressMap,
+  );
+}
+
+/// Applies a simulated in-session completion of [item] to [state].
+///
+/// Pure function: returns the next simulated learner state after the learner
+/// experiences [item] at simulated level, so the simulated session advances
+/// instead of re-presenting the same item forever.
+LearnerState applySimulatedCompletion(LearnerState state, ContentItem item) {
+  final now = DateTime.now();
+
+  // 1. Mark the item as completed.
+  final progress = Map<ContentId, ContentProgress>.from(state.progress);
+  final existing = progress[item.id];
+  progress[item.id] = (existing ??
+          ContentProgress.initial(contentId: item.id, now: now))
+      .recordCompletion(now);
+
+  // 2. Record exposure for the item's vocabulary.
+  final exposure = Map<VocabId, ExposureAggregate>.from(state.exposure);
+  final vocabToRecord = <VocabId>{
+    ...item.metadata.vocabulary,
+    ...item.metadata.curriculumCriticalVocabulary,
+  };
+  for (final vocabId in vocabToRecord) {
+    final agg = exposure[vocabId];
+    exposure[vocabId] = (agg == null)
+        ? ExposureAggregate.firstEncounter(
+            vocabId: vocabId,
+            contentId: item.id,
+            now: now,
+          )
+        : agg.recordEncounter(item.id, now);
+  }
+
+  // 3. Promote words with enough simulated encounters to known.
+  //    4+ exposures in-session means the learner "knows" it for testing.
+  final known = Set<VocabId>.from(state.knownVocabulary);
+  for (final entry in exposure.entries) {
+    if (entry.value.encounterCount >= 4 && !known.contains(entry.key)) {
+      known.add(entry.key);
+    }
+  }
+
+  return LearnerState(
+    knownVocabulary: known,
+    exposure: exposure,
+    progress: progress,
   );
 }
