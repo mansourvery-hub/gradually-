@@ -13,6 +13,7 @@ import '../acquisition/acquisition.dart';
 import '../content/bootstrap_corpus.dart';
 import '../content/content.dart';
 import '../content/content_repository.dart';
+import '../content/media_capabilities.dart';
 import '../core/simulated_level.dart';
 import '../data/database.dart';
 import '../data/repositories/content_repository_impl.dart';
@@ -20,6 +21,7 @@ import '../data/repositories/learner_repository_impl.dart';
 import '../data/repositories/review_repository_impl.dart';
 import '../learner/learner_repository.dart';
 import '../learner/learner_state.dart';
+import '../reader/audio_controller.dart';
 import '../review/fsrs_review_system.dart';
 import '../review/review.dart';
 import '../review/review_repository.dart';
@@ -131,6 +133,14 @@ final contentSelectorProvider = Provider<ContentSelector>((ref) {
 final contentRepositoryProvider = Provider<ContentRepository>((ref) {
   final db = ref.watch(databaseProvider);
   return AssetContentRepository(db: db, initialItems: bootstrapCurriculum);
+});
+
+/// Provides the [AudioPlaybackController] initialized with bootstrap curriculum
+/// media capabilities. Gracefully no-ops when no audio assets exist (E-08).
+final audioPlaybackControllerProvider = Provider<AudioPlaybackController>((ref) {
+  final controller = AudioPlaybackController();
+  controller.initialize(buildMediaCapabilities(bootstrapCurriculum));
+  return controller;
 });
 
 /// The single selected [ContentItem] for the learner to experience next (E-02, E-06).

@@ -180,7 +180,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 }
 
 /// Pure button-free beginner unit: tap anywhere to absorb and advance.
-class _ButtonlessBeginnerUnitView extends StatelessWidget {
+class _ButtonlessBeginnerUnitView extends ConsumerWidget {
   const _ButtonlessBeginnerUnitView({
     super.key,
     required this.item,
@@ -191,8 +191,10 @@ class _ButtonlessBeginnerUnitView extends StatelessWidget {
   final VoidCallback onAdvance;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final mainWord = item.metadata.title;
+    final audioCtrl = ref.watch(audioPlaybackControllerProvider);
+    final hasAudio = audioCtrl.hasAudio(item.id);
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -239,11 +241,17 @@ class _ButtonlessBeginnerUnitView extends StatelessWidget {
 
                 const SizedBox(height: 48),
 
-                // Subtle audio prompt
-                Icon(
-                  Icons.volume_up_rounded,
-                  size: 26,
-                  color: Colors.black.withValues(alpha: 0.25),
+                // Audio playback trigger (graceful no-op when absent per E-08)
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => audioCtrl.play(item.id),
+                  child: Icon(
+                    hasAudio ? Icons.volume_up_rounded : Icons.volume_off_rounded,
+                    size: 26,
+                    color: hasAudio
+                        ? Colors.black.withValues(alpha: 0.4)
+                        : Colors.black.withValues(alpha: 0.15),
+                  ),
                 ),
               ],
             ),
