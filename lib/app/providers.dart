@@ -16,11 +16,13 @@ import '../content/content_repository.dart';
 import '../content/media_capabilities.dart';
 import '../core/ids.dart';
 import '../core/progress.dart';
-import '../core/simulated_level.dart' show applySimulatedCompletion, buildSimulatedLearnerState, kPureExposureThreshold, kSimulatedLevel;
+import '../core/simulated_level.dart'
+    show applySimulatedCompletion, buildSimulatedLearnerState, kSimulatedLevel;
 import '../data/database.dart';
 import '../data/repositories/content_repository_impl.dart';
 import '../data/repositories/learner_repository_impl.dart';
 import '../data/repositories/review_repository_impl.dart';
+import '../learner/exposure_gate.dart';
 import '../learner/learner_repository.dart';
 import '../learner/learner_state.dart';
 import '../reader/audio_controller.dart';
@@ -134,26 +136,42 @@ final learnerStateStreamProvider = StreamProvider<LearnerState>((ref) async* {
   }
 });
 
-/// Provides cards currently due for review (only active after pure exposure threshold, CHOICES §1).
+/// Provides cards currently due for review (only active after the
+/// pure-exposure gate unlocks, CHOICES §1, T_ENG_020).
 final dueReviewCardsProvider = FutureProvider<List<ReviewCardRecord>>((
   ref,
 ) async {
   final learnerState = ref.watch(activeLearnerStateProvider);
 
-  // Pure exposure phase check: count total exposures
-  final totalExposures = learnerState.exposure.values.fold<int>(
-    0,
-    (sum, agg) => sum + agg.encounterCount,
-  );
-
-  // During pure exposure phase (0..threshold), no SRS reviews occur (CHOICES §1)
-  if (totalExposures < kPureExposureThreshold) {
+  // Evaluate the pure-exposure gate: recognition stays locked until the
+  // exposure phase completes with broad per-word coverage (CHOICES §1).
+  final gate = evaluateExposureGate(learnerState);
+  if (!gate.isUnlocked) {
     return const [];
   }
 
   try {
     final reviewSystem = ref.watch(reviewSystemProvider);
-    return await reviewSystem.fetchDueCards(now: DateTime.now());
+    final allDue = await reviewSystem.fetchDueCards(now: DateTime.now());
+
+    // Pacing: only words that individually passed the per-word exposure
+    // floor are eligible; rereads keep growing exposure post-unlock.
+    final readySet = gate.reviewReadyVocab.toSet();
+    final readyDue = allDue
+        .where((record) => readySet.contains(record.card.vocabId))
+        .toList();
+
+    // First-session ramp: after unlock, begin with a small cohort instead
+    // of flooding the learner with the entire backlog at once.
+    if (learnerState.progress.values
+        .every((p) => p.completionCount == 0 || p.rereadCount == 0)) {
+      // No rereads recorded anywhere yet → earliest sessions: ramp in.
+      final cohort = firstUnlockCohort(gate).toSet();
+      return readyDue
+          .where((record) => cohort.contains(record.card.vocabId))
+          .toList();
+    }
+    return readyDue;
   } catch (_) {
     return const [];
   }

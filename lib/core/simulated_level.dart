@@ -13,63 +13,77 @@ import 'progress.dart';
 /// Reads the simulated level from environment (`--dart-define=LEVEL=0..100`).
 const int kSimulatedLevel = int.fromEnvironment('LEVEL', defaultValue: 0);
 
-/// Minimum exposures required before pure exposure phase transitions to review ($CHOICES §1).
-const int kPureExposureThreshold = 500;
-
 /// Returns a synthetic [LearnerState] corresponding to [level] (0..100).
+///
+/// LEVEL semantics (CHOICES.md §4):
+/// - 0..50 maps linearly onto the pure-exposure phase (0 → ~600 total
+///   exposures distributed across the lexicon in absorption order).
+/// - 50..100 continues exposure growth with post-exposure reinforcement.
+/// - Words become "known" once absorbed through repetition (≥6 encounters).
 LearnerState buildSimulatedLearnerState(int level) {
   if (level <= 0) {
     return const LearnerState();
   }
 
   final now = DateTime(2026, 9, 8);
-  final allVocab = <VocabId>{};
+  final allVocab = <VocabId>[];
   final allItemIds = <ContentId>[];
 
   for (final item in bootstrapCurriculum) {
     allItemIds.add(item.id);
-    allVocab.addAll(item.metadata.vocabulary);
+    for (final v in item.metadata.vocabulary) {
+      if (!allVocab.contains(v)) allVocab.add(v);
+    }
   }
 
-  final vocabList = allVocab.toList();
-  final exposureMap = <VocabId, ExposureAggregate>{};
-  final knownVocab = <VocabId>{};
+  // Total exposure budget: linear 0..600 across the exposure phase (0..50),
+  // then continued growth post-gate (600..1000 at mastery).
+  final int exposureBudget = level <= 50
+      ? level * 12
+      : 600 + ((level - 50) * 8);
+
+  final int completedItemsCount =
+      (allItemIds.length * (level.clamp(0, 100)) / 100.0).floor();
+
   final progressMap = <ContentId, ContentProgress>{};
-
-  // Fraction of curriculum completed based on level (0..100)
-  final double fraction = (level.clamp(0, 100)) / 100.0;
-  final int completedItemsCount = (allItemIds.length * fraction).floor();
-  final int knownVocabCount = (vocabList.length * fraction).floor();
-
-  // 1. Seed progress for completed items up to level
   for (int i = 0; i < completedItemsCount; i++) {
-    final id = allItemIds[i];
-    progressMap[id] = ContentProgress.initial(
-      contentId: id,
+    progressMap[allItemIds[i]] = ContentProgress.initial(
+      contentId: allItemIds[i],
       now: now,
     ).recordCompletion(now);
   }
 
-  // 2. Seed exposures and known vocabulary
-  for (int i = 0; i < vocabList.length; i++) {
-    final vocab = vocabList[i];
-    final isLearned = i < knownVocabCount;
-    final encounterCount = isLearned
-        ? (5 + (fraction * 15).round())
-        : (fraction > 0.2 ? 1 : 0);
+  // Distribute the exposure budget evenly across the lexicon in absorption
+  // order: every word receives floor(budget/words); the remainder goes to
+  // the earliest-absorbed words. Deterministic, stable across runs.
+  final wordCount = allVocab.length;
+  final exposureMap = <VocabId, ExposureAggregate>{};
+  final knownVocab = <VocabId>{};
 
-    if (encounterCount > 0) {
-      exposureMap[vocab] = ExposureAggregate(
-        vocabId: vocab,
-        encounterCount: encounterCount,
+  if (wordCount > 0 && exposureBudget > 0) {
+    final perWord = exposureBudget ~/ wordCount;
+    final remainder = exposureBudget - perWord * wordCount;
+
+    // Known-vocabulary boundary: the leading fraction of the lexicon
+    // absorbed at this level (matches curriculum-position intuition).
+    final knownBoundary = (wordCount * level.clamp(0, 100)) / 100.0;
+
+    for (int i = 0; i < wordCount; i++) {
+      final encounters = perWord + (i < remainder ? 1 : 0);
+      if (encounters <= 0) continue;
+
+      exposureMap[allVocab[i]] = ExposureAggregate(
+        vocabId: allVocab[i],
+        encounterCount: encounters,
         contentItemIds: {'simulated-unit'},
         firstSeen: now,
         lastSeen: now,
       );
-    }
 
-    if (isLearned) {
-      knownVocab.add(vocab);
+      // Absorbed: leading position in the curriculum AND enough encounters.
+      if (i < knownBoundary && encounters >= 6) {
+        knownVocab.add(allVocab[i]);
+      }
     }
   }
 
