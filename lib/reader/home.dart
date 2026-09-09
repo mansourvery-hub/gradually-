@@ -273,73 +273,79 @@ class _ButtonlessBeginnerUnitView extends ConsumerWidget {
     final mainWord = item.metadata.title;
     final audioCtrl = ref.watch(audioPlaybackControllerProvider);
     final hasAudio = audioCtrl.hasAudio(item.id);
+    final visualAsset = item.sections.firstOrNull?.visualAsset;
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onAdvance,
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 480),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Visual concept illustration card (SVG per CHOICES §3;
-                // serene paper fallback when asset is absent, E-08)
-                Container(
-                  width: 160,
-                  height: 160,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF0EBE0),
-                    borderRadius: BorderRadius.circular(32),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.03),
-                        blurRadius: 24,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: VisualAssetView(
-                      assetPath: item.sections.firstOrNull?.visualAsset,
-                      size: 120,
+      child: SizedBox.expand(
+        // Full-screen zen composition: concept art fills the canvas,
+        // Hanzi rests in the calm lower third (CHOICES.md §3B).
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // Full-bleed concept art (paper tone shows through when absent)
+            if (visualAsset != null)
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final side = constraints.biggest.shortestSide;
+                  return VisualAssetView(
+                    assetPath: visualAsset,
+                    size: side,
+                    fit: BoxFit.contain,
+                  );
+                },
+              )
+            else
+              Container(color: const Color(0xFFF0EBE0)),
+
+            // Soft vertical wash so Hanzi reads over any art
+            const DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0x00FBF9F5),
+                    Color(0x66FBF9F5),
+                    Color(0xCCFBF9F5),
+                  ],
+                  stops: [0.55, 0.75, 1.0],
+                ),
+              ),
+            ),
+
+            // Hanzi anchored in the lower third
+            Align(
+              alignment: const Alignment(0, 0.68),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    mainWord,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 96,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF1E1E1E),
+                      height: 1.05,
                     ),
                   ),
-                ),
-
-                const SizedBox(height: 52),
-
-                // Prominent Large Hanzi (Pure Monolingual — NO PINYIN)
-                Text(
-                  mainWord,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 96,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xFF1E1E1E),
-                    height: 1.05,
-                  ),
-                ),
-
-                const SizedBox(height: 48),
-
-                // Audio playback trigger (graceful no-op when absent per E-08)
-                GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () => audioCtrl.play(item.id),
-                  child: Icon(
-                    hasAudio ? Icons.volume_up_rounded : Icons.volume_off_rounded,
+                  const SizedBox(height: 28),
+                  // Audio playback trigger (graceful no-op, E-08)
+                  Icon(
+                    hasAudio
+                        ? Icons.volume_up_rounded
+                        : Icons.volume_off_rounded,
                     size: 26,
                     color: hasAudio
                         ? Colors.black.withValues(alpha: 0.4)
                         : Colors.black.withValues(alpha: 0.15),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -398,51 +404,58 @@ class _ButtonlessStoryReaderView extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onAdvance,
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 540),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 36),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Story Scene Illustration (optional SVG per scene, E-08)
-                Container(
-                  width: double.infinity,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF0EBE0),
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: VisualAssetView(
-                      assetPath: section.visualAsset,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
+      child: SizedBox.expand(
+        // Full-screen scene: illustration fills the canvas, story text
+        // rests in the calm lower third (CHOICES.md §3B).
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // Full-bleed scene illustration
+            if (section.visualAsset != null)
+              VisualAssetView(
+                assetPath: section.visualAsset,
+                fit: BoxFit.contain,
+              )
+            else
+              Container(color: const Color(0xFFF0EBE0)),
 
-                const SizedBox(height: 48),
-
-                // Unspaced Chinese Narrative Text
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Text(
-                      section.text,
-                      style: const TextStyle(
-                        fontSize: 34,
-                        height: 1.8,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xFF222222),
-                        letterSpacing: 2,
-                      ),
-                    ),
-                  ),
+            // Soft wash for legible text over any art
+            const DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0x00FBF9F5),
+                    Color(0x66FBF9F5),
+                    Color(0xE6FBF9F5),
+                  ],
+                  stops: [0.45, 0.65, 0.85],
                 ),
-              ],
+              ),
             ),
-          ),
+
+            // Story text anchored in the lower third
+            Align(
+              alignment: const Alignment(0, 0.72),
+              child: FractionallySizedBox(
+                widthFactor: 0.86,
+                child: SingleChildScrollView(
+                  child: Text(
+                    section.text,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 34,
+                      height: 1.8,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF222222),
+                      letterSpacing: 2,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
