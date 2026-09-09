@@ -6,6 +6,7 @@ library;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -32,6 +33,45 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool _isAdvancing = false;
 
   @override
+  void initState() {
+    super.initState();
+    // Grant keyboard focus so semantic activation (space/enter/switch-access)
+    // reaches the zen canvas from the first frame.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).requestFocus(_activationFocusNode);
+    });
+  }
+
+  @override
+  void dispose() {
+    _activationFocusNode.dispose();
+    super.dispose();
+  }
+
+  final _activationFocusNode = FocusNode(debugLabel: 'zen-activation');
+
+  /// Single advance pathway shared by tap and semantic activation.
+  void _advance() {
+    final dueCards = ref.read(dueReviewCardsProvider).value ?? const [];
+    if (dueCards.isNotEmpty) {
+      // Review flow handles its own tap-to-reveal/confirm cycle.
+      return;
+    }
+    final contentItem =
+        ref.read(nextExperienceProvider).value ?? bootstrapCurriculum.firstOrNull;
+    if (contentItem == null) return;
+    if (contentItem.type == ContentType.beginnerUnit) {
+      _handleItemCompletion(contentItem);
+    } else {
+      if (_currentSectionIndex < contentItem.sections.length - 1) {
+        setState(() => _currentSectionIndex++);
+      } else {
+        _handleItemCompletion(contentItem);
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final dueCardsAsync = ref.watch(dueReviewCardsProvider);
     final nextExperienceAsync = ref.watch(nextExperienceProvider);
@@ -56,7 +96,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final contentItem =
         nextExperienceAsync.value ?? bootstrapCurriculum.firstOrNull;
 
-    return Scaffold(
+    // Semantic activation scope: space/enter/hardware activation keys and
+    // mobile switch-access all dispatch ActivateIntent. This is not a
+    // desktop-specific pathway — it is the OS-level activation semantic.
+    return Shortcuts(
+      shortcuts: const {
+        SingleActivator(LogicalKeyboardKey.space): ActivateIntent(),
+        SingleActivator(LogicalKeyboardKey.enter): ActivateIntent(),
+        SingleActivator(LogicalKeyboardKey.gameButtonA): ActivateIntent(),
+      },
+      child: Actions(
+        actions: {
+          ActivateIntent: CallbackAction<ActivateIntent>(
+            onInvoke: (_) {
+              _advance();
+              return null;
+            },
+          ),
+        },
+        child: Focus(
+          focusNode: _activationFocusNode,
+          skipTraversal: true,
+          autofocus: true,
+          child: Scaffold(
       backgroundColor: const Color(0xFFFBF9F5), // Calm paper tone
       body: SafeArea(
         child: AnimatedSwitcher(
@@ -97,6 +159,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                   ),
                 ),
+        ),
+      ),
+          ),
         ),
       ),
     );

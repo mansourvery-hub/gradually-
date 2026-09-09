@@ -28,6 +28,12 @@ flutter:
   assets:
     - assets/dict.dgz
     - assets/content/
+    - assets/fonts/
     - assets/images/concepts/
     - assets/images/stories/
     - assets/images/manifests/
+
+  fonts:
+    - family: NotoSansSC
+      fonts:
+        - asset: assets/fonts/NotoSansSC-Regular-subset.ttf

@@ -21,12 +21,12 @@ class JianruApp extends StatelessWidget {
       title: '渐入',
       theme: ThemeData(
         useMaterial3: true,
+        fontFamily: 'NotoSansSC',
         fontFamilyFallback: const [
           'PingFang SC',
           'Hiragino Sans GB',
           'Microsoft YaHei',
           'WenQuanYi Micro Hei',
-          'Noto Sans SC',
           'Noto Sans CJK SC',
           'sans-serif',
         ],
