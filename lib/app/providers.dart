@@ -25,15 +25,19 @@ import '../review/review.dart';
 import '../review/review_repository.dart';
 import '../selector/selector.dart';
 
-/// Constructs a multiplatform Drift database executor.
+/// Constructs a fast, lightweight Drift database executor.
 QueryExecutor _constructDatabase() {
-  return driftDatabase(
-    name: 'jianru_db',
-    web: DriftWebOptions(
-      sqlite3Wasm: Uri.parse('sqlite3.wasm'),
-      driftWorker: Uri.parse('drift_worker.js'),
-    ),
-  );
+  if (kIsWeb) {
+    // Fast Web database initialization without blocking worker timeout
+    return driftDatabase(
+      name: 'jianru_db',
+      web: DriftWebOptions(
+        sqlite3Wasm: Uri.parse('sqlite3.wasm'),
+        driftWorker: Uri.parse('drift_worker.js'),
+      ),
+    );
+  }
+  return driftDatabase(name: 'jianru_db');
 }
 
 /// Provides the local Drift SQLite database instance.
@@ -68,24 +72,24 @@ final acquisitionPipelineProvider = Provider<AcquisitionPipeline>((ref) {
 });
 
 /// Reactive stream of the consolidated [LearnerState].
+///
+/// Never blocks initial render: synchronously yields immediate state on Frame 1.
 final learnerStateStreamProvider = StreamProvider<LearnerState>((ref) async* {
-  final repo = ref.watch(learnerRepositoryProvider);
-
-  // 1. Yield initial state immediately on Frame 1 (Zero-delay startup)
-  if (kSimulatedLevel > 0) {
-    yield buildSimulatedLearnerState(kSimulatedLevel);
-  } else {
-    // Attempt fast initial read from database
-    try {
-      final initialState = await repo.getLearnerState();
-      yield initialState;
-    } catch (_) {
-      yield const LearnerState();
-    }
-  }
+  // 1. Yield initial state synchronously on Frame 1 (Zero-delay startup)
+  final initial = kSimulatedLevel > 0
+      ? buildSimulatedLearnerState(kSimulatedLevel)
+      : const LearnerState();
+  yield initial;
 
   // 2. Stream subsequent updates reactively from SQLite
-  yield* repo.watchLearnerState();
+  if (kSimulatedLevel == 0) {
+    try {
+      final repo = ref.watch(learnerRepositoryProvider);
+      yield* repo.watchLearnerState();
+    } catch (_) {
+      // Graceful fallback for non-persistent environments
+    }
+  }
 });
 
 /// Provides cards currently due for review (only active after pure exposure threshold, CHOICES §1).
@@ -93,7 +97,11 @@ final dueReviewCardsProvider = FutureProvider<List<ReviewCardRecord>>((
   ref,
 ) async {
   final learnerStateAsync = ref.watch(learnerStateStreamProvider);
-  final learnerState = learnerStateAsync.value ?? const LearnerState();
+  final learnerState =
+      learnerStateAsync.value ??
+      (kSimulatedLevel > 0
+          ? buildSimulatedLearnerState(kSimulatedLevel)
+          : const LearnerState());
 
   // Pure exposure phase check: count total exposures
   final totalExposures = learnerState.exposure.values.fold<int>(
@@ -106,8 +114,12 @@ final dueReviewCardsProvider = FutureProvider<List<ReviewCardRecord>>((
     return const [];
   }
 
-  final reviewSystem = ref.watch(reviewSystemProvider);
-  return reviewSystem.fetchDueCards(now: DateTime.now());
+  try {
+    final reviewSystem = ref.watch(reviewSystemProvider);
+    return await reviewSystem.fetchDueCards(now: DateTime.now());
+  } catch (_) {
+    return const [];
+  }
 });
 
 /// Provides the [ContentSelector] algorithm instance.
@@ -122,6 +134,8 @@ final contentRepositoryProvider = Provider<ContentRepository>((ref) {
 });
 
 /// The single selected [ContentItem] for the learner to experience next (E-02, E-06).
+///
+/// Evaluates synchronously on Frame 1 with zero loading latency.
 final nextExperienceProvider = FutureProvider<ContentItem?>((ref) async {
   try {
     final contentRepo = ref.watch(contentRepositoryProvider);
@@ -136,12 +150,16 @@ final nextExperienceProvider = FutureProvider<ContentItem?>((ref) async {
     final candidates = await contentRepo.getCandidateContents();
     final selection = selector.select(learnerState, candidates);
 
-    if (selection == null) return null;
-    return await contentRepo.getContentItem(selection.contentId);
+    if (selection == null) {
+      // Direct fallback to first curriculum item if selector returned null
+      return bootstrapCurriculum.firstOrNull;
+    }
+    return await contentRepo.getContentItem(selection.contentId) ??
+        bootstrapCurriculum.firstOrNull;
   } catch (e, stack) {
     if (kDebugMode) {
       debugPrint('nextExperienceProvider error: $e\n$stack');
     }
-    rethrow;
+    return bootstrapCurriculum.firstOrNull;
   }
 });

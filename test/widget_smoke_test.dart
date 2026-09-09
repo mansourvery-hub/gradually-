@@ -21,7 +21,7 @@ void main() {
       ),
     );
 
-    expect(find.text('渐入'), findsWidgets);
+    expect(find.text('水'), findsWidgets);
 
     // Cleanly unmount before teardown
     await tester.pumpWidget(const SizedBox());

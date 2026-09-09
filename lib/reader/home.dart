@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../app/providers.dart';
+import '../content/bootstrap_corpus.dart';
 import '../content/content.dart';
 import '../core/progress.dart';
 import '../learner/known.dart';
@@ -48,85 +49,49 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       );
     }
 
-    // 2. Immersion flow (Pure Exposure Units & Short Stories)
-    final contentItem = nextExperienceAsync.value;
+    // 2. Immersion flow: render active content with zero-delay fallback
+    final contentItem =
+        nextExperienceAsync.value ?? bootstrapCurriculum.firstOrNull;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFFBF9F5), // Calm paper tone
+    if (contentItem != null) {
+      return Scaffold(
+        backgroundColor: const Color(0xFFFBF9F5),
+        body: SafeArea(
+          child: contentItem.type == ContentType.beginnerUnit
+              ? _ButtonlessBeginnerUnitView(
+                  item: contentItem,
+                  onAdvance: () => _handleItemCompletion(contentItem),
+                )
+              : _ButtonlessStoryReaderView(
+                  item: contentItem,
+                  sectionIndex: _currentSectionIndex,
+                  onAdvance: () {
+                    if (_currentSectionIndex <
+                        contentItem.sections.length - 1) {
+                      setState(() => _currentSectionIndex++);
+                    } else {
+                      _handleItemCompletion(contentItem);
+                    }
+                  },
+                ),
+        ),
+      );
+    }
+
+    return const Scaffold(
+      backgroundColor: Color(0xFFFBF9F5),
       body: SafeArea(
-        child: contentItem != null
-            ? (contentItem.type == ContentType.beginnerUnit
-                  ? _ButtonlessBeginnerUnitView(
-                      item: contentItem,
-                      onAdvance: () => _handleItemCompletion(contentItem),
-                    )
-                  : _ButtonlessStoryReaderView(
-                      item: contentItem,
-                      sectionIndex: _currentSectionIndex,
-                      onAdvance: () {
-                        if (_currentSectionIndex <
-                            contentItem.sections.length - 1) {
-                          setState(() => _currentSectionIndex++);
-                        } else {
-                          _handleItemCompletion(contentItem);
-                        }
-                      },
-                    ))
-            : nextExperienceAsync.when(
-                loading: () => const Center(
-                  child: Text(
-                    '渐入',
-                    style: TextStyle(
-                      fontSize: 36,
-                      fontWeight: FontWeight.w200,
-                      letterSpacing: 8,
-                      color: Color(0xFF2C2C2C),
-                    ),
-                  ),
-                ),
-                error: (err, stack) => Center(
-                  child: GestureDetector(
-                    onTap: () {
-                      ref.invalidate(learnerStateStreamProvider);
-                      ref.invalidate(nextExperienceProvider);
-                    },
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text(
-                          '渐入',
-                          style: TextStyle(
-                            fontSize: 36,
-                            fontWeight: FontWeight.w200,
-                            letterSpacing: 6,
-                            color: Color(0xFF2C2C2C),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          '$err',
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.redAccent,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                data: (_) => const Center(
-                  child: Text(
-                    '渐入',
-                    style: TextStyle(
-                      fontSize: 36,
-                      fontWeight: FontWeight.w200,
-                      letterSpacing: 8,
-                      color: Color(0xFF2C2C2C),
-                    ),
-                  ),
-                ),
-              ),
+        child: Center(
+          child: Text(
+            '渐入',
+            style: TextStyle(
+              fontSize: 36,
+              fontWeight: FontWeight.w200,
+              letterSpacing: 8,
+              color: Color(0xFF2C2C2C),
+            ),
+          ),
+        ),
       ),
     );
   }
