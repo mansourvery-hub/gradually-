@@ -67,7 +67,6 @@ final class V1ContentSelector implements ContentSelector {
     }).toList();
 
     if (reachable.isEmpty) {
-      // Fallback to lowest curriculum order
       final sorted = List<CandidateContent>.from(candidates)
         ..sort((a, b) => a.curriculumOrder.compareTo(b.curriculumOrder));
       return SelectedExperience(contentId: sorted.first.id);
@@ -78,28 +77,45 @@ final class V1ContentSelector implements ContentSelector {
         .where((c) => !learner.isContentCompleted(c.id))
         .toList();
 
-    final pool = uncompleted.isNotEmpty ? uncompleted : reachable;
+    // If there are uncompleted items, prioritize advancing through them
+    if (uncompleted.isNotEmpty) {
+      CandidateContent? bestCandidate;
+      double highestScore = -double.infinity;
 
-    // 3. Score candidates
-    CandidateContent? bestCandidate;
-    double highestScore = -double.infinity;
-
-    for (final candidate in pool) {
-      final score = _scoreCandidate(learner, candidate);
-      if (score > highestScore) {
-        highestScore = score;
-        bestCandidate = candidate;
-      } else if ((score - highestScore).abs() < 0.0001 &&
-          bestCandidate != null) {
-        if (candidate.curriculumOrder < bestCandidate.curriculumOrder) {
+      for (final candidate in uncompleted) {
+        final score = _scoreCandidate(learner, candidate);
+        if (score > highestScore) {
+          highestScore = score;
           bestCandidate = candidate;
+        } else if ((score - highestScore).abs() < 0.0001 &&
+            bestCandidate != null) {
+          if (candidate.curriculumOrder < bestCandidate.curriculumOrder) {
+            bestCandidate = candidate;
+          }
         }
+      }
+
+      if (bestCandidate != null) {
+        return SelectedExperience(contentId: bestCandidate.id);
       }
     }
 
-    return bestCandidate != null
-        ? SelectedExperience(contentId: bestCandidate.id)
-        : null;
+    // 3. Rereading Rotation: When all reachable items are completed,
+    // pick the least-recently-read item (E-10, E-13)
+    final sortedByLeastRecent = List<CandidateContent>.from(reachable)
+      ..sort((a, b) {
+        final progressA = learner.progress[a.id];
+        final progressB = learner.progress[b.id];
+        final timeA =
+            progressA?.lastRead ?? DateTime.fromMillisecondsSinceEpoch(0);
+        final timeB =
+            progressB?.lastRead ?? DateTime.fromMillisecondsSinceEpoch(0);
+        final cmp = timeA.compareTo(timeB);
+        if (cmp != 0) return cmp;
+        return a.curriculumOrder.compareTo(b.curriculumOrder);
+      });
+
+    return SelectedExperience(contentId: sortedByLeastRecent.first.id);
   }
 
   double _scoreCandidate(LearnerState learner, CandidateContent candidate) {

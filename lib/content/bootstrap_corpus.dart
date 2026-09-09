@@ -7,149 +7,122 @@ library;
 import '../core/token.dart';
 import 'content.dart';
 
-/// The default bootstrap curriculum for absolute beginners.
+/// The target bootstrap lexicon items (45 words/Hanzi backward-derived from Stories 1–3).
+const List<({String id, String surface, String concept})> kBootstrapLexicon = [
+  (id: '水', surface: '水', concept: 'water'),
+  (id: '茶', surface: '茶', concept: 'tea'),
+  (id: '喝', surface: '喝', concept: 'drink'),
+  (id: '吃', surface: '吃', concept: 'eat'),
+  (id: '米饭', surface: '米饭', concept: 'rice'),
+  (id: '我', surface: '我', concept: 'I / me'),
+  (id: '想', surface: '想', concept: 'want / think'),
+  (id: '也', surface: '也', concept: 'also / too'),
+  (id: '我们', surface: '我们', concept: 'we / us'),
+  (id: '一起', surface: '一起', concept: 'together'),
+  (id: '很', surface: '很', concept: 'very'),
+  (id: '好喝', surface: '好喝', concept: 'delicious to drink'),
+  (id: '好吃', surface: '好吃', concept: 'delicious to eat'),
+  (id: '好', surface: '好', concept: 'good'),
+  (id: '猫', surface: '猫', concept: 'cat'),
+  (id: '大', surface: '大', concept: 'big'),
+  (id: '小', surface: '小', concept: 'small'),
+  (id: '看', surface: '看', concept: 'look / see'),
+  (id: '要', surface: '要', concept: 'want / need'),
+  (id: '鱼', surface: '鱼', concept: 'fish'),
+  (id: '这里', surface: '这里', concept: 'here'),
+  (id: '有', surface: '有', concept: 'have / there is'),
+  (id: '一', surface: '一', concept: 'one'),
+  (id: '只', surface: '只', concept: 'measure word for animals'),
+  (id: '和', surface: '和', concept: 'and'),
+  (id: '它们', surface: '它们', concept: 'they (animals)'),
+  (id: '是', surface: '是', concept: 'is / are'),
+  (id: '朋友', surface: '朋友', concept: 'friend'),
+  (id: '天天', surface: '天天', concept: 'every day'),
+  (id: '在', surface: '在', concept: 'at / in'),
+  (id: '跑', surface: '跑', concept: 'run'),
+  (id: '今天', surface: '今天', concept: 'today'),
+  (id: '天气', surface: '天气', concept: 'weather'),
+  (id: '不', surface: '不', concept: 'not'),
+  (id: '下雨', surface: '下雨', concept: 'rain'),
+  (id: '了', surface: '了', concept: 'aspect particle'),
+  (id: '家', surface: '家', concept: 'home'),
+  (id: '里', surface: '里', concept: 'inside'),
+  (id: '书', surface: '书', concept: 'book'),
+  (id: '热', surface: '热', concept: 'hot / warm'),
+  (id: '爸爸', surface: '爸爸', concept: 'father'),
+  (id: '妈妈', surface: '妈妈', concept: 'mother'),
+  (id: '回来', surface: '回来', concept: 'come back'),
+  (id: '雨伞', surface: '雨伞', concept: 'umbrella'),
+  (id: '冷', surface: '冷', concept: 'cold'),
+];
+
+/// Builds the complete list of 45 beginner units sequenced in target order.
+List<ContentItem> _buildBootstrapUnits() {
+  final units = <ContentItem>[];
+
+  for (int i = 0; i < kBootstrapLexicon.length; i++) {
+    final item = kBootstrapLexicon[i];
+    final order = i + 1;
+    final id = 'unit-${(i + 1).toString().padLeft(3, '0')}-${item.id}';
+    final prevId = i > 0
+        ? 'unit-${i.toString().padLeft(3, '0')}-${kBootstrapLexicon[i - 1].id}'
+        : null;
+
+    units.add(
+      ContentItem(
+        metadata: ContentMetadata(
+          id: id,
+          title: item.surface,
+          type: ContentType.beginnerUnit,
+          curriculumOrder: order,
+          prerequisiteIds: prevId != null ? {prevId} : const {},
+          difficultyEstimate: 1,
+          vocabulary: {item.id},
+          curriculumCriticalVocabulary: {item.id},
+        ),
+        sections: [
+          ContentSection(
+            id: 'sec-1',
+            text: item.surface,
+            visualAsset: 'assets/images/concepts/${item.id}.png',
+            audioAsset: 'assets/audio/words/${item.id}.mp3',
+            sentences: [
+              ContentSentence(
+                id: 's-$id',
+                text: item.surface,
+                tokens: [
+                  Token(
+                    vocabId: item.id,
+                    surface: item.surface,
+                    start: 0,
+                    end: item.surface.length,
+                  ),
+                ],
+                criticalVocabIds: {item.id},
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  return units;
+}
+
+/// The default bootstrap curriculum containing 45 progressive exposure units + Stories 1–3.
 final List<ContentItem> bootstrapCurriculum = [
-  // Unit 1: 水 (Water)
-  const ContentItem(
-    metadata: ContentMetadata(
-      id: 'unit-001-water',
-      title: '水',
-      type: ContentType.beginnerUnit,
-      curriculumOrder: 1,
-      prerequisiteIds: {},
-      difficultyEstimate: 1,
-      vocabulary: {'水'},
-      curriculumCriticalVocabulary: {'水'},
-    ),
-    sections: [
-      ContentSection(
-        id: 'sec-1',
-        text: '水',
-        visualAsset: 'assets/images/water.png',
-        audioAsset: 'assets/audio/shui.mp3',
-        sentences: [
-          ContentSentence(
-            id: 'unit-001-s1',
-            text: '水',
-            tokens: [Token(vocabId: '水', surface: '水', start: 0, end: 1)],
-            criticalVocabIds: {'水'},
-          ),
-        ],
-      ),
-    ],
-  ),
+  // 1. All 45 target-led beginner exposure units (orders 1..45)
+  ..._buildBootstrapUnits(),
 
-  // Unit 2: 茶 (Tea)
-  const ContentItem(
-    metadata: ContentMetadata(
-      id: 'unit-002-tea',
-      title: '茶',
-      type: ContentType.beginnerUnit,
-      curriculumOrder: 2,
-      prerequisiteIds: {'unit-001-water'},
-      difficultyEstimate: 1,
-      vocabulary: {'茶'},
-      curriculumCriticalVocabulary: {'茶'},
-    ),
-    sections: [
-      ContentSection(
-        id: 'sec-1',
-        text: '茶',
-        visualAsset: 'assets/images/tea.png',
-        audioAsset: 'assets/audio/cha.mp3',
-        sentences: [
-          ContentSentence(
-            id: 'unit-002-s1',
-            text: '茶',
-            tokens: [Token(vocabId: '茶', surface: '茶', start: 0, end: 1)],
-            criticalVocabIds: {'茶'},
-          ),
-        ],
-      ),
-    ],
-  ),
-
-  // Unit 3: 喝 (Drink)
-  const ContentItem(
-    metadata: ContentMetadata(
-      id: 'unit-003-drink',
-      title: '喝',
-      type: ContentType.beginnerUnit,
-      curriculumOrder: 3,
-      prerequisiteIds: {'unit-002-tea'},
-      difficultyEstimate: 2,
-      vocabulary: {'喝', '水', '茶'},
-      curriculumCriticalVocabulary: {'喝'},
-    ),
-    sections: [
-      ContentSection(
-        id: 'sec-1',
-        text: '喝水。喝茶。',
-        visualAsset: 'assets/images/drink.png',
-        sentences: [
-          ContentSentence(
-            id: 'unit-003-s1',
-            text: '喝水。',
-            tokens: [
-              Token(vocabId: '喝', surface: '喝', start: 0, end: 1),
-              Token(vocabId: '水', surface: '水', start: 1, end: 2),
-            ],
-            criticalVocabIds: {'喝'},
-          ),
-          ContentSentence(
-            id: 'unit-003-s2',
-            text: '喝茶。',
-            tokens: [
-              Token(vocabId: '喝', surface: '喝', start: 0, end: 1),
-              Token(vocabId: '茶', surface: '茶', start: 1, end: 2),
-            ],
-            criticalVocabIds: {'喝'},
-          ),
-        ],
-      ),
-    ],
-  ),
-
-  // Unit 4: 吃 (Eat)
-  const ContentItem(
-    metadata: ContentMetadata(
-      id: 'unit-004-eat',
-      title: '吃',
-      type: ContentType.beginnerUnit,
-      curriculumOrder: 4,
-      prerequisiteIds: {'unit-003-drink'},
-      difficultyEstimate: 2,
-      vocabulary: {'吃', '米饭'},
-      curriculumCriticalVocabulary: {'吃', '米饭'},
-    ),
-    sections: [
-      ContentSection(
-        id: 'sec-1',
-        text: '吃米饭。',
-        visualAsset: 'assets/images/rice.png',
-        sentences: [
-          ContentSentence(
-            id: 'unit-004-s1',
-            text: '吃米饭。',
-            tokens: [
-              Token(vocabId: '吃', surface: '吃', start: 0, end: 1),
-              Token(vocabId: '米饭', surface: '米饭', start: 1, end: 3),
-            ],
-            criticalVocabIds: {'吃', '米饭'},
-          ),
-        ],
-      ),
-    ],
-  ),
-
-  // Story 1: 喝茶与米饭
+  // 2. Story 1: 喝茶与米饭 (Order 46)
   const ContentItem(
     metadata: ContentMetadata(
       id: 'story-001-drink-tea',
       title: '喝茶与米饭',
       type: ContentType.story,
-      curriculumOrder: 5,
-      prerequisiteIds: {'unit-004-eat'},
+      curriculumOrder: 46,
+      prerequisiteIds: {'unit-013-好吃'},
       difficultyEstimate: 2,
       vocabulary: {
         '我',
@@ -242,13 +215,13 @@ final List<ContentItem> bootstrapCurriculum = [
     ],
   ),
 
-  // Story 2: 大猫与小猫
+  // 3. Story 2: 大猫与小猫 (Order 47)
   const ContentItem(
     metadata: ContentMetadata(
       id: 'story-002-cats',
       title: '大猫与小猫',
       type: ContentType.story,
-      curriculumOrder: 6,
+      curriculumOrder: 47,
       prerequisiteIds: {'story-001-drink-tea'},
       difficultyEstimate: 2,
       vocabulary: {
@@ -375,13 +348,13 @@ final List<ContentItem> bootstrapCurriculum = [
     ],
   ),
 
-  // Story 3: 今天下雨
+  // 4. Story 3: 今天下雨 (Order 48)
   const ContentItem(
     metadata: ContentMetadata(
       id: 'story-003-rainy-day',
       title: '今天下雨',
       type: ContentType.story,
-      curriculumOrder: 7,
+      curriculumOrder: 48,
       prerequisiteIds: {'story-002-cats'},
       difficultyEstimate: 3,
       vocabulary: {

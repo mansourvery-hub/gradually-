@@ -1,5 +1,4 @@
-/// Radical zero-friction, button-free monolingual reader with scaffold decay
-/// (AGENTS.md §3, CONTENT.md §6, CHOICES.md §1).
+/// Radical zero-friction, button-free monolingual reader (AGENTS.md §3, CHOICES.md §1).
 ///
 /// Widgets only: consumes Riverpod providers, contains no learning logic.
 /// All progression is driven by natural tap/gesture interactions.
@@ -34,8 +33,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final dueCardsAsync = ref.watch(dueReviewCardsProvider);
     final nextExperienceAsync = ref.watch(nextExperienceProvider);
-    final learnerState =
-        ref.watch(learnerStateStreamProvider).value ?? const LearnerState();
 
     // 1. Post-exposure phase: If an SRS card is due, present review card
     final dueCards = dueCardsAsync.value ?? const [];
@@ -45,6 +42,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         backgroundColor: const Color(0xFFFBF9F5),
         body: SafeArea(
           child: _ButtonlessReviewView(
+            key: ValueKey(activeCard.card.id),
             record: activeCard,
             onRecallCompleted: (grade) => _handleReviewGrade(activeCard, grade),
           ),
@@ -56,48 +54,47 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final contentItem =
         nextExperienceAsync.value ?? bootstrapCurriculum.firstOrNull;
 
-    if (contentItem != null) {
-      final wordExposure =
-          learnerState.exposure[contentItem.id]?.encounterCount ?? 0;
-
-      return Scaffold(
-        backgroundColor: const Color(0xFFFBF9F5),
-        body: SafeArea(
-          child: contentItem.type == ContentType.beginnerUnit
-              ? _ButtonlessBeginnerUnitView(
-                  item: contentItem,
-                  encounterCount: wordExposure,
-                  onAdvance: () => _handleItemCompletion(contentItem),
-                )
-              : _ButtonlessStoryReaderView(
-                  item: contentItem,
-                  sectionIndex: _currentSectionIndex,
-                  onAdvance: () {
-                    if (_currentSectionIndex <
-                        contentItem.sections.length - 1) {
-                      setState(() => _currentSectionIndex++);
-                    } else {
-                      _handleItemCompletion(contentItem);
-                    }
-                  },
-                ),
-        ),
-      );
-    }
-
-    return const Scaffold(
-      backgroundColor: Color(0xFFFBF9F5),
+    return Scaffold(
+      backgroundColor: const Color(0xFFFBF9F5), // Calm paper tone
       body: SafeArea(
-        child: Center(
-          child: Text(
-            '渐入',
-            style: TextStyle(
-              fontSize: 36,
-              fontWeight: FontWeight.w200,
-              letterSpacing: 8,
-              color: Color(0xFF2C2C2C),
-            ),
-          ),
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          switchInCurve: Curves.easeOut,
+          switchOutCurve: Curves.easeIn,
+          child: contentItem != null
+              ? (contentItem.type == ContentType.beginnerUnit
+                    ? _ButtonlessBeginnerUnitView(
+                        key: ValueKey(contentItem.id),
+                        item: contentItem,
+                        onAdvance: () => _handleItemCompletion(contentItem),
+                      )
+                    : _ButtonlessStoryReaderView(
+                        key: ValueKey(
+                          '${contentItem.id}-$_currentSectionIndex',
+                        ),
+                        item: contentItem,
+                        sectionIndex: _currentSectionIndex,
+                        onAdvance: () {
+                          if (_currentSectionIndex <
+                              contentItem.sections.length - 1) {
+                            setState(() => _currentSectionIndex++);
+                          } else {
+                            _handleItemCompletion(contentItem);
+                          }
+                        },
+                      ))
+              : const Center(
+                  key: ValueKey('empty-splash'),
+                  child: Text(
+                    '渐入',
+                    style: TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.w200,
+                      letterSpacing: 8,
+                      color: Color(0xFF2C2C2C),
+                    ),
+                  ),
+                ),
         ),
       ),
     );
@@ -182,31 +179,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 }
 
-/// Pure button-free beginner unit with automatic scaffold decay (CONTENT.md §6).
+/// Pure button-free beginner unit: tap anywhere to absorb and advance.
 class _ButtonlessBeginnerUnitView extends StatelessWidget {
   const _ButtonlessBeginnerUnitView({
+    super.key,
     required this.item,
-    required this.encounterCount,
     required this.onAdvance,
   });
 
   final ContentItem item;
-  final int encounterCount;
   final VoidCallback onAdvance;
 
   @override
   Widget build(BuildContext context) {
     final mainWord = item.metadata.title;
-    final pinyin = _getPinyinForWord(mainWord);
-
-    // Scaffold decay formula: opacity decreases as encounters grow (CONTENT.md §6)
-    final double pinyinOpacity = encounterCount <= 1
-        ? 0.9
-        : encounterCount == 2
-        ? 0.5
-        : encounterCount == 3
-        ? 0.2
-        : 0.0;
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -237,26 +223,9 @@ class _ButtonlessBeginnerUnitView extends StatelessWidget {
                   child: Center(child: _buildVisualPlaceholder(mainWord)),
                 ),
 
-                const SizedBox(height: 36),
+                const SizedBox(height: 52),
 
-                // Scaffolding: Pinyin + Tone mark (Decays automatically)
-                AnimatedOpacity(
-                  opacity: pinyinOpacity,
-                  duration: const Duration(milliseconds: 300),
-                  child: Text(
-                    pinyin,
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w400,
-                      letterSpacing: 2,
-                      color: Color(0xFF7A7A7A),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 12),
-
-                // Prominent Large Hanzi
+                // Prominent Large Hanzi (Pure Monolingual — NO PINYIN)
                 Text(
                   mainWord,
                   textAlign: TextAlign.center,
@@ -268,7 +237,7 @@ class _ButtonlessBeginnerUnitView extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 36),
+                const SizedBox(height: 48),
 
                 // Subtle audio prompt
                 Icon(
@@ -284,35 +253,38 @@ class _ButtonlessBeginnerUnitView extends StatelessWidget {
     );
   }
 
-  String _getPinyinForWord(String word) {
-    switch (word) {
-      case '水':
-        return 'shuǐ';
-      case '茶':
-        return 'chá';
-      case '喝':
-        return 'hē';
-      case '吃':
-        return 'chī';
-      case '米饭':
-        return 'mǐ fàn';
-      default:
-        return '';
-    }
-  }
-
   Widget _buildVisualPlaceholder(String word) {
     IconData iconData;
     switch (word) {
       case '水':
         iconData = Icons.water_drop_rounded;
       case '茶':
+      case '好喝':
         iconData = Icons.emoji_food_beverage_rounded;
       case '喝':
         iconData = Icons.local_cafe_rounded;
       case '吃':
+      case '好吃':
       case '米饭':
         iconData = Icons.rice_bowl_rounded;
+      case '猫':
+        iconData = Icons.pets_rounded;
+      case '鱼':
+        iconData = Icons.set_meal_rounded;
+      case '跑':
+        iconData = Icons.directions_run_rounded;
+      case '下雨':
+      case '雨伞':
+      case '天气':
+        iconData = Icons.umbrella_rounded;
+      case '家':
+        iconData = Icons.home_rounded;
+      case '书':
+        iconData = Icons.menu_book_rounded;
+      case '热':
+        iconData = Icons.whatshot_rounded;
+      case '冷':
+        iconData = Icons.ac_unit_rounded;
       default:
         iconData = Icons.auto_stories_rounded;
     }
@@ -324,6 +296,7 @@ class _ButtonlessBeginnerUnitView extends StatelessWidget {
 /// Pure button-free story reader: tap anywhere to read the next sentence/scene.
 class _ButtonlessStoryReaderView extends StatelessWidget {
   const _ButtonlessStoryReaderView({
+    super.key,
     required this.item,
     required this.sectionIndex,
     required this.onAdvance,
@@ -396,6 +369,7 @@ class _ButtonlessStoryReaderView extends StatelessWidget {
 /// Gesture-driven, buttonless review card (post-exposure phase).
 class _ButtonlessReviewView extends StatefulWidget {
   const _ButtonlessReviewView({
+    super.key,
     required this.record,
     required this.onRecallCompleted,
   });
