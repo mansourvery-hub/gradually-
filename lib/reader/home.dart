@@ -1,4 +1,5 @@
-/// Radical zero-friction, button-free monolingual reader (AGENTS.md §3, CHOICES.md §1).
+/// Radical zero-friction, button-free monolingual reader with scaffold decay
+/// (AGENTS.md §3, CONTENT.md §6, CHOICES.md §1).
 ///
 /// Widgets only: consumes Riverpod providers, contains no learning logic.
 /// All progression is driven by natural tap/gesture interactions.
@@ -33,6 +34,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final dueCardsAsync = ref.watch(dueReviewCardsProvider);
     final nextExperienceAsync = ref.watch(nextExperienceProvider);
+    final learnerState =
+        ref.watch(learnerStateStreamProvider).value ?? const LearnerState();
 
     // 1. Post-exposure phase: If an SRS card is due, present review card
     final dueCards = dueCardsAsync.value ?? const [];
@@ -54,12 +57,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         nextExperienceAsync.value ?? bootstrapCurriculum.firstOrNull;
 
     if (contentItem != null) {
+      final wordExposure =
+          learnerState.exposure[contentItem.id]?.encounterCount ?? 0;
+
       return Scaffold(
         backgroundColor: const Color(0xFFFBF9F5),
         body: SafeArea(
           child: contentItem.type == ContentType.beginnerUnit
               ? _ButtonlessBeginnerUnitView(
                   item: contentItem,
+                  encounterCount: wordExposure,
                   onAdvance: () => _handleItemCompletion(contentItem),
                 )
               : _ButtonlessStoryReaderView(
@@ -175,19 +182,31 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 }
 
-/// Pure button-free beginner unit: tap anywhere to absorb and advance.
+/// Pure button-free beginner unit with automatic scaffold decay (CONTENT.md §6).
 class _ButtonlessBeginnerUnitView extends StatelessWidget {
   const _ButtonlessBeginnerUnitView({
     required this.item,
+    required this.encounterCount,
     required this.onAdvance,
   });
 
   final ContentItem item;
+  final int encounterCount;
   final VoidCallback onAdvance;
 
   @override
   Widget build(BuildContext context) {
     final mainWord = item.metadata.title;
+    final pinyin = _getPinyinForWord(mainWord);
+
+    // Scaffold decay formula: opacity decreases as encounters grow (CONTENT.md §6)
+    final double pinyinOpacity = encounterCount <= 1
+        ? 0.9
+        : encounterCount == 2
+        ? 0.5
+        : encounterCount == 3
+        ? 0.2
+        : 0.0;
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -218,7 +237,24 @@ class _ButtonlessBeginnerUnitView extends StatelessWidget {
                   child: Center(child: _buildVisualPlaceholder(mainWord)),
                 ),
 
-                const SizedBox(height: 48),
+                const SizedBox(height: 36),
+
+                // Scaffolding: Pinyin + Tone mark (Decays automatically)
+                AnimatedOpacity(
+                  opacity: pinyinOpacity,
+                  duration: const Duration(milliseconds: 300),
+                  child: Text(
+                    pinyin,
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w400,
+                      letterSpacing: 2,
+                      color: Color(0xFF7A7A7A),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 12),
 
                 // Prominent Large Hanzi
                 Text(
@@ -232,7 +268,7 @@ class _ButtonlessBeginnerUnitView extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 48),
+                const SizedBox(height: 36),
 
                 // Subtle audio prompt
                 Icon(
@@ -246,6 +282,23 @@ class _ButtonlessBeginnerUnitView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _getPinyinForWord(String word) {
+    switch (word) {
+      case '水':
+        return 'shuǐ';
+      case '茶':
+        return 'chá';
+      case '喝':
+        return 'hē';
+      case '吃':
+        return 'chī';
+      case '米饭':
+        return 'mǐ fàn';
+      default:
+        return '';
+    }
   }
 
   Widget _buildVisualPlaceholder(String word) {
