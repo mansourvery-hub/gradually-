@@ -4,6 +4,7 @@
 /// All progression is driven by natural tap/gesture interactions.
 library;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,6 +12,7 @@ import '../app/providers.dart';
 import '../content/bootstrap_corpus.dart';
 import '../content/content.dart';
 import '../core/progress.dart';
+import '../core/simulated_level.dart';
 import '../learner/known.dart';
 import '../learner/learner_state.dart';
 import '../review/review.dart';
@@ -121,46 +123,50 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     try {
       final now = DateTime.now();
-      final learnerRepo = ref.read(learnerRepositoryProvider);
-      final contentRepo = ref.read(contentRepositoryProvider);
-      final acquisition = ref.read(acquisitionPipelineProvider);
       final learnerState =
           ref.read(learnerStateStreamProvider).value ?? const LearnerState();
 
-      // 1. Record vocabulary exposure for all words in the content
-      final vocabIds = item.metadata.vocabulary.toList();
-      await learnerRepo.recordBatchExposure(vocabIds, item.id, at: now);
+      // At simulated levels, skip real DB writes — state is already synthetic
+      if (kSimulatedLevel == 0) {
+        final learnerRepo = ref.read(learnerRepositoryProvider);
+        final contentRepo = ref.read(contentRepositoryProvider);
+        final acquisition = ref.read(acquisitionPipelineProvider);
 
-      // 2. Evaluate words for acquisition (candidate registration)
-      for (final section in item.sections) {
-        for (final sentence in section.sentences) {
-          for (final token in sentence.tokens) {
-            final isCritical = item.metadata.curriculumCriticalVocabulary
-                .contains(token.vocabId);
-            await acquisition.evaluateAndPromote(
-              learner: learnerState,
-              vocabId: token.vocabId,
-              contentId: item.id,
-              sourceSentenceText: sentence.text,
-              token: token,
-              isCurriculumCritical: isCritical,
-              visualAsset: section.visualAsset,
-              audioAsset: section.audioAsset,
-              now: now,
-            );
+        // 1. Record vocabulary exposure for all words in the content
+        final vocabIds = item.metadata.vocabulary.toList();
+        await learnerRepo.recordBatchExposure(vocabIds, item.id, at: now);
+
+        // 2. Evaluate words for acquisition (candidate registration)
+        for (final section in item.sections) {
+          for (final sentence in section.sentences) {
+            for (final token in sentence.tokens) {
+              final isCritical = item.metadata.curriculumCriticalVocabulary
+                  .contains(token.vocabId);
+              await acquisition.evaluateAndPromote(
+                learner: learnerState,
+                vocabId: token.vocabId,
+                contentId: item.id,
+                sourceSentenceText: sentence.text,
+                token: token,
+                isCurriculumCritical: isCritical,
+                visualAsset: section.visualAsset,
+                audioAsset: section.audioAsset,
+                now: now,
+              );
+            }
           }
         }
+
+        // 3. Update reading completion progress in SQLite
+        final existingProgress = await contentRepo.getProgress(item.id);
+        final updatedProgress =
+            (existingProgress ??
+                    ContentProgress.initial(contentId: item.id, now: now))
+                .recordCompletion(now);
+
+        await contentRepo.saveProgress(updatedProgress);
+        await learnerRepo.updateContentProgress(updatedProgress);
       }
-
-      // 3. Update reading completion progress in SQLite
-      final existingProgress = await contentRepo.getProgress(item.id);
-      final updatedProgress =
-          (existingProgress ??
-                  ContentProgress.initial(contentId: item.id, now: now))
-              .recordCompletion(now);
-
-      await contentRepo.saveProgress(updatedProgress);
-      await learnerRepo.updateContentProgress(updatedProgress);
 
       if (mounted) {
         setState(() {
@@ -171,10 +177,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
       ref.invalidate(nextExperienceProvider);
       ref.invalidate(dueReviewCardsProvider);
-    } catch (_) {
+    } catch (e, stack) {
+      if (kDebugMode) {
+        debugPrint('_handleItemCompletion error: $e\n$stack');
+      }
       if (mounted) {
         setState(() => _isAdvancing = false);
       }
+      // Always invalidate so the selector can pick the next item
+      ref.invalidate(nextExperienceProvider);
+      ref.invalidate(dueReviewCardsProvider);
     }
   }
 }
