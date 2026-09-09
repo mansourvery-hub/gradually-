@@ -2,7 +2,7 @@
   "metadata": {
     "id": "story-002-cats",
     "title": "大猫与小猫",
-    "type": "story",
+    "type": "microStory",
     "curriculumOrder": 51,
     "prerequisiteIds": [
       "story-001-drink-tea"

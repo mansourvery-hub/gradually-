@@ -50,8 +50,9 @@ void main() {
       final manifest =
           jsonDecode(manifestFile.readAsStringSync()) as Map<String, dynamic>;
       final scenes = manifest['scenes'] as Map<String, dynamic>;
-      expect(scenes.length, 11,
-          reason: 'Story1(3) + Story2(4) + Story3(4) = 11 scenes');
+      expect(scenes.length, 17,
+          reason: 'Story1(3) + Story2(4) + Story3(4) + ChildrenStory(6) '
+              '= 17 scenes');
 
       for (final entry in scenes.entries) {
         final path = entry.value as String;

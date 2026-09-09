@@ -2,7 +2,7 @@
   "metadata": {
     "id": "story-003-rainy-day",
     "title": "今天下雨",
-    "type": "story",
+    "type": "microStory",
     "curriculumOrder": 52,
     "prerequisiteIds": [
       "story-002-cats"

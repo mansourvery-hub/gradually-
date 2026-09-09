@@ -13,6 +13,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../app/providers.dart';
 import '../content/bootstrap_corpus.dart';
 import '../content/content.dart';
+import '../core/ids.dart';
 import '../core/progress.dart';
 import '../core/simulated_level.dart';
 import '../learner/known.dart';
@@ -31,6 +32,10 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   int _currentSectionIndex = 0;
   bool _isAdvancing = false;
+
+  /// The content item whose persisted position `_currentSectionIndex`
+  /// reflects. Reset on selector switches (T_UI_030 resume contract).
+  ContentId? _positionTrackedItemId;
 
   @override
   void initState() {
@@ -64,9 +69,74 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       _handleItemCompletion(contentItem);
     } else {
       if (_currentSectionIndex < contentItem.sections.length - 1) {
-        setState(() => _currentSectionIndex++);
+        _gotoSection(contentItem, _currentSectionIndex + 1);
       } else {
         _handleItemCompletion(contentItem);
+      }
+    }
+  }
+
+  /// Moves to [sectionIndex] and persists the reading position (T_UI_030).
+  void _gotoSection(ContentItem item, int sectionIndex) {
+    setState(() => _currentSectionIndex = sectionIndex);
+    _persistPosition(item, sectionIndex);
+  }
+
+  /// Persists the reading position for [item] at [sectionIndex].
+  Future<void> _persistPosition(ContentItem item, int sectionIndex) async {
+    final now = DateTime.now();
+    try {
+      if (kSimulatedLevel > 0) {
+        // Simulated session: update the in-memory learner state position.
+        final notifier = ref.read(activeLearnerStateProvider.notifier);
+        notifier.updatePosition(item.id, sectionIndex, now);
+      } else {
+        final contentRepo = ref.read(contentRepositoryProvider);
+        final learnerRepo = ref.read(learnerRepositoryProvider);
+        final existing = await contentRepo.getProgress(item.id);
+        final updated = (existing ??
+                ContentProgress.initial(contentId: item.id, now: now))
+            .updatePosition(sectionIndex, now);
+        await contentRepo.saveProgress(updated);
+        await learnerRepo.updateContentProgress(updated);
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('_persistPosition error: $e');
+      }
+    }
+  }
+
+  /// Restores the reading position when the selector switches to a new
+  /// story/micro-story item, so mid-story sessions resume exactly (E-10).
+  Future<void> _restorePositionForItem(ContentItem item) async {
+    if (_positionTrackedItemId == item.id) return;
+    _positionTrackedItemId = item.id;
+
+    if (item.type == ContentType.beginnerUnit) {
+      _currentSectionIndex = 0;
+      return;
+    }
+    try {
+      ContentProgress? progress;
+      if (kSimulatedLevel > 0) {
+        progress = ref
+            .read(activeLearnerStateProvider)
+            .progress[item.id];
+      } else {
+        final contentRepo = ref.read(contentRepositoryProvider);
+        progress = await contentRepo.getProgress(item.id);
+      }
+      final saved = progress?.lastPosition ?? 0;
+      final clamped = item.sections.isEmpty
+          ? 0
+          : saved.clamp(0, item.sections.length - 1);
+      if (_currentSectionIndex != clamped) {
+        setState(() => _currentSectionIndex = clamped);
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('_restorePositionForItem error: $e');
       }
     }
   }
@@ -95,6 +165,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     // 2. Immersion flow: render active content with zero-delay fallback
     final contentItem =
         nextExperienceAsync.value ?? bootstrapCurriculum.firstOrNull;
+
+    // Resume mid-story position when the selector switches items (T_UI_030).
+    if (contentItem != null) {
+      _restorePositionForItem(contentItem);
+    }
 
     // Semantic activation scope: space/enter/hardware activation keys and
     // mobile switch-access all dispatch ActivateIntent. This is not a
@@ -141,7 +216,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         onAdvance: () {
                           if (_currentSectionIndex <
                               contentItem.sections.length - 1) {
-                            setState(() => _currentSectionIndex++);
+                            _gotoSection(
+                              contentItem,
+                              _currentSectionIndex + 1,
+                            );
                           } else {
                             _handleItemCompletion(contentItem);
                           }

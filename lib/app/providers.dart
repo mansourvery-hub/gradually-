@@ -14,6 +14,8 @@ import '../content/bootstrap_corpus.dart';
 import '../content/content.dart';
 import '../content/content_repository.dart';
 import '../content/media_capabilities.dart';
+import '../core/ids.dart';
+import '../core/progress.dart';
 import '../core/simulated_level.dart' show applySimulatedCompletion, buildSimulatedLearnerState, kPureExposureThreshold, kSimulatedLevel;
 import '../data/database.dart';
 import '../data/repositories/content_repository_impl.dart';
@@ -91,6 +93,18 @@ class SimulatedLearnerNotifier extends Notifier<LearnerState> {
   void completeItem(ContentItem item) {
     if (kSimulatedLevel == 0) return;
     state = applySimulatedCompletion(state, item);
+  }
+
+  /// Updates the simulated reading position for [contentId] (T_UI_030).
+  /// No-op at LEVEL=0 where the SQLite stream owns the state.
+  void updatePosition(ContentId contentId, int position, DateTime now) {
+    if (kSimulatedLevel == 0) return;
+    final progress = Map<ContentId, ContentProgress>.from(state.progress);
+    final existing = progress[contentId];
+    progress[contentId] = (existing ??
+            ContentProgress.initial(contentId: contentId, now: now))
+        .updatePosition(position, now);
+    state = state.copyWith(progress: progress);
   }
 }
 

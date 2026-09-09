@@ -2,7 +2,7 @@
   "metadata": {
     "id": "story-001-drink-tea",
     "title": "喝茶与米饭",
-    "type": "story",
+    "type": "microStory",
     "curriculumOrder": 50,
     "prerequisiteIds": [],
     "difficultyEstimate": 2,

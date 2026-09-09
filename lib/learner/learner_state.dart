@@ -106,4 +106,19 @@ final class LearnerState {
   /// Whether a content item has been completed by this learner.
   bool isContentCompleted(ContentId contentId) =>
       progress[contentId]?.isCompleted ?? false;
+
+  /// Returns a copy with the given fields replaced.
+  LearnerState copyWith({
+    Set<VocabId>? knownVocabulary,
+    Set<Hanzi>? knownHanzi,
+    Map<VocabId, ExposureAggregate>? exposure,
+    Map<ContentId, ContentProgress>? progress,
+  }) {
+    return LearnerState(
+      knownVocabulary: knownVocabulary ?? this.knownVocabulary,
+      knownHanzi: knownHanzi ?? this.knownHanzi,
+      exposure: exposure ?? this.exposure,
+      progress: progress ?? this.progress,
+    );
+  }
 }
