@@ -1,0 +1,30 @@
+{
+  "version": "0.1.0-mock",
+  "description": "Mock monolingual dictionary for lookup development (T_UI_040). Chinese definitions only — no translations (AGENTS.md §3.1).",
+  "entries": [
+    {
+      "vocabId": "水",
+      "surface": "水",
+      "definition": "一种没有颜色的东西，可以喝。人和动物天天要喝水。",
+      "examples": ["我想喝水。"]
+    },
+    {
+      "vocabId": "茶",
+      "surface": "茶",
+      "definition": "用热水和叶子做的一种饮料，很好喝。",
+      "examples": ["我也想喝茶。"]
+    },
+    {
+      "vocabId": "猫",
+      "surface": "猫",
+      "definition": "一种小动物。猫喜欢鱼，会跑，天天在一起玩。",
+      "examples": ["这里有一只大猫和一只小猫。"]
+    },
+    {
+      "vocabId": "下雨",
+      "surface": "下雨",
+      "definition": "天上有很多水，落下来。下雨的天气不好。",
+      "examples": ["今天天气不好，天下雨了。"]
+    }
+  ]
+}

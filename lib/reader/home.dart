@@ -5,6 +5,7 @@
 library;
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,8 +17,10 @@ import '../content/content.dart';
 import '../core/ids.dart';
 import '../core/progress.dart';
 import '../core/simulated_level.dart';
+import '../dictionary/lookup.dart';
 import '../learner/known.dart';
 import '../review/review.dart';
+import 'widgets/context_lookup_sheet.dart';
 
 /// The primary screen of 渐入.
 ///
@@ -461,7 +464,7 @@ class VisualAssetView extends StatelessWidget {
 }
 
 /// Pure button-free story reader: tap anywhere to read the next sentence/scene.
-class _ButtonlessStoryReaderView extends StatelessWidget {
+class _ButtonlessStoryReaderView extends ConsumerWidget {
   const _ButtonlessStoryReaderView({
     super.key,
     required this.item,
@@ -474,10 +477,11 @@ class _ButtonlessStoryReaderView extends StatelessWidget {
   final VoidCallback onAdvance;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final section = sectionIndex < item.sections.length
         ? item.sections[sectionIndex]
         : item.sections.first;
+    final dictionary = ref.watch(dictionaryProvider).value;
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -513,14 +517,21 @@ class _ButtonlessStoryReaderView extends StatelessWidget {
               ),
             ),
 
-            // Story text anchored in the lower third
+            // Story text anchored in the lower third, token-tappable for
+            // contextual monolingual lookup (T_UI_040)
             Align(
               alignment: const Alignment(0, 0.72),
               child: FractionallySizedBox(
                 widthFactor: 0.86,
                 child: SingleChildScrollView(
-                  child: Text(
-                    section.text,
+                  child: Text.rich(
+                    TextSpan(
+                      children: _buildTokenSpans(
+                        context,
+                        section,
+                        dictionary,
+                      ),
+                    ),
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 34,
@@ -537,6 +548,52 @@ class _ButtonlessStoryReaderView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// Builds tappable token spans from pre-tokenized sentences, preserving
+  /// uncovered punctuation as plain spans. Tapping a token opens the local
+  /// monolingual lookup; tapping elsewhere advances (E-08: absent entries
+  /// still open the serene empty sheet — data exists where it exists).
+  List<InlineSpan> _buildTokenSpans(
+    BuildContext context,
+    ContentSection section,
+    MonolingualDictionary? dictionary,
+  ) {
+    final spans = <InlineSpan>[];
+
+    for (final sentence in section.sentences) {
+      var cursor = 0;
+      for (final token in sentence.tokens) {
+        // Plain span for uncovered text before this token (punctuation).
+        if (token.start > cursor) {
+          spans.add(TextSpan(
+            text: sentence.text.substring(cursor, token.start),
+          ));
+        }
+        final hasEntry = dictionary?.contains(token.vocabId) ?? false;
+        spans.add(TextSpan(
+          text: token.surface,
+          style: hasEntry
+              ? const TextStyle(
+                  color: Color(0xFF2E4B3F), // sage ink: quiet lookup hint
+                )
+              : null,
+          recognizer: TapGestureRecognizer()
+            ..onTap = () {
+              final result = dictionary != null
+                  ? dictionary.lookup(token.vocabId)
+                  : const LookupResult.absent();
+              ContextLookupSheet.show(context, result);
+            },
+        ));
+        cursor = token.end;
+      }
+      // Trailing uncovered text after the last token.
+      if (cursor < sentence.text.length) {
+        spans.add(TextSpan(text: sentence.text.substring(cursor)));
+      }
+    }
+    return spans;
   }
 }
 

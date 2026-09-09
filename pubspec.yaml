@@ -28,6 +28,7 @@ flutter:
   assets:
     - assets/dict.dgz
     - assets/content/
+    - assets/dictionary/
     - assets/fonts/
     - assets/images/concepts/
     - assets/images/stories/

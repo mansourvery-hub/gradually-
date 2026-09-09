@@ -7,6 +7,7 @@ library;
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../acquisition/acquisition.dart';
@@ -22,6 +23,7 @@ import '../data/database.dart';
 import '../data/repositories/content_repository_impl.dart';
 import '../data/repositories/learner_repository_impl.dart';
 import '../data/repositories/review_repository_impl.dart';
+import '../dictionary/lookup.dart';
 import '../learner/exposure_gate.dart';
 import '../learner/learner_repository.dart';
 import '../learner/learner_state.dart';
@@ -219,5 +221,24 @@ final nextExperienceProvider = FutureProvider<ContentItem?>((ref) async {
       debugPrint('nextExperienceProvider error: $e\n$stack');
     }
     return bootstrapCurriculum.firstOrNull;
+  }
+});
+
+/// Provides the local monolingual dictionary (T_UI_040).
+///
+/// Loads the curated dictionary asset once. When the asset is missing or
+/// unparseable, degrades to an empty dictionary: every lookup is absent,
+/// never an error (E-08 spirit). Swap `assets/dictionary/mock_dictionary.json`
+/// for the real dictionary later without code changes.
+final dictionaryProvider = FutureProvider<MonolingualDictionary>((ref) async {
+  try {
+    const assetPath = 'assets/dictionary/mock_dictionary.json';
+    final jsonString = await rootBundle.loadString(assetPath);
+    return MonolingualDictionary.fromJson(jsonString);
+  } catch (e) {
+    if (kDebugMode) {
+      debugPrint('dictionaryProvider: using empty dictionary ($e)');
+    }
+    return MonolingualDictionary.empty();
   }
 });
