@@ -15,13 +15,20 @@ void main() {
     final next = applySimulatedCompletion(initial, item);
 
     // The completed item must now be marked as completed.
-    expect(next.isContentCompleted(item.id), isTrue,
-        reason: 'tapped item must be recorded as completed');
+    expect(
+      next.isContentCompleted(item.id),
+      isTrue,
+      reason: 'tapped item must be recorded as completed',
+    );
     // Exposure must grow for the item's vocabulary.
-    final exposed = item.metadata.vocabulary
-        .any((v) => next.exposure[v]?.encounterCount != null);
-    expect(exposed, isTrue,
-        reason: 'vocabulary exposure must be recorded in simulated mode');
+    final exposed = item.metadata.vocabulary.any(
+      (v) => next.exposure[v]?.encounterCount != null,
+    );
+    expect(
+      exposed,
+      isTrue,
+      reason: 'vocabulary exposure must be recorded in simulated mode',
+    );
     // State must be a new instance (immutably advanced).
     expect(identical(initial, next), isFalse);
   });
@@ -34,9 +41,13 @@ void main() {
       state = applySimulatedCompletion(state, item);
     }
 
-    final completedCount =
-        bootstrapCurriculum.where((i) => state.isContentCompleted(i.id)).length;
-    expect(completedCount, bootstrapCurriculum.length,
-        reason: 'all items should be completable via simulated completions');
+    final completedCount = bootstrapCurriculum
+        .where((i) => state.isContentCompleted(i.id))
+        .length;
+    expect(
+      completedCount,
+      bootstrapCurriculum.length,
+      reason: 'all items should be completable via simulated completions',
+    );
   });
 }

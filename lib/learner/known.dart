@@ -12,7 +12,7 @@ import '../core/vocab.dart';
 ///
 /// Meaning, Hanzi, sound, and tone can dissociate early, so the outcome
 /// records which aspect was tested. Allowed inputs only (LEARNING_ENGINE
-/// §2 / AGENTS.md §6): explicit learning events, never behavioral signals.
+/// §2 / QUALITY.md D-03 / A-08 (privacy)): explicit learning events, never behavioral signals.
 enum MasteryEvidenceKind { meaning, hanzi, sound, tone }
 
 /// At-least-three-grade outcome of a recognition/review event

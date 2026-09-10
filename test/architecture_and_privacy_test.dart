@@ -65,7 +65,7 @@ void main() {
   });
 
   group(
-    'Privacy Boundary Invariant Checks (AGENTS.md §6, dev_graph T_TEST_002)',
+    'Privacy Boundary Invariant Checks (QUALITY.md D-03 / A-08 (privacy), dev_graph T_TEST_002)',
     () {
       late AppDatabase db;
 

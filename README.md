@@ -1,4 +1,4 @@
-# Chinese Immersion App
+# 渐入 — Chinese Immersion App
 
 A zero-friction, inherently monolingual Chinese immersion app. It continuously
 answers one question — **given everything the learner knows, which piece of
@@ -7,26 +7,30 @@ until the learner no longer needs it.
 
 Platform: Flutter — iOS, Android, Web. Offline-first core.
 
-## Documents
+## Documents (read in order — narrow to the task at hand)
 
-| File | Load when… |
+| File | Read when… |
 |---|---|
-| `AGENTS.md` | **Every task.** Invariants, boundaries, decision rules. Short. |
+| `AGENTS.md` | **Every task.** Entry point, authority hierarchy, operating loop, hard rules. |
+| `PRODUCT.md` | Need the product intent, users, journeys, non-goals, constraints. |
+| `MVP.md` | Deciding what is in scope right now vs deferred. |
 | `ARCHITECTURE.md` | Touching subsystem boundaries, persistence, tokenizer, tests. |
-| `LEARNING_ENGINE.md` | Touching learner model, acquisition, SRS/review, content selection. |
-| `CONTENT.md` | Touching content schema, curriculum data, media, reader presentation. |
-| `dev_graph.json` | Master execution graph, 4-tier task decomposition (282 nodes), and dependency DAG. |
-| `CHOICES.md` | Numerical parameters, target-led vocabulary choices, asset pipelines. |
-| `ROADMAP.md` | Deciding what to build now vs later. |
-| `DECISIONS.md` | Before choosing a technology or resolving anything marked [OPEN]. |
-| `CHINESE_IMMERSION_APP_BLUEPRINT.md` | Master product spec (human reference). Consult only when the shorter docs don't answer. |
-| `DEVELOPMENT.md` | Git, branches, worktrees, commits, CI, repository workflow. |
+| `QUALITY.md` | Need to know which invariants must remain true. |
+| `TEST_STRATEGY.md` | Need to know how an invariant is mechanically verified. |
+| `IMPLEMENTATION_PLAN.md` | Selecting the next ready task. |
+| `docs/domain/LEARNING_ENGINE.md` | Touching learner model, acquisition, SRS/review, selection. |
+| `docs/domain/CONTENT.md` | Touching content schema, curriculum data, media, reader presentation. |
+| `docs/domain/CHOICES.md` | Numerical parameters, target-led vocabulary, asset pipelines. |
+| `docs/adr/DECISIONS.md` | Before choosing a technology or resolving anything marked `[OPEN]`. |
+| `docs/adr/` | Individual ADR files for established decisions. |
+| `docs/reference/dev_graph.json` | Machine-readable execution graph (mirror of the plan). |
+| `docs/reference/CHINESE_IMMERSION_APP_BLUEPRINT.md` | Master product spec (consult only when shorter docs don't answer). |
+| `docs/reference/DEVELOPMENT.md` | Git, branches, worktrees, commits, CI, repository workflow. |
 
-## How to work
+## Verification
 
-1. Read `AGENTS.md`.
-2. Read only the subsystem document(s) relevant to the task.
-3. Read the code.
-4. If a decision affects more than one subsystem, record it in `DECISIONS.md`.
+```bash
+./verify        # format + analyze + test + curriculum validator
+```
 
-Do not read everything by default.
+CI runs the same gates (format/analyze/test + validator) on every push.

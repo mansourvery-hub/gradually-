@@ -1,4 +1,4 @@
-/// Zen monolingual contextual lookup sheet (T_UI_040, AGENTS.md §3.1).
+/// Zen monolingual contextual lookup sheet (T_UI_040, QUALITY.md P-01 (monolingual)).
 ///
 /// Widgets only. Shows a Chinese-only dictionary entry: surface form,
 /// Chinese definition, Chinese examples. Contains no translation logic
@@ -39,8 +39,11 @@ class ContextLookupSheet extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.auto_stories_rounded,
-                size: 40, color: Color(0xFF9E9689)),
+            Icon(
+              Icons.auto_stories_rounded,
+              size: 40,
+              color: Color(0xFF9E9689),
+            ),
             SizedBox(height: 20),
             Text(
               '……',

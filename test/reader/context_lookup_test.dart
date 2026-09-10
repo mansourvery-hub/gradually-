@@ -63,8 +63,7 @@ void main() {
       expect(dict.contains('水'), isFalse);
     });
 
-    test('lookupToken resolves through the canonical Token representation',
-        () {
+    test('lookupToken resolves through the canonical Token representation', () {
       final dict = MonolingualDictionary.fromJson(mockJson);
       const token = Token(vocabId: '猫', surface: '猫', start: 0, end: 1);
       final result = dict.lookupToken(token);
@@ -83,7 +82,7 @@ void main() {
     });
   });
 
-  group('monolingual invariant (AGENTS.md §3.1)', () {
+  group('monolingual invariant (QUALITY.md P-01 (monolingual))', () {
     test('mock dictionary asset exists and parses', () {
       final file = File('assets/dictionary/mock_dictionary.json');
       expect(file.existsSync(), isTrue);
@@ -91,8 +90,7 @@ void main() {
       expect(dict.length, greaterThanOrEqualTo(2));
     });
 
-    test('mock dictionary covers every lexicon word (no absent taps)',
-        () {
+    test('mock dictionary covers every lexicon word (no absent taps)', () {
       // Regression guard for the "no definition shown for any word" bug:
       // every word the learner can tap in bootstrap content must find an
       // entry, so the lookup feature is never perceived as broken.
@@ -102,18 +100,21 @@ void main() {
       final lexiconFile = File(
         'assets/content/curriculum/bootstrap_target_lexicon.json',
       );
-      final lex = jsonDecode(lexiconFile.readAsStringSync())
-          as Map<String, dynamic>;
+      final lex =
+          jsonDecode(lexiconFile.readAsStringSync()) as Map<String, dynamic>;
       for (final raw in lex['items'] as List<dynamic>) {
         final id = (raw as Map<String, dynamic>)['id'] as String;
-        expect(dict.contains(id), isTrue,
-            reason: 'lexicon word "$id" has no dictionary entry — '
-                'tapping it shows the absent state');
+        expect(
+          dict.contains(id),
+          isTrue,
+          reason:
+              'lexicon word "$id" has no dictionary entry — '
+              'tapping it shows the absent state',
+        );
       }
     });
 
-    test('no translation field exists in the dictionary schema or data',
-        () {
+    test('no translation field exists in the dictionary schema or data', () {
       final file = File('assets/dictionary/mock_dictionary.json');
       final raw = file.readAsStringSync();
 
@@ -126,8 +127,11 @@ void main() {
         '"gloss"',
         '"meaning_en"',
       ]) {
-        expect(raw.contains(forbidden), isFalse,
-            reason: 'monolingual dictionary must not carry $forbidden');
+        expect(
+          raw.contains(forbidden),
+          isFalse,
+          reason: 'monolingual dictionary must not carry $forbidden',
+        );
       }
       expect(MonolingualDictionary.fromJson(raw).length, greaterThan(0));
     });
@@ -137,11 +141,17 @@ void main() {
       final dict = MonolingualDictionary.fromJson(file.readAsStringSync());
       final latin = RegExp(r'[A-Za-z]{2,}');
       for (final entry in dict.allEntries) {
-        expect(latin.hasMatch(entry.definition), isFalse,
-            reason: 'definition of "${entry.surface}" must be pure Chinese');
+        expect(
+          latin.hasMatch(entry.definition),
+          isFalse,
+          reason: 'definition of "${entry.surface}" must be pure Chinese',
+        );
         for (final example in entry.examples) {
-          expect(latin.hasMatch(example), isFalse,
-              reason: 'examples must be pure Chinese');
+          expect(
+            latin.hasMatch(example),
+            isFalse,
+            reason: 'examples must be pure Chinese',
+          );
         }
       }
     });
@@ -153,8 +163,10 @@ void main() {
       // gaps; a corpus-wide check guarantees no drift between tokens and
       // text (the lookup tap targets depend on exact offsets).
       final stories = bootstrapCurriculum
-          .where((i) =>
-              i.type == ContentType.microStory || i.type == ContentType.story)
+          .where(
+            (i) =>
+                i.type == ContentType.microStory || i.type == ContentType.story,
+          )
           .toList();
       expect(stories, isNotEmpty);
 
@@ -173,9 +185,13 @@ void main() {
             if (cursor < sentence.text.length) {
               buffer.write(sentence.text.substring(cursor));
             }
-            expect(buffer.toString(), sentence.text,
-                reason: 'sentence reconstruction drifted in ${story.id} '
-                    '${sentence.id}');
+            expect(
+              buffer.toString(),
+              sentence.text,
+              reason:
+                  'sentence reconstruction drifted in ${story.id} '
+                  '${sentence.id}',
+            );
           }
         }
       }

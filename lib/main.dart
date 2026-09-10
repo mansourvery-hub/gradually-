@@ -44,13 +44,13 @@ class JianruApp extends StatelessWidget {
         ],
       ),
       // App-wide text selection: long-press/drag selects any learner-facing
-      // text for copy (a legitimate control, AGENTS.md §3.3) without
+      // text for copy (a legitimate control, QUALITY.md P-03 (legitimate controls)) without
       // disturbing the tap-anywhere reading cadence — taps keep winning the
       // gesture arena, selection only claims long-press and drag.
       // Wrapped around the home screen (inside the Navigator/Overlay) so
       // the selection region can present its toolbar.
       // App-wide text selection: long-press/drag selects any learner-facing
-      // text for copy (a legitimate control, AGENTS.md §3.3) without
+      // text for copy (a legitimate control, QUALITY.md P-03 (legitimate controls)) without
       // disturbing the tap-anywhere reading cadence — taps keep winning the
       // gesture arena, selection only claims long-press and drag.
       // Wrapped around the home screen (inside the Navigator/Overlay) so

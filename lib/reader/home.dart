@@ -1,4 +1,4 @@
-/// Radical zero-friction, button-free monolingual reader (AGENTS.md §3, CHOICES.md §1).
+/// Radical zero-friction, button-free monolingual reader (QUALITY.md (invariants), CHOICES.md §1).
 ///
 /// Widgets only: consumes Riverpod providers, contains no learning logic.
 /// All progression is driven by natural tap/gesture interactions.
@@ -67,7 +67,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       return;
     }
     final contentItem =
-        ref.read(nextExperienceProvider).value ?? bootstrapCurriculum.firstOrNull;
+        ref.read(nextExperienceProvider).value ??
+        bootstrapCurriculum.firstOrNull;
     if (contentItem == null) return;
     if (contentItem.type == ContentType.beginnerUnit) {
       _handleItemCompletion(contentItem);
@@ -98,9 +99,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         final contentRepo = ref.read(contentRepositoryProvider);
         final learnerRepo = ref.read(learnerRepositoryProvider);
         final existing = await contentRepo.getProgress(item.id);
-        final updated = (existing ??
-                ContentProgress.initial(contentId: item.id, now: now))
-            .updatePosition(sectionIndex, now);
+        final updated =
+            (existing ?? ContentProgress.initial(contentId: item.id, now: now))
+                .updatePosition(sectionIndex, now);
         await contentRepo.saveProgress(updated);
         await learnerRepo.updateContentProgress(updated);
       }
@@ -124,9 +125,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     try {
       ContentProgress? progress;
       if (kSimulatedLevel > 0) {
-        progress = ref
-            .read(activeLearnerStateProvider)
-            .progress[item.id];
+        progress = ref.read(activeLearnerStateProvider).progress[item.id];
       } else {
         final contentRepo = ref.read(contentRepositoryProvider);
         progress = await contentRepo.getProgress(item.id);
@@ -198,51 +197,52 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           skipTraversal: true,
           autofocus: true,
           child: Scaffold(
-      backgroundColor: const Color(0xFFFBF9F5), // Calm paper tone
-      body: SafeArea(
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
-          switchInCurve: Curves.easeOut,
-          switchOutCurve: Curves.easeIn,
-          child: contentItem != null
-              ? (contentItem.type == ContentType.beginnerUnit
-                    ? _ButtonlessBeginnerUnitView(
-                        key: ValueKey(contentItem.id),
-                        item: contentItem,
-                        onAdvance: () => _handleItemCompletion(contentItem),
-                      )
-                    : _ButtonlessStoryReaderView(
-                        key: ValueKey(
-                          '${contentItem.id}-$_currentSectionIndex',
+            backgroundColor: const Color(0xFFFBF9F5), // Calm paper tone
+            body: SafeArea(
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                switchInCurve: Curves.easeOut,
+                switchOutCurve: Curves.easeIn,
+                child: contentItem != null
+                    ? (contentItem.type == ContentType.beginnerUnit
+                          ? _ButtonlessBeginnerUnitView(
+                              key: ValueKey(contentItem.id),
+                              item: contentItem,
+                              onAdvance: () =>
+                                  _handleItemCompletion(contentItem),
+                            )
+                          : _ButtonlessStoryReaderView(
+                              key: ValueKey(
+                                '${contentItem.id}-$_currentSectionIndex',
+                              ),
+                              item: contentItem,
+                              sectionIndex: _currentSectionIndex,
+                              onAdvance: () {
+                                if (_currentSectionIndex <
+                                    contentItem.sections.length - 1) {
+                                  _gotoSection(
+                                    contentItem,
+                                    _currentSectionIndex + 1,
+                                  );
+                                } else {
+                                  _handleItemCompletion(contentItem);
+                                }
+                              },
+                            ))
+                    : const Center(
+                        key: ValueKey('empty-splash'),
+                        child: Text(
+                          '渐入',
+                          style: TextStyle(
+                            fontSize: 36,
+                            fontWeight: FontWeight.w200,
+                            letterSpacing: 8,
+                            color: Color(0xFF2C2C2C),
+                          ),
                         ),
-                        item: contentItem,
-                        sectionIndex: _currentSectionIndex,
-                        onAdvance: () {
-                          if (_currentSectionIndex <
-                              contentItem.sections.length - 1) {
-                            _gotoSection(
-                              contentItem,
-                              _currentSectionIndex + 1,
-                            );
-                          } else {
-                            _handleItemCompletion(contentItem);
-                          }
-                        },
-                      ))
-              : const Center(
-                  key: ValueKey('empty-splash'),
-                  child: Text(
-                    '渐入',
-                    style: TextStyle(
-                      fontSize: 36,
-                      fontWeight: FontWeight.w200,
-                      letterSpacing: 8,
-                      color: Color(0xFF2C2C2C),
-                    ),
-                  ),
-                ),
-        ),
-      ),
+                      ),
+              ),
+            ),
           ),
         ),
       ),
@@ -432,7 +432,6 @@ class _ButtonlessBeginnerUnitView extends ConsumerWidget {
       ),
     );
   }
-
 }
 
 /// Renders an optional visual asset (SVG) with a serene paper-tone
@@ -573,20 +572,22 @@ class _ButtonlessStoryReaderView extends ConsumerWidget {
       for (final token in sentence.tokens) {
         // Plain span for uncovered text before this token (punctuation).
         if (token.start > cursor) {
-          spans.add(TextSpan(
-            text: sentence.text.substring(cursor, token.start),
-          ));
+          spans.add(
+            TextSpan(text: sentence.text.substring(cursor, token.start)),
+          );
         }
         final hasEntry = dictionary?.contains(token.vocabId) ?? false;
-        spans.add(TextSpan(
-          text: token.surface,
-          style: hasEntry
-              ? const TextStyle(
-                  color: Color(0xFF2E4B3F), // sage ink: quiet lookup hint
-                )
-              : null,
-          recognizer: TapGestureRecognizer()..onTap = () => onTokenTap(token),
-        ));
+        spans.add(
+          TextSpan(
+            text: token.surface,
+            style: hasEntry
+                ? const TextStyle(
+                    color: Color(0xFF2E4B3F), // sage ink: quiet lookup hint
+                  )
+                : null,
+            recognizer: TapGestureRecognizer()..onTap = () => onTokenTap(token),
+          ),
+        );
         cursor = token.end;
       }
       // Trailing uncovered text after the last token.

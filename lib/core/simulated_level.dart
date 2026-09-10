@@ -105,9 +105,9 @@ LearnerState applySimulatedCompletion(LearnerState state, ContentItem item) {
   // 1. Mark the item as completed.
   final progress = Map<ContentId, ContentProgress>.from(state.progress);
   final existing = progress[item.id];
-  progress[item.id] = (existing ??
-          ContentProgress.initial(contentId: item.id, now: now))
-      .recordCompletion(now);
+  progress[item.id] =
+      (existing ?? ContentProgress.initial(contentId: item.id, now: now))
+          .recordCompletion(now);
 
   // 2. Record exposure for the item's vocabulary.
   final exposure = Map<VocabId, ExposureAggregate>.from(state.exposure);

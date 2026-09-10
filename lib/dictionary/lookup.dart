@@ -1,4 +1,4 @@
-/// Local monolingual contextual lookup (T_UI_040, AGENTS.md §3.1).
+/// Local monolingual contextual lookup (T_UI_040, QUALITY.md P-01 (monolingual)).
 ///
 /// Pure Dart domain service. Lookup is Chinese-only: entries carry Chinese
 /// definitions and Chinese example sentences from actual content. No
@@ -42,11 +42,11 @@ final class DictionaryEntry {
   final List<String> examples;
 
   Map<String, dynamic> toJson() => {
-        'vocabId': vocabId,
-        'surface': surface,
-        'definition': definition,
-        'examples': examples,
-      };
+    'vocabId': vocabId,
+    'surface': surface,
+    'definition': definition,
+    'examples': examples,
+  };
 }
 
 /// The result of a lookup: entry present or absent. Absence is valid and

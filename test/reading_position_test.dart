@@ -45,10 +45,16 @@ void main() {
     // New session reads back the exact position.
     final restored = await repo.getProgress(story.id);
     expect(restored, isNotNull);
-    expect(restored!.lastPosition, 2,
-        reason: 'reading position must resume exactly');
-    expect(restored.isCompleted, isFalse,
-        reason: 'mid-read item must not be marked completed');
+    expect(
+      restored!.lastPosition,
+      2,
+      reason: 'reading position must resume exactly',
+    );
+    expect(
+      restored.isCompleted,
+      isFalse,
+      reason: 'mid-read item must not be marked completed',
+    );
   });
 
   test('position survives completion and reread (bounded upsert)', () async {
@@ -58,9 +64,10 @@ void main() {
     final now = DateTime(2026, 9, 9, 10);
 
     // First complete read.
-    var progress = ContentProgress.initial(contentId: story.id, now: now)
-        .updatePosition(story.sections.length - 1, now)
-        .recordCompletion(now);
+    var progress = ContentProgress.initial(
+      contentId: story.id,
+      now: now,
+    ).updatePosition(story.sections.length - 1, now).recordCompletion(now);
     await repo.saveProgress(progress);
 
     // Reread: open again, position resets through a fresh update.
@@ -69,10 +76,16 @@ void main() {
 
     final restored = await repo.getProgress(story.id);
     expect(restored!.lastPosition, 0);
-    expect(restored.completionCount, 2,
-        reason: 'rereading increments completion count in place');
-    expect(restored.rereadCount, 1,
-        reason: 'second complete read counts as a reread');
+    expect(
+      restored.completionCount,
+      2,
+      reason: 'rereading increments completion count in place',
+    );
+    expect(
+      restored.rereadCount,
+      1,
+      reason: 'second complete read counts as a reread',
+    );
   });
 
   test('clamping restores a valid section when content shrinks', () {
@@ -82,48 +95,69 @@ void main() {
     final story = bootstrapCurriculum.firstWhere((i) => i.id == storyId);
     final saved = 99;
     final clamped = saved.clamp(0, story.sections.length - 1);
-    expect(clamped, story.sections.length - 1,
-        reason: 'out-of-range position clamps to the last section');
+    expect(
+      clamped,
+      story.sections.length - 1,
+      reason: 'out-of-range position clamps to the last section',
+    );
     expect(clamped >= 0, isTrue);
   });
 
-  test('children story entity exists and recycles only known lexicon',
-      () async {
-    final children = bootstrapCurriculum.where(
-      (i) => i.type == ContentType.story,
-    );
-    expect(children.length, 1,
-        reason: 'children stories are a distinct entity from micro stories');
-    final story = children.first;
-    expect(story.sections.length, greaterThanOrEqualTo(5),
-        reason: 'children stories are longer than micro stories');
+  test(
+    'children story entity exists and recycles only known lexicon',
+    () async {
+      final children = bootstrapCurriculum.where(
+        (i) => i.type == ContentType.story,
+      );
+      expect(
+        children.length,
+        1,
+        reason: 'children stories are a distinct entity from micro stories',
+      );
+      final story = children.first;
+      expect(
+        story.sections.length,
+        greaterThanOrEqualTo(5),
+        reason: 'children stories are longer than micro stories',
+      );
 
-    // Every vocabulary id in the children story must exist in the corpus
-    // lexicon (content is part of the algorithm: no stray vocabulary).
-    final allVocab = bootstrapCurriculum
-        .expand((i) => i.metadata.vocabulary)
-        .toSet();
-    final lexicon = bootstrapCurriculum
-        .where((i) => i.type == ContentType.beginnerUnit)
-        .expand((i) => i.metadata.vocabulary)
-        .toSet();
-    for (final v in story.metadata.vocabulary) {
-      expect(lexicon.contains(v), isTrue,
-          reason: 'children story vocabulary "$v" must be recycled from the '
-              'bootstrap lexicon');
-      expect(allVocab.contains(v), isTrue);
-    }
-  });
+      // Every vocabulary id in the children story must exist in the corpus
+      // lexicon (content is part of the algorithm: no stray vocabulary).
+      final allVocab = bootstrapCurriculum
+          .expand((i) => i.metadata.vocabulary)
+          .toSet();
+      final lexicon = bootstrapCurriculum
+          .where((i) => i.type == ContentType.beginnerUnit)
+          .expand((i) => i.metadata.vocabulary)
+          .toSet();
+      for (final v in story.metadata.vocabulary) {
+        expect(
+          lexicon.contains(v),
+          isTrue,
+          reason:
+              'children story vocabulary "$v" must be recycled from the '
+              'bootstrap lexicon',
+        );
+        expect(allVocab.contains(v), isTrue);
+      }
+    },
+  );
 
   test('micro stories are distinct from children stories', () {
     final micros = bootstrapCurriculum
         .where((i) => i.type == ContentType.microStory)
         .toList();
-    expect(micros.length, 3,
-        reason: 'Stories 1-3 are short micro stories, not children stories');
+    expect(
+      micros.length,
+      3,
+      reason: 'Stories 1-3 are short micro stories, not children stories',
+    );
     for (final m in micros) {
-      expect(m.sections.length, lessThan(5),
-          reason: 'micro stories stay a few lines long');
+      expect(
+        m.sections.length,
+        lessThan(5),
+        reason: 'micro stories stay a few lines long',
+      );
     }
   });
 }

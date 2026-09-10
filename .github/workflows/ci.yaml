@@ -28,3 +28,6 @@ jobs:
 
       - name: Test
         run: flutter test
+
+      - name: Curriculum / asset validator
+        run: dart run tool/validate_curriculum.dart

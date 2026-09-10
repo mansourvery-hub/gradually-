@@ -20,20 +20,13 @@ class SectionMediaCapability {
 ///
 /// Returns an empty list when no media capabilities are declared,
 /// allowing the reader to function without any media.
-List<MediaCapability> buildMediaCapabilities(
-  Iterable<ContentItem> items,
-) {
+List<MediaCapability> buildMediaCapabilities(Iterable<ContentItem> items) {
   final result = <MediaCapability>[];
   for (final item in items) {
     for (final section in item.sections) {
       final audioId = section.audioAsset;
       if (audioId != null) {
-        result.add(
-          MediaCapability(
-            contentId: item.id,
-            audioAssetId: audioId,
-          ),
-        );
+        result.add(MediaCapability(contentId: item.id, audioAssetId: audioId));
       }
     }
   }

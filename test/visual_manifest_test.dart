@@ -2,7 +2,7 @@
 ///
 /// Validates that every concept and scene reference resolves to an existing,
 /// well-formed SVG, and that no bilingual instructional text is embedded
-/// (AGENTS.md §3.1 monolingual invariant).
+/// (QUALITY.md P-01 (monolingual) monolingual invariant).
 library;
 
 import 'dart:convert';
@@ -12,13 +12,17 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   final manifestFile = File('assets/images/manifests/bootstrap_visuals.json');
-  final lexiconFile =
-      File('assets/content/curriculum/bootstrap_target_lexicon.json');
+  final lexiconFile = File(
+    'assets/content/curriculum/bootstrap_target_lexicon.json',
+  );
 
   group('visual manifest (T_VIS_002)', () {
     test('manifest exists and parses', () {
-      expect(manifestFile.existsSync(), isTrue,
-          reason: 'bootstrap_visuals.json must exist');
+      expect(
+        manifestFile.existsSync(),
+        isTrue,
+        reason: 'bootstrap_visuals.json must exist',
+      );
       final manifest =
           jsonDecode(manifestFile.readAsStringSync()) as Map<String, dynamic>;
       expect(manifest['version'], isNotNull);
@@ -30,19 +34,31 @@ void main() {
       final manifest =
           jsonDecode(manifestFile.readAsStringSync()) as Map<String, dynamic>;
       final concepts = manifest['concepts'] as Map<String, dynamic>;
-      expect(concepts.length, 45,
-          reason: 'all 45 bootstrap concepts must be covered');
+      expect(
+        concepts.length,
+        45,
+        reason: 'all 45 bootstrap concepts must be covered',
+      );
 
       for (final entry in concepts.entries) {
         final path = (entry.value as Map<String, dynamic>)['path'] as String;
         final f = File(path);
-        expect(f.existsSync(), isTrue,
-            reason: 'concept ${entry.key} asset missing at $path');
+        expect(
+          f.existsSync(),
+          isTrue,
+          reason: 'concept ${entry.key} asset missing at $path',
+        );
         final content = f.readAsStringSync();
-        expect(content.startsWith('<svg'), isTrue,
-            reason: '$path is not an SVG');
-        expect(content.contains('</svg>'), isTrue,
-            reason: '$path is truncated');
+        expect(
+          content.startsWith('<svg'),
+          isTrue,
+          reason: '$path is not an SVG',
+        );
+        expect(
+          content.contains('</svg>'),
+          isTrue,
+          reason: '$path is truncated',
+        );
       }
     });
 
@@ -50,17 +66,27 @@ void main() {
       final manifest =
           jsonDecode(manifestFile.readAsStringSync()) as Map<String, dynamic>;
       final scenes = manifest['scenes'] as Map<String, dynamic>;
-      expect(scenes.length, 17,
-          reason: 'Story1(3) + Story2(4) + Story3(4) + ChildrenStory(6) '
-              '= 17 scenes');
+      expect(
+        scenes.length,
+        17,
+        reason:
+            'Story1(3) + Story2(4) + Story3(4) + ChildrenStory(6) '
+            '= 17 scenes',
+      );
 
       for (final entry in scenes.entries) {
         final path = entry.value as String;
         final f = File(path);
-        expect(f.existsSync(), isTrue,
-            reason: 'scene ${entry.key} asset missing at $path');
-        expect(f.readAsStringSync().contains('</svg>'), isTrue,
-            reason: '$path is truncated');
+        expect(
+          f.existsSync(),
+          isTrue,
+          reason: 'scene ${entry.key} asset missing at $path',
+        );
+        expect(
+          f.readAsStringSync().contains('</svg>'),
+          isTrue,
+          reason: '$path is truncated',
+        );
       }
     });
 
@@ -72,31 +98,41 @@ void main() {
           .toSet();
       final manifest =
           jsonDecode(manifestFile.readAsStringSync()) as Map<String, dynamic>;
-      final manifestIds =
-          (manifest['concepts'] as Map<String, dynamic>).keys.toSet();
+      final manifestIds = (manifest['concepts'] as Map<String, dynamic>).keys
+          .toSet();
 
-      expect(manifestIds.difference(lexIds), isEmpty,
-          reason: 'manifest has concepts outside the target lexicon');
-      expect(lexIds.difference(manifestIds), isEmpty,
-          reason: 'target lexicon concepts missing from manifest');
+      expect(
+        manifestIds.difference(lexIds),
+        isEmpty,
+        reason: 'manifest has concepts outside the target lexicon',
+      );
+      expect(
+        lexIds.difference(manifestIds),
+        isEmpty,
+        reason: 'target lexicon concepts missing from manifest',
+      );
     });
 
     test('no English instructional text embedded in any SVG', () {
       final manifest =
           jsonDecode(manifestFile.readAsStringSync()) as Map<String, dynamic>;
       final allPaths = <String>[
-        ...(manifest['concepts'] as Map<String, dynamic>)
-            .values
-            .map((v) => (v as Map<String, dynamic>)['path'] as String),
+        ...(manifest['concepts'] as Map<String, dynamic>).values.map(
+          (v) => (v as Map<String, dynamic>)['path'] as String,
+        ),
         ...(manifest['scenes'] as Map<String, dynamic>).values.cast<String>(),
       ];
 
       final englishText = RegExp(r'>[A-Za-z]{2,}<');
       for (final path in allPaths) {
         final content = File(path).readAsStringSync();
-        expect(englishText.hasMatch(content), isFalse,
-            reason: '$path embeds Latin instructional text (monolingual '
-                'invariant violation)');
+        expect(
+          englishText.hasMatch(content),
+          isFalse,
+          reason:
+              '$path embeds Latin instructional text (monolingual '
+              'invariant violation)',
+        );
       }
     });
 
@@ -104,17 +140,21 @@ void main() {
       final manifest =
           jsonDecode(manifestFile.readAsStringSync()) as Map<String, dynamic>;
       final allPaths = <String>[
-        ...(manifest['concepts'] as Map<String, dynamic>)
-            .values
-            .map((v) => (v as Map<String, dynamic>)['path'] as String),
+        ...(manifest['concepts'] as Map<String, dynamic>).values.map(
+          (v) => (v as Map<String, dynamic>)['path'] as String,
+        ),
         ...(manifest['scenes'] as Map<String, dynamic>).values.cast<String>(),
       ];
 
       for (final path in allPaths) {
         final content = File(path).readAsStringSync();
-        expect(content.contains('<text'), isFalse,
-            reason: '$path contains a text element — visuals must be purely '
-                'pictographic (E-01 monolingual)');
+        expect(
+          content.contains('<text'),
+          isFalse,
+          reason:
+              '$path contains a text element — visuals must be purely '
+              'pictographic (E-01 monolingual)',
+        );
       }
     });
   });

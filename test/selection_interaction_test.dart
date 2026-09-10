@@ -1,6 +1,6 @@
 /// Selection + interaction coexistence tests.
 ///
-/// Text is selectable everywhere for copy/paste (AGENTS.md §3.3 legitimate
+/// Text is selectable everywhere for copy/paste (QUALITY.md P-03 (legitimate controls) legitimate
 /// control), and the monolingual toolbar shows 复制 — while the tap-anywhere
 /// reading cadence and token-lookup taps keep working: selection claims
 /// only long-press/drag, never taps.
@@ -103,10 +103,7 @@ void main() {
 
   /// Glyph-precise tap/long-press helper: locates a single character's
   /// rect inside the story RichText and acts at its center.
-  Future<Offset> centerOfGlyph(
-    WidgetTester tester,
-    String surface,
-  ) async {
+  Future<Offset> centerOfGlyph(WidgetTester tester, String surface) async {
     final richText = tester.renderObjectList<RenderParagraph>(
       find.byType(RichText),
     );
@@ -160,8 +157,9 @@ void main() {
     await unmountCleanly(tester);
   });
 
-  testWidgets('token tap opens the lookup sheet with the Chinese definition',
-      (tester) async {
+  testWidgets('token tap opens the lookup sheet with the Chinese definition', (
+    tester,
+  ) async {
     await pumpApp(tester);
 
     final glyph = await centerOfGlyph(tester, '水');
@@ -169,15 +167,22 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
 
-    expect(find.text('人要天天喝的东西。'), findsOneWidget,
-        reason: 'curated definition must render in the sheet');
-    expect(find.text('复制'), findsNothing,
-        reason: 'no selection started by a plain tap');
+    expect(
+      find.text('人要天天喝的东西。'),
+      findsOneWidget,
+      reason: 'curated definition must render in the sheet',
+    );
+    expect(
+      find.text('复制'),
+      findsNothing,
+      reason: 'no selection started by a plain tap',
+    );
     await unmountCleanly(tester);
   });
 
-  testWidgets('selection toolbar shows Chinese copy label (复制)',
-      (tester) async {
+  testWidgets('selection toolbar shows Chinese copy label (复制)', (
+    tester,
+  ) async {
     await pumpApp(tester);
 
     final glyph = await centerOfGlyph(tester, '水');
@@ -186,8 +191,11 @@ void main() {
     await tester.pump(const Duration(milliseconds: 300));
 
     // Material zh localization: copy button is 复制 — never "Copy".
-    expect(find.text('复制'), findsWidgets,
-        reason: 'monolingual invariant covers selection chrome');
+    expect(
+      find.text('复制'),
+      findsWidgets,
+      reason: 'monolingual invariant covers selection chrome',
+    );
     expect(find.text('Copy'), findsNothing);
     await unmountCleanly(tester);
   });

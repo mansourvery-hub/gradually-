@@ -18,19 +18,17 @@ void main() {
   final manifest =
       jsonDecode(manifestFile.readAsStringSync()) as Map<String, dynamic>;
   final paths = <String>[
-        ...(manifest['concepts'] as Map<String, dynamic>)
-            .values
-            .map((v) => (v as Map<String, dynamic>)['path'] as String),
-        ...(manifest['scenes'] as Map<String, dynamic>).values.cast<String>(),
-      ]..sort();
+    ...(manifest['concepts'] as Map<String, dynamic>).values.map(
+      (v) => (v as Map<String, dynamic>)['path'] as String,
+    ),
+    ...(manifest['scenes'] as Map<String, dynamic>).values.cast<String>(),
+  ]..sort();
 
   testWidgets('every bundled SVG renders through flutter_svg', (tester) async {
     final failures = <String>[];
     for (final path in paths) {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(body: SvgPicture.asset(path)),
-        ),
+        MaterialApp(home: Scaffold(body: SvgPicture.asset(path))),
       );
       try {
         await tester.pumpAndSettle();
@@ -44,7 +42,10 @@ void main() {
         failures.add('$path: $e');
       }
     }
-    expect(failures, isEmpty,
-        reason: 'all ${paths.length} declared visuals must render');
+    expect(
+      failures,
+      isEmpty,
+      reason: 'all ${paths.length} declared visuals must render',
+    );
   });
 }

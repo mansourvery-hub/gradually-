@@ -105,17 +105,19 @@ class SimulatedLearnerNotifier extends Notifier<LearnerState> {
     if (kSimulatedLevel == 0) return;
     final progress = Map<ContentId, ContentProgress>.from(state.progress);
     final existing = progress[contentId];
-    progress[contentId] = (existing ??
-            ContentProgress.initial(contentId: contentId, now: now))
-        .updatePosition(position, now);
+    progress[contentId] =
+        (existing ?? ContentProgress.initial(contentId: contentId, now: now))
+            .updatePosition(position, now);
     state = state.copyWith(progress: progress);
   }
 }
 
 /// Provides the active learner state — simulated in-memory at LEVEL>0,
 /// streamed from SQLite at LEVEL=0.
-final activeLearnerStateProvider = NotifierProvider<SimulatedLearnerNotifier,
-    LearnerState>(SimulatedLearnerNotifier.new);
+final activeLearnerStateProvider =
+    NotifierProvider<SimulatedLearnerNotifier, LearnerState>(
+      SimulatedLearnerNotifier.new,
+    );
 
 /// Reactive stream of the consolidated [LearnerState].
 ///
@@ -165,8 +167,9 @@ final dueReviewCardsProvider = FutureProvider<List<ReviewCardRecord>>((
 
     // First-session ramp: after unlock, begin with a small cohort instead
     // of flooding the learner with the entire backlog at once.
-    if (learnerState.progress.values
-        .every((p) => p.completionCount == 0 || p.rereadCount == 0)) {
+    if (learnerState.progress.values.every(
+      (p) => p.completionCount == 0 || p.rereadCount == 0,
+    )) {
       // No rereads recorded anywhere yet → earliest sessions: ramp in.
       final cohort = firstUnlockCohort(gate).toSet();
       return readyDue
@@ -192,7 +195,9 @@ final contentRepositoryProvider = Provider<ContentRepository>((ref) {
 
 /// Provides the [AudioPlaybackController] initialized with bootstrap curriculum
 /// media capabilities. Gracefully no-ops when no audio assets exist (E-08).
-final audioPlaybackControllerProvider = Provider<AudioPlaybackController>((ref) {
+final audioPlaybackControllerProvider = Provider<AudioPlaybackController>((
+  ref,
+) {
   final controller = AudioPlaybackController();
   controller.initialize(buildMediaCapabilities(bootstrapCurriculum));
   return controller;
