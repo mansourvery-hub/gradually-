@@ -2,8 +2,10 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'app/l10n.dart';
 import 'reader/home.dart';
 
 void main() {
@@ -19,6 +21,16 @@ class JianruApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: '渐入',
+      // Monolingual: all material chrome (copy toolbar 复制, selection
+      // menus, a11y labels) resolves to Chinese on every platform.
+      supportedLocales: kSupportedLocales,
+      locale: const Locale('zh'),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      localeResolutionCallback: resolveMonolingualLocale,
       theme: ThemeData(
         useMaterial3: true,
         fontFamily: 'NotoSansSC',
@@ -31,7 +43,19 @@ class JianruApp extends StatelessWidget {
           'sans-serif',
         ],
       ),
-      home: const HomeScreen(),
+      // App-wide text selection: long-press/drag selects any learner-facing
+      // text for copy (a legitimate control, AGENTS.md §3.3) without
+      // disturbing the tap-anywhere reading cadence — taps keep winning the
+      // gesture arena, selection only claims long-press and drag.
+      // Wrapped around the home screen (inside the Navigator/Overlay) so
+      // the selection region can present its toolbar.
+      // App-wide text selection: long-press/drag selects any learner-facing
+      // text for copy (a legitimate control, AGENTS.md §3.3) without
+      // disturbing the tap-anywhere reading cadence — taps keep winning the
+      // gesture arena, selection only claims long-press and drag.
+      // Wrapped around the home screen (inside the Navigator/Overlay) so
+      // the selection region can present its toolbar.
+      home: const SelectionArea(child: HomeScreen()),
     );
   }
 }
