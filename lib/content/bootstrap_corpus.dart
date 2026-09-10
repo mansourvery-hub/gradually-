@@ -57,6 +57,67 @@ const List<({String id, String surface, String concept})> kBootstrapLexicon = [
 ];
 
 /// Builds the complete list of 45 beginner units sequenced in target order.
+/// Stable ASCII file names for bootstrap concept visuals.
+///
+/// Web bundlers percent-encode non-ASCII filenames, which breaks asset
+/// resolution on some platforms; concept SVGs therefore use toneless
+/// pinyin ASCII names (homophones disambiguated with -2, -3 in lexicon
+/// order). This map is the single source of truth, mirrored by the files
+/// on disk and the visual manifest (CHOICES.md §3B swap contract).
+const Map<String, String> kConceptAssetNames = {
+      '水': 'shui',
+      '茶': 'cha',
+      '喝': 'he',
+      '吃': 'chi',
+      '米饭': 'mi-fan',
+      '我': 'wo',
+      '想': 'xiang',
+      '也': 'ye',
+      '我们': 'wo-men',
+      '一起': 'yi-qi',
+      '很': 'hen',
+      '好喝': 'hao-he',
+      '好吃': 'hao-chi',
+      '好': 'hao',
+      '猫': 'mao',
+      '大': 'da',
+      '小': 'xiao',
+      '看': 'kan',
+      '要': 'yao',
+      '鱼': 'yu',
+      '这里': 'zhe-li',
+      '有': 'you',
+      '一': 'yi',
+      '只': 'zhi',
+      '和': 'he-2',
+      '它们': 'ta-men',
+      '是': 'shi',
+      '朋友': 'peng-you',
+      '天天': 'tian-tian',
+      '在': 'zai',
+      '跑': 'pao',
+      '今天': 'jin-tian',
+      '天气': 'tian-qi',
+      '不': 'bu',
+      '下雨': 'xia-yu',
+      '了': 'le',
+      '家': 'jia',
+      '里': 'li',
+      '书': 'shu',
+      '热': 're',
+      '爸爸': 'ba-ba',
+      '妈妈': 'ma-ma',
+      '回来': 'hui-lai',
+      '雨伞': 'yu-san',
+      '冷': 'leng',
+};
+
+/// Resolves the ASCII concept visual file name for a lexicon word.
+String _asciiAssetName(
+    ({String id, String surface, String concept}) item) {
+  return kConceptAssetNames[item.id] ?? item.id;
+}
+
 List<ContentItem> _buildBootstrapUnits() {
   final units = <ContentItem>[];
 
@@ -84,7 +145,7 @@ List<ContentItem> _buildBootstrapUnits() {
           ContentSection(
             id: 'sec-1',
             text: item.surface,
-            visualAsset: 'assets/images/concepts/${item.id}.svg',
+            visualAsset: 'assets/images/concepts/${_asciiAssetName(item)}.svg',
             audioAsset: 'assets/audio/words/${item.id}.mp3',
             sentences: [
               ContentSentence(

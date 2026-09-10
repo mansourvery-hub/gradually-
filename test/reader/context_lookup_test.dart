@@ -7,6 +7,7 @@
 /// - Token-span reconstruction preserves sentence text exactly.
 library;
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -88,6 +89,27 @@ void main() {
       expect(file.existsSync(), isTrue);
       final dict = MonolingualDictionary.fromJson(file.readAsStringSync());
       expect(dict.length, greaterThanOrEqualTo(2));
+    });
+
+    test('mock dictionary covers every lexicon word (no absent taps)',
+        () {
+      // Regression guard for the "no definition shown for any word" bug:
+      // every word the learner can tap in bootstrap content must find an
+      // entry, so the lookup feature is never perceived as broken.
+      final file = File('assets/dictionary/mock_dictionary.json');
+      final dict = MonolingualDictionary.fromJson(file.readAsStringSync());
+
+      final lexiconFile = File(
+        'assets/content/curriculum/bootstrap_target_lexicon.json',
+      );
+      final lex = jsonDecode(lexiconFile.readAsStringSync())
+          as Map<String, dynamic>;
+      for (final raw in lex['items'] as List<dynamic>) {
+        final id = (raw as Map<String, dynamic>)['id'] as String;
+        expect(dict.contains(id), isTrue,
+            reason: 'lexicon word "$id" has no dictionary entry — '
+                'tapping it shows the absent state');
+      }
     });
 
     test('no translation field exists in the dictionary schema or data',

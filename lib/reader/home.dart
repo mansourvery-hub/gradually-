@@ -17,6 +17,7 @@ import '../content/content.dart';
 import '../core/ids.dart';
 import '../core/progress.dart';
 import '../core/simulated_level.dart';
+import '../core/token.dart';
 import '../dictionary/lookup.dart';
 import '../learner/known.dart';
 import '../review/review.dart';
@@ -529,6 +530,11 @@ class _ButtonlessStoryReaderView extends ConsumerWidget {
                       children: _buildTokenSpans(
                         context,
                         section,
+                        (token) => _handleTokenLookup(
+                          context,
+                          token,
+                          ref.read(dictionaryProvider).value,
+                        ),
                         dictionary,
                       ),
                     ),
@@ -557,6 +563,7 @@ class _ButtonlessStoryReaderView extends ConsumerWidget {
   List<InlineSpan> _buildTokenSpans(
     BuildContext context,
     ContentSection section,
+    void Function(Token token) onTokenTap,
     MonolingualDictionary? dictionary,
   ) {
     final spans = <InlineSpan>[];
@@ -578,13 +585,7 @@ class _ButtonlessStoryReaderView extends ConsumerWidget {
                   color: Color(0xFF2E4B3F), // sage ink: quiet lookup hint
                 )
               : null,
-          recognizer: TapGestureRecognizer()
-            ..onTap = () {
-              final result = dictionary != null
-                  ? dictionary.lookup(token.vocabId)
-                  : const LookupResult.absent();
-              ContextLookupSheet.show(context, result);
-            },
+          recognizer: TapGestureRecognizer()..onTap = () => onTokenTap(token),
         ));
         cursor = token.end;
       }
@@ -594,6 +595,19 @@ class _ButtonlessStoryReaderView extends ConsumerWidget {
       }
     }
     return spans;
+  }
+
+  /// Resolves a token lookup at tap time — never a stale snapshot — so a
+  /// tap during dictionary load still finds curated data.
+  void _handleTokenLookup(
+    BuildContext context,
+    Token token,
+    MonolingualDictionary? dictionary,
+  ) {
+    final result = dictionary != null
+        ? dictionary.lookup(token.vocabId)
+        : const LookupResult.absent();
+    ContextLookupSheet.show(context, result);
   }
 }
 
