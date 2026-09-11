@@ -10,8 +10,7 @@
     "difficultyEstimate": 2,
     "vocabulary": [
       "吃",
-      "米饭",
-      "吃饭"
+      "米饭"
     ],
     "curriculumCriticalVocabulary": [
       "吃",
@@ -48,13 +47,13 @@
         },
         {
           "id": "unit-004-s2",
-          "text": "吃饭。",
+          "text": "吃。",
           "tokens": [
             {
-              "vocabId": "吃饭",
-              "surface": "吃饭",
+              "vocabId": "吃",
+              "surface": "吃",
               "start": 0,
-              "end": 2
+              "end": 1
             }
           ],
           "criticalVocabIds": [
