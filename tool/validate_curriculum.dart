@@ -140,6 +140,41 @@ void main(List<String> args) {
     }
   }
 
+  // 5. Validate declared curriculum vocabulary stays inside the bootstrap
+  //    lexicon (QUALITY.md D-06 + C-04). Story tokens may include
+  //    incidental vocabulary, but `metadata.vocabulary` and
+  //    `metadata.curriculumCriticalVocabulary` must reference only the
+  //    target-led bootstrap set.
+  final lexFile = File(
+    'assets/content/curriculum/bootstrap_target_lexicon.json',
+  );
+  final Set<String> lexiconIds = lexFile.existsSync()
+      ? ((jsonDecode(lexFile.readAsStringSync())
+                    as Map<String, dynamic>)['items']
+                as List<dynamic>)
+            .map((e) => (e as Map<String, dynamic>)['id'] as String)
+            .toSet()
+      : <String>{};
+
+  if (lexiconIds.isNotEmpty) {
+    for (final item in items) {
+      for (final key in const ['vocabulary', 'curriculumCriticalVocabulary']) {
+        final declared = List<String>.from(
+          (item.metadata.toJson()[key] as List<dynamic>?) ?? const [],
+        );
+        final outOfLexicon = declared
+            .where((v) => !lexiconIds.contains(v))
+            .toList();
+        if (outOfLexicon.isNotEmpty) {
+          errors.add(
+            '(D-06) "${item.id}".metadata.$key references vocabulary outside '
+            'the bootstrap lexicon: ${outOfLexicon.join(', ')}',
+          );
+        }
+      }
+    }
+  }
+
   // Summary
   if (errors.isNotEmpty) {
     stderr.writeln(

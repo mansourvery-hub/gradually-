@@ -21,6 +21,8 @@ fi
 step() { printf '\n==> %s\n' "$1"; }
 
 step "format"
+# Format and verify the tree is canonical (CI enforces too).
+"${DART[@]}" format lib test tool
 "${DART[@]}" format --output=none --set-exit-if-changed lib test tool
 
 step "analyze"
