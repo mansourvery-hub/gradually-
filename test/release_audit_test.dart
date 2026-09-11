@@ -109,7 +109,7 @@ void main() {
     /// A word-boundary regex that matches identifiers, comments, or string
     /// literals (handles `XP`, `'XP'`, `// XP`, `XP()`, etc.).
     RegExp affordancePattern(String word) =>
-        RegExp("(^|[^a-zA-Z0-9_])$word([^a-zA-Z0-9_]|\\\$)");
+        RegExp(r'(^|[^a-zA-Z0-9_])$word([^a-zA-Z0-9_]|$)');
 
     test('lib/ has no anti-feature identifiers or strings', () {
       for (final f in libFiles) {
@@ -144,7 +144,7 @@ void main() {
         expect(
           RegExp(entry.key).hasMatch(libSrc),
           isFalse,
-          reason: '${entry.value}',
+          reason: entry.value,
         );
       }
     });
@@ -165,11 +165,11 @@ void main() {
         final src = f.readAsStringSync();
         for (final pkg in behavioralImports) {
           expect(
-            RegExp("package:$pkg").hasMatch(src),
+            RegExp('package:$pkg').hasMatch(src),
             isFalse,
             reason:
                 'D-03 violation in ${f.path}: behavioral analytics '
-                'package "$pkg" imported. Learner state derives only from '
+                'package $pkg imported. Learner state derives only from '
                 'explicit learning events.',
           );
         }
