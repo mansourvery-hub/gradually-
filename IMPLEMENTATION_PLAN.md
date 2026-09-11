@@ -33,11 +33,11 @@ T1 AUDIO_ASSETS ──→ T2 PLAYBACK_CADENCE ──→ [COMPLETE] (UI wiring do
       ↓
 T3 ART_SWAP (replace placeholder SVGs at manifest paths)
 
-T4 REREAD_EVIDENCE ──→ T5 LONG_TERM_EXPOSURE        (post-MVP evidence)
-T6 DICTIONARY_SCHEMA ──→ T7 LEVELED_LOOKUP_DEPTH    (post-MVP dictionary)
-T8 IMPORT_PIPELINE ──→ T9 IMPORT_SELECTION          (post-MVP importing)
+T4 REREAD_EVIDENCE ──→ T5 LONG_TERM_EXPOSURE        [DEFERRED: post-MVP evidence]
+T6 DICTIONARY_SCHEMA ──→ T7 LEVELED_LOOKUP_DEPTH    [DEFERRED: post-MVP dictionary]
+T8 IMPORT_PIPELINE ──→ T9 IMPORT_SELECTION          [DEFERRED: post-MVP importing]
 
-T10 RELEASE_AUDIT ──→ T11 PLATFORM_VALIDATION ──→ MVP VALIDATION
+T10 RELEASE_AUDIT ──→ T11 PLATFORM_VALIDATION ──→ MVP VALIDATION [COMPLETE]
 ```
 
 ## Task definitions
@@ -65,26 +65,25 @@ T10 RELEASE_AUDIT ──→ T11 PLATFORM_VALIDATION ──→ MVP VALIDATION
   story illustrations at the manifest paths (`CHOICES §3B swap contract`,
   C-05). Zero code changes by design.
 
-### T4 — Reread evidence in learner model `[READY]`
+### T4 — Reread evidence in learner model `[DEFERRED]`
 
 - Rereads already record exposure/completion; fold rereading into
-  learner-model evidence explicitly (post-MVP per E-14 ordering, but small
-  and well-defined now).
+  learner-model evidence explicitly (post-MVP per E-14 ordering).
 - Files: `lib/learner/` aggregate extension + `test/` regression.
 - Guard: D-02 (explicit events only).
 
-### T5 — Long-term exposure evidence `[BLOCKED: T4]`
+### T5 — Long-term exposure evidence `[DEFERRED: T4]`
 
 - Aggregate-derived familiarity signal feeding selector scoring V2.
 
-### T6 — Curated dictionary schema (real data) `[READY]`
+### T6 — Curated dictionary schema (real data) `[DEFERRED]`
 
 - Replace mock dictionary entries with curated monolingual definitions at
   the same path/schema (mock proves the pipeline; real data is editorial
   work). Schema is stable — data swap only.
 - Guard: C-04 (structurally monolingual).
 
-### T7 — Leveled lookup depth `[BLOCKED: T6]`
+### T7 — Leveled lookup depth `[DEFERRED: T6]`
 
 - Learner-aware definition depth (simpler Chinese for earlier stages).
 
