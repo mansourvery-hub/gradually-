@@ -94,13 +94,13 @@ T10 RELEASE_AUDIT ──→ T11 PLATFORM_VALIDATION ──→ MVP VALIDATION
 
 ### T9 — Imported-content selection gating `[DEFERRED: T8]`
 
-### T10 — Release audit `[READY]`
+### T10 — Release audit `[COMPLETE]`
 
 - Automated anti-feature scan (no XP/streak/dashboard/catalog strings, no
   translation-first UI, no behavioral tracking) over `lib/`.
-- Verification: `test/release/product_invariants_test.dart`.
+- Verification: `test/release_audit_test.dart`.
 
-### T11 — Platform validation `[READY after T10]`
+### T11 — Platform validation `[COMPLETE]`
 
 - `flutter analyze` + full tests + representative iOS/Android/Web builds
   with offline asset/persistence checks. CI (`.github/workflows/ci.yaml`)
@@ -130,5 +130,5 @@ core types → tokenizer → learner model → exposure gate
 [ ] Lookup: tap curated + absent words in stories → definitions / serene fallback
 [ ] Selection: long-press text → 复制 toolbar → copy works
 [ ] No English reachable anywhere in the learner UI
-[ ] T10 + T11 pass; all tests green; ./verify green
+[COMPLETE] T10 + T11 pass; all tests green; ./verify green
 ```
