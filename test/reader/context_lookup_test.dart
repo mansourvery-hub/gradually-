@@ -11,10 +11,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:jianru/content/bootstrap_corpus.dart';
 import 'package:jianru/content/content.dart';
 import 'package:jianru/core/token.dart';
 import 'package:jianru/dictionary/lookup.dart';
+
+import '../helpers/corpus_loader.dart';
 
 const mockJson = '''
 {
@@ -162,7 +163,7 @@ void main() {
       // The span builder reconstructs sentence text from tokens + uncovered
       // gaps; a corpus-wide check guarantees no drift between tokens and
       // text (the lookup tap targets depend on exact offsets).
-      final stories = bootstrapCurriculum
+      final stories = fullCorpus()
           .where(
             (i) =>
                 i.type == ContentType.microStory || i.type == ContentType.story,

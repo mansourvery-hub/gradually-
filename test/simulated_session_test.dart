@@ -4,13 +4,16 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:jianru/content/bootstrap_corpus.dart';
+import 'package:jianru/content/content.dart';
 import 'package:jianru/core/simulated_level.dart';
+
+import 'helpers/corpus_loader.dart';
 
 void main() {
   test('applySimulatedCompletion advances learner state', () {
-    final initial = buildSimulatedLearnerState(10);
-    final item = bootstrapCurriculum.first;
+    final corpus = fullCorpus();
+    final initial = buildSimulatedLearnerState(10, corpus: corpus);
+    final item = corpus.first;
 
     final next = applySimulatedCompletion(initial, item);
 
@@ -34,20 +37,37 @@ void main() {
   });
 
   test('repeated simulated completions eventually cover the curriculum', () {
-    var state = buildSimulatedLearnerState(10);
+    final corpus = fullCorpus();
+    var state = buildSimulatedLearnerState(10, corpus: corpus);
 
     // Complete every curriculum item once through the simulated reducer.
-    for (final item in bootstrapCurriculum) {
+    for (final item in corpus) {
       state = applySimulatedCompletion(state, item);
     }
 
-    final completedCount = bootstrapCurriculum
+    final completedCount = corpus
         .where((i) => state.isContentCompleted(i.id))
         .length;
     expect(
       completedCount,
-      bootstrapCurriculum.length,
+      corpus.length,
       reason: 'all items should be completable via simulated completions',
+    );
+  });
+
+  test('simulated state derives from the corpus data, not compiled code', () {
+    // The corpus must be loadable purely from data files: 45 lexicon
+    // units plus the manifest stories (>= 20 by the V1 milestone).
+    final corpus = fullCorpus();
+    final units = corpus
+        .where((i) => i.type == ContentType.beginnerUnit)
+        .length;
+    final stories = corpus.length - units;
+    expect(units, 45, reason: 'lexicon data generates 45 beginner units');
+    expect(
+      stories,
+      greaterThanOrEqualTo(20),
+      reason: 'manifest data carries at least 20 stories/dialogues',
     );
   });
 }

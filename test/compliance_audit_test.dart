@@ -3,62 +3,53 @@
 ///
 /// - **P-01** Monolingual: no English chrome can ever reach the learner UI.
 /// - **D-06 / C-04** Vocabulary declared in any content item must be a
-///   subset of the bootstrap target-led lexicon. (Validators enforce
-///   this against content JSON; this test enforces it against the Dart
-///   corpus — the data the running app actually consumes.)
+///   subset of the bootstrap target-led lexicon. Enforced against BOTH
+///   the corpus data files AND the runtime-assembled corpus.
 library;
 
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:jianru/content/bootstrap_corpus.dart';
+import 'package:jianru/content/corpus.dart' show parseLexiconJson;
+
+import 'helpers/corpus_loader.dart';
 
 void main() {
+  final lexiconIds = parseLexiconJson(lexiconJson()).map((i) => i.id).toSet();
+
   group(
     'D-06 + C-04 — declared curriculum vocabulary stays inside the lexicon',
     () {
-      final lexFile = File(
-        'assets/content/curriculum/bootstrap_target_lexicon.json',
-      );
-      final lex =
-          jsonDecode(lexFile.readAsStringSync()) as Map<String, dynamic>;
-      final lexiconIds = (lex['items'] as List<dynamic>)
-          .map((i) => (i as Map<String, dynamic>)['id'] as String)
-          .toSet();
-
-      test(
-        'every item in bootstrapCurriculum declares a lexicon-only vocabulary',
-        () {
-          for (final item in bootstrapCurriculum) {
-            final declaredVocab = item.metadata.vocabulary;
-            final out = declaredVocab
-                .where((v) => !lexiconIds.contains(v))
-                .toList();
-            expect(
-              out,
-              isEmpty,
-              reason:
-                  '${item.id}.metadata.vocabulary declares non-lexicon '
-                  'vocabulary: ${out.join(', ')} (QUALITY.md D-06)',
-            );
-            // Critical vocabulary is by definition lexicon-bounded.
-            final crit = item.metadata.curriculumCriticalVocabulary;
-            final critOut = crit.where((v) => !lexiconIds.contains(v)).toList();
-            expect(
-              critOut,
-              isEmpty,
-              reason:
-                  '${item.id}.metadata.curriculumCriticalVocabulary declares '
-                  'non-lexicon: ${critOut.join(', ')} (QUALITY.md D-06)',
-            );
-          }
-        },
-      );
+      test('every corpus item declares a lexicon-only vocabulary', () {
+        for (final item in fullCorpus()) {
+          final declaredVocab = item.metadata.vocabulary;
+          final out = declaredVocab
+              .where((v) => !lexiconIds.contains(v))
+              .toList();
+          expect(
+            out,
+            isEmpty,
+            reason:
+                '${item.id}.metadata.vocabulary declares non-lexicon '
+                'vocabulary: ${out.join(', ')} (QUALITY.md D-06)',
+          );
+          // Critical vocabulary is by definition lexicon-bounded.
+          final crit = item.metadata.curriculumCriticalVocabulary;
+          final critOut = crit.where((v) => !lexiconIds.contains(v)).toList();
+          expect(
+            critOut,
+            isEmpty,
+            reason:
+                '${item.id}.metadata.curriculumCriticalVocabulary declares '
+                'non-lexicon: ${critOut.join(', ')} (QUALITY.md D-06)',
+          );
+        }
+      });
 
       test('every story token surface is a substring of its sentence', () {
         // Defends against typos / drift between authored surface and text.
-        for (final item in bootstrapCurriculum) {
+        for (final item in fullCorpus()) {
           for (final section in item.sections) {
             for (final sentence in section.sentences) {
               for (final token in sentence.tokens) {
@@ -75,6 +66,37 @@ void main() {
           }
         }
       });
+
+      test(
+        'token vocab ids outside the lexicon are never declared critical',
+        () {
+          // Incidental tokens (他们, single chars) may exist in story text
+          // for naturalness, but they must never enter the curriculum
+          // vocabulary declaration that drives acquisition.
+          for (final item in manifestStories()) {
+            final declared = item.metadata.vocabulary;
+            final incidental = <String>{};
+            for (final section in item.sections) {
+              for (final sentence in section.sentences) {
+                for (final token in sentence.tokens) {
+                  if (!lexiconIds.contains(token.vocabId)) {
+                    incidental.add(token.vocabId);
+                  }
+                }
+              }
+            }
+            for (final v in declared) {
+              expect(
+                incidental.contains(v),
+                isFalse,
+                reason:
+                    '${item.id} declares "$v" as curriculum vocabulary, but it '
+                    'is an incidental (non-lexicon) token (D-06)',
+              );
+            }
+          }
+        },
+      );
     },
   );
 
@@ -149,10 +171,6 @@ void main() {
       for (final f in libSrc) {
         if (f.path.contains('test/')) continue;
         final raw = f.readAsStringSync();
-        // Strip comments before scanning: a comment mentioning the
-        // forbidden string is documentation, not UI. Multiline /// and /*
-        // comments are stripped; string literals inside Dart comments
-        // don't reach the learner.
         final stripped = stripDartComments(raw);
         for (final s in materialStringsLeaked) {
           final pattern = RegExp("['\"]($s)['\"]");
@@ -171,14 +189,9 @@ void main() {
     test(
       'lib/reader/widgets/context_lookup_sheet.dart renders in Chinese only',
       () {
-        // The sheet is the learner-facing definition surface; its literal
-        // text must contain no Latin letters in the rendered empty-state or
-        // definitions passed to Text widgets.
         final sheet = File(
           'lib/reader/widgets/context_lookup_sheet.dart',
         ).readAsStringSync();
-        // The single visible literal is "……" — confirm no other UI literals
-        // contain Latin letters.
         final literalPattern = RegExp("Text\\(\\s*['\"]([^'\\\"]+)['\"]");
         final latinPattern = RegExp(r'[A-Za-z]{3,}');
         for (final m in literalPattern.allMatches(sheet)) {
@@ -194,9 +207,6 @@ void main() {
     );
 
     test('mock dictionary surface + definition are pure Chinese', () {
-      // The mock dictionary is the only learner-consumed data source for
-      // definitions/examples; a regression test prevents future entries
-      // from sneaking Latin back in.
       final dictFile = File('assets/dictionary/mock_dictionary.json');
       final dict =
           jsonDecode(dictFile.readAsStringSync()) as Map<String, dynamic>;

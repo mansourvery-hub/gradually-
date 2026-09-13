@@ -12,6 +12,8 @@ import 'package:jianru/core/simulated_level.dart';
 import 'package:jianru/learner/exposure_gate.dart';
 import 'package:jianru/learner/learner_state.dart';
 
+import 'helpers/corpus_loader.dart';
+
 ExposureAggregate _agg(String id, int count, {DateTime? firstSeen}) {
   final seen = firstSeen ?? DateTime(2026, 9, 1);
   return ExposureAggregate(
@@ -211,7 +213,9 @@ void main() {
     });
 
     test('LEVEL=25: mid exposure phase, gate still locked', () {
-      final gate = evaluateExposureGate(buildSimulatedLearnerState(25));
+      final gate = evaluateExposureGate(
+        buildSimulatedLearnerState(25, corpus: fullCorpus()),
+      );
       expect(
         gate.isUnlocked,
         isFalse,
@@ -221,7 +225,9 @@ void main() {
     });
 
     test('LEVEL=50: exposure phase complete, gate unlocked with cohort', () {
-      final gate = evaluateExposureGate(buildSimulatedLearnerState(50));
+      final gate = evaluateExposureGate(
+        buildSimulatedLearnerState(50, corpus: fullCorpus()),
+      );
       expect(
         gate.isUnlocked,
         isTrue,
@@ -233,7 +239,9 @@ void main() {
     });
 
     test('LEVEL=100: full mastery, gate unlocked', () {
-      final gate = evaluateExposureGate(buildSimulatedLearnerState(100));
+      final gate = evaluateExposureGate(
+        buildSimulatedLearnerState(100, corpus: fullCorpus()),
+      );
       expect(gate.isUnlocked, isTrue);
     });
   });

@@ -97,13 +97,15 @@ void main() {
   });
 
   group('Curated Content Corpus Regression & Validation (E-13)', () {
-    final contentDir = Directory('assets/content');
-    final jsonFiles = contentDir
-        .listSync()
-        .whereType<File>()
-        .where(
-          (f) => f.path.endsWith('.json') && !f.path.endsWith('manifest.json'),
-        )
+    // Corpus items come from the manifest (CONTENT IS DATA): stories and
+    // dialogues live in listed JSON files; beginner units are generated
+    // from the lexicon and are not individual files.
+    final manifestFile = File('assets/content/manifest.json');
+    final manifest =
+        jsonDecode(manifestFile.readAsStringSync()) as Map<String, dynamic>;
+    final jsonFiles = (manifest['items'] as List<dynamic>)
+        .cast<String>()
+        .map(File.new)
         .toList();
 
     test('curated content directory contains content files', () {
@@ -182,13 +184,32 @@ void main() {
     }
 
     test('all prerequisite IDs point to existing content items in corpus', () {
+      // Generated beginner unit ids (unit-NNN-word) are valid
+      // prerequisites by convention; the validator enforces the same.
+      final lexiconFile = File(
+        'assets/content/curriculum/bootstrap_target_lexicon.json',
+      );
+      final lexiconList =
+          ((jsonDecode(lexiconFile.readAsStringSync())
+                      as Map<String, dynamic>)['items']
+                  as List<dynamic>)
+              .map((e) => (e as Map<String, dynamic>)['id'] as String)
+              .toList();
+      final generatedUnits = <String>{
+        for (var i = 0; i < lexiconList.length; i++)
+          'unit-${(i + 1).toString().padLeft(3, '0')}-${lexiconList[i]}',
+      };
+
       for (final item in items) {
         for (final prereq in item.metadata.prerequisiteIds) {
+          final exists =
+              allItemIds.contains(prereq) || generatedUnits.contains(prereq);
           expect(
-            allItemIds,
-            contains(prereq),
+            exists,
+            isTrue,
             reason:
-                'Prerequisite $prereq in ${item.id} must exist in the corpus',
+                'Prerequisite $prereq in ${item.id} must exist in the corpus '
+                '(story ids or generated unit ids)',
           );
         }
       }
@@ -270,5 +291,100 @@ void main() {
       expect(loadedProgress?.completionCount, 1);
       expect(loadedProgress?.isCompleted, isTrue);
     });
+
+    test('fromData builds the corpus from lexicon + story payloads '
+        '(units generated, stories registered, drafts filtered)', () async {
+      final repo = AssetContentRepository.fromData(
+        db: db,
+        lexiconJson: File(
+          'assets/content/curriculum/bootstrap_target_lexicon.json',
+        ).readAsStringSync(),
+        storyPayloads: [
+          for (final f in [
+            'assets/content/micro-101-tea-water.json',
+            'assets/content/story-001-drink-tea.json',
+          ])
+            File(f).readAsStringSync(),
+          // A draft story: present in the dataset, excluded from the
+          // running corpus (status filtering).
+          jsonEncode(
+            const ContentItem(
+              metadata: ContentMetadata(
+                id: 'draft-story',
+                title: '草稿',
+                type: ContentType.microStory,
+                curriculumOrder: 999,
+                status: ContentStatus.draft,
+              ),
+              sections: [],
+            ).toJson(),
+          ),
+        ],
+      );
+
+      final candidates = await repo.getCandidateContents();
+      // 45 generated units + 2 stories; the draft never appears.
+      expect(candidates.length, 47);
+      expect(
+        candidates.any((c) => c.id == 'draft-story'),
+        isFalse,
+        reason: 'draft items must be filtered from selection',
+      );
+      expect(candidates.any((c) => c.id == 'unit-001-水'), isTrue);
+      expect(candidates.any((c) => c.id == 'story-001-drink-tea'), isTrue);
+      // Candidate metadata carries type + difficulty for the selector.
+      final story = candidates.firstWhere((c) => c.id == 'story-001-drink-tea');
+      expect(story.type, ContentType.microStory);
+      expect(story.difficulty, 2);
+    });
+
+    test('register() ignores non-available items (availability invariant)', () {
+      const retired = ContentItem(
+        metadata: ContentMetadata(
+          id: 'retired-story',
+          title: '旧故事',
+          type: ContentType.story,
+          curriculumOrder: 998,
+          status: ContentStatus.retired,
+        ),
+        sections: [],
+      );
+      repository.register(retired);
+      expect(() => repository.getContentItem('retired-story'), returnsNormally);
+    });
+
+    test(
+      'firstItemId follows curriculum order (repository owns ordering)',
+      () async {
+        const early = ContentItem(
+          metadata: ContentMetadata(
+            id: 'unit-1',
+            title: '早',
+            type: ContentType.beginnerUnit,
+            curriculumOrder: 1,
+          ),
+          sections: [],
+        );
+        const late = ContentItem(
+          metadata: ContentMetadata(
+            id: 'late-item',
+            title: '晚',
+            type: ContentType.microStory,
+            curriculumOrder: 500,
+          ),
+          sections: [],
+        );
+        repository.register(early);
+        repository.register(late);
+        final first = await repository.firstItemId();
+        expect(
+          first,
+          'unit-1',
+          reason:
+              'unit-1 has order 1; the late item (500) must not lead the '
+              'corpus',
+        );
+      },
+    );
   });
 }

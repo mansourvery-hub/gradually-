@@ -7,11 +7,12 @@ library;
 
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:jianru/content/bootstrap_corpus.dart';
 import 'package:jianru/content/content.dart';
 import 'package:jianru/core/progress.dart';
 import 'package:jianru/data/database.dart';
 import 'package:jianru/data/repositories/content_repository_impl.dart';
+
+import 'helpers/corpus_loader.dart';
 
 void main() {
   late AppDatabase db;
@@ -19,7 +20,7 @@ void main() {
 
   setUp(() {
     db = AppDatabase(NativeDatabase.memory());
-    repo = AssetContentRepository(db: db, initialItems: bootstrapCurriculum);
+    repo = AssetContentRepository(db: db, initialItems: fullCorpus());
   });
 
   tearDown(() async {
@@ -27,7 +28,7 @@ void main() {
   });
 
   test('position round-trips through saveProgress/getProgress', () async {
-    final story = bootstrapCurriculum.firstWhere(
+    final story = fullCorpus().firstWhere(
       (i) => i.type == ContentType.microStory,
     );
 
@@ -58,7 +59,7 @@ void main() {
   });
 
   test('position survives completion and reread (bounded upsert)', () async {
-    final story = bootstrapCurriculum.firstWhere(
+    final story = fullCorpus().firstWhere(
       (i) => i.type == ContentType.microStory,
     );
     final now = DateTime(2026, 9, 9, 10);
@@ -91,8 +92,7 @@ void main() {
   test('clamping restores a valid section when content shrinks', () {
     // Guards the restore path: a saved position beyond the current section
     // count (e.g. after content edits) must clamp, never crash.
-    const storyId = 'story-001-drink-tea';
-    final story = bootstrapCurriculum.firstWhere((i) => i.id == storyId);
+    final story = fullCorpus().firstWhere((i) => i.id == 'story-001-drink-tea');
     final saved = 99;
     final clamped = saved.clamp(0, story.sections.length - 1);
     expect(
@@ -106,9 +106,8 @@ void main() {
   test(
     'children story entity exists and recycles only known lexicon',
     () async {
-      final children = bootstrapCurriculum.where(
-        (i) => i.type == ContentType.story,
-      );
+      final corpus = fullCorpus();
+      final children = corpus.where((i) => i.type == ContentType.story);
       expect(
         children.length,
         1,
@@ -123,10 +122,8 @@ void main() {
 
       // Every vocabulary id in the children story must exist in the corpus
       // lexicon (content is part of the algorithm: no stray vocabulary).
-      final allVocab = bootstrapCurriculum
-          .expand((i) => i.metadata.vocabulary)
-          .toSet();
-      final lexicon = bootstrapCurriculum
+      final allVocab = corpus.expand((i) => i.metadata.vocabulary).toSet();
+      final lexicon = corpus
           .where((i) => i.type == ContentType.beginnerUnit)
           .expand((i) => i.metadata.vocabulary)
           .toSet();
@@ -144,13 +141,13 @@ void main() {
   );
 
   test('micro stories are distinct from children stories', () {
-    final micros = bootstrapCurriculum
+    final micros = fullCorpus()
         .where((i) => i.type == ContentType.microStory)
         .toList();
     expect(
       micros.length,
-      3,
-      reason: 'Stories 1-3 are short micro stories, not children stories',
+      greaterThanOrEqualTo(3),
+      reason: 'the original Stories 1-3 plus new micro stories exist',
     );
     for (final m in micros) {
       expect(
