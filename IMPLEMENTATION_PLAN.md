@@ -1,13 +1,8 @@
 # Implementation Plan
 
-Task definitions, dependency graph, and execution status for the current
-scope (`MVP.md`). A task is **READY** when all its dependencies are
-complete. Work top-to-bottom by readiness; never start a task whose
-dependencies are incomplete.
-
-Historical note: the detailed 280-node machine graph lives in
-`docs/reference/dev_graph.json` (generated during initial decomposition).
-This file is the human/agent-readable plan of record.
+Task definitions, dependency graph, and execution status. A task is
+**READY** when all its dependencies are complete. Work top-to-bottom by
+readiness; never start a task whose dependencies are incomplete.
 
 ## Status legend
 
@@ -15,119 +10,129 @@ This file is the human/agent-readable plan of record.
 [COMPLETE]  shipped + guarded by tests
 [READY]     dependencies complete; may be selected next
 [BLOCKED]   waiting on dependencies or a decision
-[DEFERRED]  out of current MVP scope (see MVP.md)
+[DEFERRED]  out of current scope (see MVP.md / ROADMAP.md)
 [DECISION]  requires human input (art direction, audio sourcing)
 ```
 
-## Dependency graph (remaining work)
+## Current focus: Phase 4 — corpus expansion (ROADMAP.md)
+
+The content-architecture milestone (Phases 1–3) is complete and guarded.
+Remaining work, in priority order:
 
 ```text
-[DECISION] audio sourcing (neural TTS vs native recordings)
-      │
-      ↓
-T1 AUDIO_ASSETS ──→ T2 PLAYBACK_CADENCE ──→ [COMPLETE] (UI wiring done)
-      │
-      ↓
-[DECISION] Chinese art style (concept art + story illustrations)
-      │
-      ↓
-T3 ART_SWAP (replace placeholder SVGs at manifest paths)
-
+T12 LEXICON_GROWTH ──→ T13 CORPUS_100 ──→ T14 SEQUENCING_V3   [content/editorial]
+[DECISION] audio sourcing ──→ T1 AUDIO_ASSETS ──→ T2 PLAYBACK_CADENCE  [media, parked]
+[DECISION] Chinese art style ──→ T3 ART_SWAP                        [media, parked]
 T4 REREAD_EVIDENCE ──→ T5 LONG_TERM_EXPOSURE        [DEFERRED: post-MVP evidence]
 T6 DICTIONARY_SCHEMA ──→ T7 LEVELED_LOOKUP_DEPTH    [DEFERRED: post-MVP dictionary]
 T8 IMPORT_PIPELINE ──→ T9 IMPORT_SELECTION          [DEFERRED: post-MVP importing]
-
-T10 RELEASE_AUDIT ──→ T11 PLATFORM_VALIDATION ──→ MVP VALIDATION [COMPLETE]
 ```
 
-## Task definitions
+## Completed milestone: content architecture (2026-09-13)
+
+```text
+[COMPLETE] T-ARCH-1 repository/content audit (findings in ADR-007 context)
+[COMPLETE] T-ARCH-2 canonical content model
+           ContentType {beginnerUnit, sentence, microStory, story, dialogue,
+           article}; ContentStatus {available, draft, retired}; tags;
+           difficulty; optional visual/audio/animation per section
+[COMPLETE] T-ARCH-3 content repository as data
+           units generated from lexicon JSON (45 words, asset refs in
+           data); stories via assets/content/manifest.json; by-ID lookup;
+           availability filtering; firstItemId fallback
+[COMPLETE] T-ARCH-4 hardcoded sequencing removed
+           bootstrap_corpus.dart + exposure_generator.dart deleted;
+           UI/simulated-level no longer reference a compiled corpus;
+           reader/ carries no content ids (architecture test enforced)
+[COMPLETE] T-ARCH-5 sequencing interface preserved + V2 engine
+           ContentSelector.select(); deterministic; exposure-based i+1
+           readiness (≤6 unseen AND ≥60% seen); forward preparation;
+           reread rotation; input-order independent
+[COMPLETE] T-ARCH-6 dynamic first curriculum
+           45 units + 24 stories (14 micro, 3 legacy, 1 children, 6
+           dialogues) — all data; walk starts unit-001-水, first story at
+           ~step 7 (exposure-driven, not hardcoded)
+[COMPLETE] T-ARCH-7 target-content-driven vocabulary metadata
+           story vocabulary declared in data; forward preparation reads
+           it; authoring tool enforces lexicon closure at authoring time
+[COMPLETE] T-ARCH-8 tests (156 total: +38 architecture/selector/e2e)
+           add-stories-without-code-changes; input-order determinism;
+           learner-state changes selection; stable ids; draft/retired
+           filtered; media-optional rendering; full-corpus end-to-end walk
+[COMPLETE] T-ARCH-9 documentation (MVP, ROADMAP, ARCHITECTURE, QUALITY,
+           TEST_STRATEGY, ADR-007)
+```
+
+## Task definitions (active)
+
+### T12 — Target lexicon growth `[READY]`
+
+- Backward-derive an expanded lexicon (toward 100–150 words) from the next
+  batch of target stories (CHOICES §2 method). Data edit +
+  `tool/author_story.dart` for stories using the new words; dictionary
+  entries must keep full coverage.
+- Editorial gate: story selection is a human decision (AGENTS.md §3).
+- Verification: validator + dictionary-coverage test + walk smoke.
+
+### T13 — Corpus expansion toward 100+ items `[BLOCKED: T12]`
+
+- Author stories/dialogues through the data pipeline; ~20 per editorial
+  batch. No code changes anywhere (that's the architecture contract).
+- Verification: add-20-stories test pattern; `./verify`.
+
+### T14 — Sequencing V3 (learner-aware refinements) `[BLOCKED: corpus scale]`
+
+- Enrich scoring with long-term familiarity, reread evidence (needs T4/T5
+  evidence), Hanzi-coverage signals. Replaceable engine; golden fixtures
+  pin regressions.
 
 ### T1 — Bootstrap word audio assets `[BLOCKED: DECISION]`
 
-- Generate/approve native audio for all 45 bootstrap words + story
-  narration; compress to OGG/MP3; publish `assets/audio/audio_manifest.json`
-  (schema already fixed: `assets/audio/words/{id}.mp3` referenced by units).
-- Depends on: **audio sourcing decision** (see `docs/domain/CONTENT.md` §audio
-  pipeline; CHOICES §3A). Controller/wiring already complete and no-ops
-  safely (E-08), so this task changes data only.
-- Verification: audio manifest test (files decode, refs resolve), manual
-  playback check.
+- Generate/approve native audio for the bootstrap words + story
+  narration; publish `assets/audio/audio_manifest.json`. Controller/
+  wiring already complete and no-ops safely (E-08) — data-only change.
+- Depends on: audio sourcing decision (CHOICES §3A).
 
 ### T2 — Audio playback cadence `[BLOCKED: T1]`
 
-- Content-scoped autoplay/replay metadata at experience boundaries
-  (`assets/content/audio_playback.json`). Reader wiring already consumes
-  capabilities gracefully; this adds the data + cadence contract test.
+- Content-scoped autoplay/replay metadata at experience boundaries;
+  reader already consumes capabilities gracefully.
 
 ### T3 — AI-generated art swap `[BLOCKED: DECISION]`
 
-- Replace placeholder SVGs with AI-generated Chinese-style concept art and
-  story illustrations at the manifest paths (`CHOICES §3B swap contract`,
-  C-05). Zero code changes by design.
+- Replace placeholder SVGs at lexicon/manifest-referenced paths. Zero
+  code changes by design (swap contract, C-05).
 
 ### T4 — Reread evidence in learner model `[DEFERRED]`
-
-- Rereads already record exposure/completion; fold rereading into
-  learner-model evidence explicitly (post-MVP per E-14 ordering).
-- Files: `lib/learner/` aggregate extension + `test/` regression.
-- Guard: D-02 (explicit events only).
-
 ### T5 — Long-term exposure evidence `[DEFERRED: T4]`
-
-- Aggregate-derived familiarity signal feeding selector scoring V2.
-
 ### T6 — Curated dictionary schema (real data) `[DEFERRED]`
-
-- Replace mock dictionary entries with curated monolingual definitions at
-  the same path/schema (mock proves the pipeline; real data is editorial
-  work). Schema is stable — data swap only.
-- Guard: C-04 (structurally monolingual).
-
 ### T7 — Leveled lookup depth `[DEFERRED: T6]`
-
-- Learner-aware definition depth (simpler Chinese for earlier stages).
-
 ### T8 — Import pipeline (EPUB/TXT) `[DEFERRED]`
-
-- Per MVP exclusion; interface sketches in `docs/domain/CONTENT.md`.
-
 ### T9 — Imported-content selection gating `[DEFERRED: T8]`
 
-### T10 — Release audit `[COMPLETE]`
-
-- Automated anti-feature scan (no XP/streak/dashboard/catalog strings, no
-  translation-first UI, no behavioral tracking) over `lib/`.
-- Verification: `test/release_audit_test.dart`.
-
-### T11 — Platform validation `[COMPLETE]`
-
-- `flutter analyze` + full tests + representative iOS/Android/Web builds
-  with offline asset/persistence checks. CI (`.github/workflows/ci.yaml`)
-  runs analyze+test on every push already.
-
-## Completed foundation (for orientation)
+## Historical: MVP foundation (complete, for orientation)
 
 ```text
 core types → tokenizer → learner model → exposure gate
 → acquisition → promotion → FSRS review → selector V1 (+goldens)
 → drift schema/repositories (bounded aggregates, privacy-scanned)
 → web WASM persistence → reader (tap/activation/full-screen/select)
-→ 45 units + 3 micro stories + children story mock (validator-enforced)
+→ 45 generated units + 24 story/dialogue items (validator-enforced)
 → placeholder visuals (45 concepts + 17 scenes, flutter_svg smoke)
 → exposure gate pacing + first-session ramp
 → reading-position persistence + rereading rotation
 → contextual monolingual lookup + full-coverage mock dictionary
-→ simulated LEVEL hook (0..100 deterministic)
+→ simulated LEVEL hook (0..100 deterministic, corpus-independent)
 → CI (analyze + test) on all pushes
 ```
 
-## MVP validation checklist (gate to release)
+## Verification checklist (gate to release)
 
 ```text
-[ ] Fresh learner walks exposure → stories → gate unlock (manual, LEVEL=0)
-[ ] Resume: kill app mid-story → reopen → same section
-[ ] Lookup: tap curated + absent words in stories → definitions / serene fallback
-[ ] Selection: long-press text → 复制 toolbar → copy works
-[ ] No English reachable anywhere in the learner UI
-[COMPLETE] T10 + T11 pass; all tests green; ./verify green
+[COMPLETE] Fresh learner walks exposure → stories → gate unlock (walk test)
+[COMPLETE] Selection emerges from data; adding stories needs no code (tested)
+[ ] Manual app run: LEVEL=0 tap-through sanity (per release)
+[ ] Resume: kill app mid-story → reopen → same section (manual)
+[ ] Lookup: tap curated + absent words in stories (manual)
+[COMPLETE] T10 release audit + T11 platform validation; ./verify green
 ```

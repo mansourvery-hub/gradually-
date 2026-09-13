@@ -131,38 +131,51 @@ LearnerState + CandidateContent[] → ContentSelector → ONE selected experienc
 - Runnable on synthetic inputs without a database.
 - Output is one experience. The learner never sees a ranked list, score, or
   rationale.
+- **Order-independence:** the candidate list may arrive in any order —
+  the corpus supplies no ordering promise (input order is never the
+  learning order).
 
-Inputs (minimum): learner known vocabulary/Hanzi; content lexical data;
-content difficulty metadata; progression constraints / prerequisites;
-curriculum ordering; completion history.
+Inputs (minimum): learner encountered/known vocabulary + Hanzi; content
+lexical data; content difficulty metadata; progression constraints /
+prerequisites; curriculum ordering; completion history.
 
-**i+1 is not "percent unknown".** The engine is designed to weigh, over time:
-known vs new vocabulary amounts · recurrence of new words · usefulness ·
+**i+1 is not "percent unknown".** The engine weighs, over time: known vs
+new vocabulary amounts · recurrence of new words · usefulness ·
 rare/incidental words · curriculum order · prerequisites · sentence and
 grammatical complexity · concentration vs scatter of new words. Objective:
 *high learning value at an appropriate difficulty cost.* The formula may
 evolve; V1 must be simple and replaceable — not a research project.
 
-[PROPOSED] conceptual split (adopt only if it helps in MVP):
+**V2 (implemented — deterministic, no ML):**
 
 ```text
-LearnerState → Candidate Generation → CandidateContent[] → Ranking → ONE experience
+1. eligibility        prerequisites met (never strands: earliest fallback)
+2. phase & readiness  story-like content is offered only when it is
+                      actually readable: unseen words ≤ 6 AND seen
+                      vocabulary ≥ 60% — measured against ENCOUNTERED
+                      vocabulary (exposure aggregates), so selection works
+                      during pure exposure before any review evidence
+3. forward preparation  unread beginner units that pre-teach vocabulary
+                      needed by uncompleted stories outrank their peers;
+                      curriculum order stays the base preference (a nudge,
+                      not a shuffle)
+4. story choice        i+1: fewest unseen words; encountered-ratio breaks
+                      ties; curriculum order breaks remaining ties
+5. reread rotation    all-completed → least-recently-read (E-10)
 ```
 
-[PROPOSED] V1:
-1. Filter: prerequisites met, curriculum position reachable, content type
-   appropriate to learner state (beginner material before stories).
-2. Compute from shared tokens + learner state: known coverage, distinct new
-   items, per-item recurrence within the candidate, concentration.
-3. Score with one named, unit-tested function favoring a modest number of
-   highly recurring new items and honoring curriculum order.
-4. Return the top candidate; tie-break by curriculum order.
+A story in the i+1 zone preempts remaining drill units — meaningful
+reading is the point of the preparation. When nothing story-like is
+readable yet, beginner units continue, biased toward preparation.
 
-Required behaviors:
+Required behaviors (all golden-tested):
 - Near-zero-vocabulary learner receives beginner material, not stories.
-- Freshly acquired vocabulary clusters are exploited by subsequent content.
-- Few recurring new words beat many rare irrelevant ones.
-- Completed content remains eligible (rereading is progression, not failure).
+- Fresh learner's first exposure is the first unit (deterministic anchor).
+- Early unit exposure is selected partly because it prepares upcoming
+  stories (forward preparation).
+- Few recurring new words beat many rare irrelevant ones (i+1 zone).
+- Completed content remains eligible (rereading is progression, E-10).
 - Imported content (later) is offered only when learner state supports it.
 
-Protect with golden progression fixtures (`ARCHITECTURE.md` §7).
+Protect with golden progression fixtures (`ARCHITECTURE.md` §7) and the
+end-to-end corpus-walk regression (`test/end_to_end_flow_test.dart`).

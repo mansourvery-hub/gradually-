@@ -32,8 +32,9 @@ alternatives + meaningful consequences get an ADR.
 | [002-tokenizer](adr/002-tokenizer.md) | dart_jieba as the single tokenizer | Accepted |
 | [003-state-management](adr/003-state-management.md) | Riverpod providers in `app/` only | Accepted |
 | [004-scheduler](adr/004-scheduler.md) | FSRS behind a replaceable adapter | Accepted |
-| [005-content-serialization](adr/005-content-serialization.md) | Pre-tokenized JSON + Dart corpus mirror | Accepted |
+| [005-content-serialization](adr/005-content-serialization.md) | Pre-tokenized JSON authoring schema (Dart mirror superseded by ADR-007) | Accepted |
 | [006-script](adr/006-script.md) | Simplified Chinese only | Accepted |
+| [007-content-architecture](adr/007-content-architecture.md) | Corpus as data + replaceable sequencing engine (CONTENT IS DATA) | Accepted |
 
 ## Market-informed decisions (compact)
 

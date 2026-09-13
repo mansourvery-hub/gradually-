@@ -22,10 +22,23 @@ Platform: Flutter — iOS, Android, Web. Offline-first core.
 | `docs/domain/CONTENT.md` | Touching content schema, curriculum data, media, reader presentation. |
 | `docs/domain/CHOICES.md` | Numerical parameters, target-led vocabulary, asset pipelines. |
 | `docs/adr/DECISIONS.md` | Before choosing a technology or resolving anything marked `[OPEN]`. |
-| `docs/adr/` | Individual ADR files for established decisions. |
+| `docs/adr/` | Individual ADR files — especially 005 (content serialization) and 007 (content architecture). |
 | `docs/reference/dev_graph.json` | Machine-readable execution graph (mirror of the plan). |
 | `docs/reference/CHINESE_IMMERSION_APP_BLUEPRINT.md` | Master product spec (consult only when shorter docs don't answer). |
 | `docs/reference/DEVELOPMENT.md` | Git, branches, worktrees, commits, CI, repository workflow. |
+
+## Adding content (the architecture contract)
+
+> CONTENT IS DATA. Adding a story never requires code changes.
+
+```bash
+# 1. Write the story (one sentence per line, --- between sections)
+# 2. Author it (lexicon-constrained pre-tokenization):
+fvm dart run tool/author_story.dart my_story.txt --id story-slug --title 标题 \
+  --type microStory --order 118
+# 3. Add the output file to assets/content/manifest.json
+# 4. ./verify
+```
 
 ## Verification
 

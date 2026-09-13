@@ -23,12 +23,14 @@ being declared complete.
 |---|---|
 | A-01 | Domain packages (`core`, `learner`, `content`, `tokenizer`, `acquisition`, `selector`, `review`, `dictionary`) never import Flutter widgets or Riverpod — pure Dart, testable without DB/UI. |
 | A-02 | `app/` contains provider composition only — no learning logic. |
-| A-03 | `reader/` widgets contain no curriculum conditionals, scores, or scheduling logic. |
+| A-03 | `reader/` widgets contain no curriculum conditionals, scores, or scheduling logic — and no content ids, story lists, or corpus imports. |
 | A-04 | Selector and Review are separate subsystems sharing learner state only (E-02). |
 | A-05 | SRS state ≠ learner state (E-03): no intervals/ease in the learner model. |
 | A-06 | Repository interfaces live in the owning domain; `data/` implements them (swappable persistence). |
 | A-07 | One tokenizer, one shared Token representation for all consumers (E-07). |
 | A-08 | Learner state derives only from explicit learning events (E-09) — never behavior. |
+| A-09 | CONTENT IS DATA: the corpus lives in data files (lexicon + manifest); adding/removing content never requires reader, navigation, or selector code changes. |
+| A-10 | SEQUENCING IS LOGIC: the next experience is computed by the `ContentSelector` alone; selection is independent of candidate input order and of any UI state. |
 
 ## Data invariants (D-xx)
 
@@ -60,4 +62,8 @@ being declared complete.
 | C-02 | ~4–6 encounters per word, ~500–600 total exposures before any recall. |
 | C-03 | Exposure gate: total ≥500 AND ≥10 ready words; first session cohort capped at 5; no behavioral signal can unlock. |
 | C-04 | Monolingual dictionary: no translation fields (structurally absent), no Latin text in definitions/examples. |
-| C-05 | Concept art swap contract: `bootstrap_visuals.json` manifest is the stable interface; `kConceptAssetNames` is the single source of truth for file names. |
+| C-05 | Concept art swap contract: `bootstrap_visuals.json` manifest is the stable interface; concept asset references live in the lexicon data. |
+| C-06 | Stable content ids: beginner units use `unit-NNN-词`; ids never change when the corpus grows (learner progress keys on them). |
+| C-07 | Story corpus files must be listed in `assets/content/manifest.json` (disk ↔ manifest parity, validator-enforced); story `curriculumOrder` > lexicon size. |
+| C-08 | Declared story vocabulary ⊆ target lexicon (D-06); authored tokens are lexicon-constrained by the authoring tool. |
+| C-09 | Draft/retired content stays in the dataset but is filtered from selection (availability is data, not deletion). |

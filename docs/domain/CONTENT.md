@@ -32,16 +32,34 @@ a course for speakers of any particular language.
 ## 3. Content model
 
 ```text
-Content
- ├── metadata: id, title, type, ordering, prerequisites, difficulty,
- │             editorial constraints, vocabulary references
- ├── sections / scenes
- │    ├── text (unspaced Chinese)
- │    ├── visual assets   (optional)
- │    └── audio           (optional)
- └── sentences
-      ├── tokens (shared token type)
-      └── learning metadata (e.g. curriculum-critical vocabulary)
+Content (data file: lexicon JSON or manifest-listed story JSON)
+  ├── metadata: id, title, type, status, curriculumOrder, prerequisites,
+  │             difficulty, tags, vocabulary references
+  ├── sections / scenes
+  │    ├── text (unspaced Chinese)
+  │    ├── visual assets   (optional)
+  │    ├── audio           (optional)
+  │    └── animation       (optional)
+  └── sentences
+       ├── tokens (shared token type)
+       └── learning metadata (e.g. curriculum-critical vocabulary)
+```
+
+Types: `beginnerUnit · sentence · microStory · story · dialogue ·
+article` — one shared abstraction; new formats join the enum, they never
+grow parallel systems. Status: `available · draft · retired` — the
+repository filters; unavailable items live in the dataset without being
+selectable (C-09).
+
+Where content lives (ADR-007):
+
+```text
+assets/content/
+├── curriculum/bootstrap_target_lexicon.json
+│     → generates the beginner units (stable ids unit-NNN-词)
+├── manifest.json
+│     → lists every story/dialogue item file (disk ↔ manifest parity)
+└── *.json  pre-tokenized story items
 ```
 
 Must support: unspaced text · shared tokenization · section boundaries ·
@@ -49,9 +67,16 @@ optional visuals/audio/animation · ordering and prerequisites · difficulty
 metadata · vocabulary reuse · completion history · saved reading position.
 
 Do not force fields that only apply to beginner stories onto every item.
-Content types range from beginner atomic units to long plain text without
-identical media requirements. Serialization / authoring format: **[OPEN]**
-`DECISIONS.md` D-05.
+Beginner units carry NO prerequisite chain — eligibility is selector
+policy (SEQUENCING IS LOGIC). Stories may declare prerequisites as
+*content relationships* (e.g. "read the micro-stories first"), never as
+a hidden hard-coded sequence.
+
+**Authoring:** `tool/author_story.dart` converts raw Chinese text into
+lexicon-constrained, pre-tokenized JSON (longest-match against the target
+lexicon + a whitelisted set of incidental words), guaranteeing declared
+vocabulary ⊆ lexicon (D-06) at authoring time. Add story = author JSON →
+manifest line → `./verify`. No code changes, ever.
 
 ## 4. Media are optional capabilities
 
