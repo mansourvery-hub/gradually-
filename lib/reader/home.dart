@@ -12,7 +12,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../app/providers.dart';
-import '../content/bootstrap_corpus.dart';
 import '../content/content.dart';
 import '../core/ids.dart';
 import '../core/progress.dart';
@@ -66,9 +65,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       // Review flow handles its own tap-to-reveal/confirm cycle.
       return;
     }
-    final contentItem =
-        ref.read(nextExperienceProvider).value ??
-        bootstrapCurriculum.firstOrNull;
+    final contentItem = ref.read(nextExperienceProvider).value;
     if (contentItem == null) return;
     if (contentItem.type == ContentType.beginnerUnit) {
       _handleItemCompletion(contentItem);
@@ -96,7 +93,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         final notifier = ref.read(activeLearnerStateProvider.notifier);
         notifier.updatePosition(item.id, sectionIndex, now);
       } else {
-        final contentRepo = ref.read(contentRepositoryProvider);
+        final contentRepo = await ref.read(contentRepositoryProvider.future);
         final learnerRepo = ref.read(learnerRepositoryProvider);
         final existing = await contentRepo.getProgress(item.id);
         final updated =
@@ -127,7 +124,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       if (kSimulatedLevel > 0) {
         progress = ref.read(activeLearnerStateProvider).progress[item.id];
       } else {
-        final contentRepo = ref.read(contentRepositoryProvider);
+        final contentRepo = await ref.read(contentRepositoryProvider.future);
         progress = await contentRepo.getProgress(item.id);
       }
       final saved = progress?.lastPosition ?? 0;
@@ -166,8 +163,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     }
 
     // 2. Immersion flow: render active content with zero-delay fallback
-    final contentItem =
-        nextExperienceAsync.value ?? bootstrapCurriculum.firstOrNull;
+    final contentItem = nextExperienceAsync.value;
 
     // Resume mid-story position when the selector switches items (T_UI_030).
     if (contentItem != null) {
@@ -277,7 +273,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ref.read(activeLearnerStateProvider.notifier).completeItem(item);
       } else {
         final learnerRepo = ref.read(learnerRepositoryProvider);
-        final contentRepo = ref.read(contentRepositoryProvider);
+        final contentRepo = await ref.read(contentRepositoryProvider.future);
         final acquisition = ref.read(acquisitionPipelineProvider);
 
         // 1. Record vocabulary exposure for all words in the content

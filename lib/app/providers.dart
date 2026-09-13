@@ -4,6 +4,8 @@
 /// and streams for widgets to consume.
 library;
 
+import 'dart:convert';
+
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:flutter/foundation.dart';
@@ -11,7 +13,6 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../acquisition/acquisition.dart';
-import '../content/bootstrap_corpus.dart';
 import '../content/content.dart';
 import '../content/content_repository.dart';
 import '../content/media_capabilities.dart';
@@ -86,7 +87,11 @@ class SimulatedLearnerNotifier extends Notifier<LearnerState> {
   @override
   LearnerState build() {
     if (kSimulatedLevel > 0) {
-      return buildSimulatedLearnerState(kSimulatedLevel);
+      // Corpus-independent seeding: when the repository has not resolved
+      // yet, start empty and re-seed once it loads.
+      final corpus =
+          ref.watch(_simulatedCorpusProvider).value ?? const <ContentItem>[];
+      return buildSimulatedLearnerState(kSimulatedLevel, corpus: corpus);
     }
     // LEVEL=0: mirror the persisted DB stream.
     return ref.watch(learnerStateStreamProvider).value ?? const LearnerState();
@@ -112,6 +117,20 @@ class SimulatedLearnerNotifier extends Notifier<LearnerState> {
   }
 }
 
+/// At simulated levels: the corpus snapshot used for seeding, empty until
+/// the repository resolves (rebuilds the simulated state on arrival).
+Future<List<ContentItem>> _simulatedCorpus(Ref ref) async {
+  if (kSimulatedLevel == 0) return const [];
+  try {
+    final repo = await ref.watch(contentRepositoryProvider.future);
+    return await repo.getAllContentItems();
+  } catch (_) {
+    return const [];
+  }
+}
+
+final _simulatedCorpusProvider = FutureProvider(_simulatedCorpus);
+
 /// Provides the active learner state — simulated in-memory at LEVEL>0,
 /// streamed from SQLite at LEVEL=0.
 final activeLearnerStateProvider =
@@ -124,10 +143,7 @@ final activeLearnerStateProvider =
 /// Never blocks initial render: synchronously yields immediate state on Frame 1.
 final learnerStateStreamProvider = StreamProvider<LearnerState>((ref) async* {
   // 1. Yield initial state synchronously on Frame 1 (Zero-delay startup)
-  final initial = kSimulatedLevel > 0
-      ? buildSimulatedLearnerState(kSimulatedLevel)
-      : const LearnerState();
-  yield initial;
+  yield const LearnerState();
 
   // 2. Stream subsequent updates reactively from SQLite
   if (kSimulatedLevel == 0) {
@@ -183,32 +199,79 @@ final dueReviewCardsProvider = FutureProvider<List<ReviewCardRecord>>((
 });
 
 /// Provides the [ContentSelector] algorithm instance.
+///
+/// V2: deterministic, learner-aware sequencing with forward preparation.
+/// Swapping the algorithm is a one-line change here — the app talks to
+/// the [ContentSelector] interface, never a specific curriculum.
 final contentSelectorProvider = Provider<ContentSelector>((ref) {
-  return const V1ContentSelector();
+  return const V2ContentSelector();
 });
 
-/// Provides the [ContentRepository] loaded with the curated bootstrap corpus.
-final contentRepositoryProvider = Provider<ContentRepository>((ref) {
+/// Provides the [ContentRepository] loaded from the content corpus DATA:
+/// beginner units generated from the target lexicon + story/dialogue
+/// JSON files referenced by the corpus manifest. Nothing curriculum-
+/// shaped is compiled into Dart (CONTENT IS DATA).
+final contentRepositoryProvider = FutureProvider<ContentRepository>((
+  ref,
+) async {
   final db = ref.watch(databaseProvider);
-  return AssetContentRepository(db: db, initialItems: bootstrapCurriculum);
+  try {
+    // 1. Lexicon data → beginner exposure units.
+    final lexiconJson = await rootBundle.loadString(
+      'assets/content/curriculum/bootstrap_target_lexicon.json',
+    );
+
+    // 2. Corpus manifest → story payloads.
+    final manifestJson = await rootBundle.loadString(
+      'assets/content/manifest.json',
+    );
+    final manifest = jsonDecode(manifestJson) as Map<String, dynamic>;
+    final paths = (manifest['items'] as List<dynamic>).cast<String>();
+    final storyPayloads = await Future.wait(
+      paths.map((p) => rootBundle.loadString(p)),
+    );
+
+    return AssetContentRepository.fromData(
+      db: db,
+      lexiconJson: lexiconJson,
+      storyPayloads: storyPayloads,
+    );
+  } catch (e) {
+    if (kDebugMode) {
+      debugPrint('contentRepositoryProvider: falling back to empty ($e)');
+    }
+    // Serene degradation: empty corpus rather than a crash (R-01).
+    return AssetContentRepository(db: db);
+  }
 });
 
-/// Provides the [AudioPlaybackController] initialized with bootstrap curriculum
-/// media capabilities. Gracefully no-ops when no audio assets exist (E-08).
+/// Provides the [AudioPlaybackController] initialized with corpus media
+/// capabilities. Gracefully no-ops when no audio assets exist (E-08).
 final audioPlaybackControllerProvider = Provider<AudioPlaybackController>((
   ref,
 ) {
   final controller = AudioPlaybackController();
-  controller.initialize(buildMediaCapabilities(bootstrapCurriculum));
+  ref.listen<AsyncValue<ContentRepository>>(contentRepositoryProvider, (
+    _,
+    next,
+  ) {
+    final repo = next.value;
+    if (repo == null) return;
+    // Media capabilities are derived from the corpus the repository
+    // actually loaded — never from a compiled list.
+    repo.getAllContentItems().then((items) {
+      controller.initialize(buildMediaCapabilities(items));
+    });
+  }, fireImmediately: true);
   return controller;
 });
 
-/// The single selected [ContentItem] for the learner to experience next (E-02, E-06).
-///
-/// Evaluates synchronously on Frame 1 with zero loading latency.
+/// The single selected [ContentItem] for the learner to experience next
+/// (E-02, E-06). SEQUENCING IS LOGIC: this provider asks the selector;
+/// it never knows a curriculum.
 final nextExperienceProvider = FutureProvider<ContentItem?>((ref) async {
   try {
-    final contentRepo = ref.watch(contentRepositoryProvider);
+    final contentRepo = await ref.watch(contentRepositoryProvider.future);
     final learnerState = ref.watch(activeLearnerStateProvider);
     final selector = ref.watch(contentSelectorProvider);
 
@@ -216,18 +279,22 @@ final nextExperienceProvider = FutureProvider<ContentItem?>((ref) async {
     final selection = selector.select(learnerState, candidates);
 
     if (selection == null) {
-      // Direct fallback to first curriculum item if selector returned null
-      return bootstrapCurriculum.firstOrNull;
+      return await _firstItem(contentRepo);
     }
     return await contentRepo.getContentItem(selection.contentId) ??
-        bootstrapCurriculum.firstOrNull;
+        await _firstItem(contentRepo);
   } catch (e, stack) {
     if (kDebugMode) {
       debugPrint('nextExperienceProvider error: $e\n$stack');
     }
-    return bootstrapCurriculum.firstOrNull;
+    return null;
   }
 });
+
+Future<ContentItem?> _firstItem(ContentRepository repo) async {
+  final id = await repo.firstItemId();
+  return id == null ? null : repo.getContentItem(id);
+}
 
 /// Provides the local monolingual dictionary (T_UI_040).
 ///

@@ -2,9 +2,18 @@
 ///
 /// Seeds synthetic learner state from compile-time environment flags
 /// `--dart-define=LEVEL=0..100` for rapid testing of any progression stage.
+///
+/// LEVEL semantics (CHOICES.md §4):
+/// - 0..50 maps linearly onto the pure-exposure phase (0 → ~600 total
+///   exposures distributed across the lexicon in absorption order).
+/// - 50..100 continues exposure growth with post-exposure reinforcement.
+/// - Words become "known" once absorbed through repetition (≥6 encounters).
+///
+/// Corpus-independent: the simulated state derives from whatever corpus
+/// the caller supplies (the running app passes the loaded repository
+/// corpus). Nothing here knows a curriculum.
 library;
 
-import '../content/bootstrap_corpus.dart';
 import '../content/content.dart';
 import '../learner/learner_state.dart';
 import 'ids.dart';
@@ -13,23 +22,32 @@ import 'progress.dart';
 /// Reads the simulated level from environment (`--dart-define=LEVEL=0..100`).
 const int kSimulatedLevel = int.fromEnvironment('LEVEL', defaultValue: 0);
 
-/// Returns a synthetic [LearnerState] corresponding to [level] (0..100).
-///
-/// LEVEL semantics (CHOICES.md §4):
-/// - 0..50 maps linearly onto the pure-exposure phase (0 → ~600 total
-///   exposures distributed across the lexicon in absorption order).
-/// - 50..100 continues exposure growth with post-exposure reinforcement.
-/// - Words become "known" once absorbed through repetition (≥6 encounters).
-LearnerState buildSimulatedLearnerState(int level) {
-  if (level <= 0) {
+/// Returns a synthetic [LearnerState] corresponding to [level] (0..100)
+/// for the given [corpus] (CONTENT IS DATA: any corpus works).
+LearnerState buildSimulatedLearnerState(
+  int level, {
+  List<ContentItem> corpus = const [],
+}) {
+  if (level <= 0 || corpus.isEmpty) {
     return const LearnerState();
   }
 
   final now = DateTime(2026, 9, 8);
+
+  // Stable absorption order: curriculum order, then id.
+  final ordered = [...corpus]
+    ..sort((a, b) {
+      final cmp = a.metadata.curriculumOrder.compareTo(
+        b.metadata.curriculumOrder,
+      );
+      if (cmp != 0) return cmp;
+      return a.id.compareTo(b.id);
+    });
+
   final allVocab = <VocabId>[];
   final allItemIds = <ContentId>[];
 
-  for (final item in bootstrapCurriculum) {
+  for (final item in ordered) {
     allItemIds.add(item.id);
     for (final v in item.metadata.vocabulary) {
       if (!allVocab.contains(v)) allVocab.add(v);

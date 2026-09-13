@@ -1,28 +1,19 @@
 /// Content domain model and JSON schema (CONTENT.md §3, DECISIONS.md D-05).
 ///
-/// Pre-tokenized at authoring time; supports optional visuals and audio
-/// across beginner units, micro-stories, and longer text without forcing
-/// universal media requirements (E-08).
+/// CONTENT IS DATA: every kind of learning material — beginner units,
+/// sentences, dialogues, micro-stories, children's stories, articles —
+/// shares one abstraction so the corpus can grow without new systems.
+/// Pre-tokenized at authoring time; supports optional visuals, audio, and
+/// animation across all types without forcing universal media requirements
+/// (E-08: media are optional per item and never gate existence).
 library;
 
+import '../core/content_type.dart';
 import '../core/ids.dart';
 import '../core/token.dart';
 import '../selector/selector.dart';
 
-/// The pedagogical classification of a content item (CONTENT.md §2).
-enum ContentType {
-  /// Atomic beginner unit (concept/visual + native sound + Hanzi + tone).
-  beginnerUnit,
-
-  /// Visual-heavy narrated micro-story.
-  microStory,
-
-  /// Graded children's or cultural story.
-  story,
-
-  /// Plain native text / article.
-  article,
-}
+export '../core/content_type.dart';
 
 /// A sentence within a content section with pre-tokenized tokens and learning metadata.
 final class ContentSentence {
@@ -82,6 +73,7 @@ final class ContentSection {
     this.title,
     this.visualAsset,
     this.audioAsset,
+    this.animationAsset,
   });
 
   factory ContentSection.fromJson(Map<String, dynamic> json) {
@@ -93,6 +85,7 @@ final class ContentSection {
       title: json['title'] as String?,
       visualAsset: json['visualAsset'] as String?,
       audioAsset: json['audioAsset'] as String?,
+      animationAsset: json['animationAsset'] as String?,
       sentences: rawSentences
           .map((s) => ContentSentence.fromJson(s as Map<String, dynamic>))
           .toList(),
@@ -111,6 +104,10 @@ final class ContentSection {
   /// Optional section/scene narration audio (E-08).
   final String? audioAsset;
 
+  /// Optional lightweight animation clip for this scene (E-08). Data, not
+  /// infrastructure: absence is valid everywhere.
+  final String? animationAsset;
+
   /// Segmented sentences in this section.
   final List<ContentSentence> sentences;
 
@@ -120,6 +117,7 @@ final class ContentSection {
     'text': text,
     if (visualAsset != null) 'visualAsset': visualAsset,
     if (audioAsset != null) 'audioAsset': audioAsset,
+    if (animationAsset != null) 'animationAsset': animationAsset,
     'sentences': sentences.map((s) => s.toJson()).toList(),
   };
 }
@@ -135,6 +133,8 @@ final class ContentMetadata {
     this.difficultyEstimate = 1,
     this.vocabulary = const {},
     this.curriculumCriticalVocabulary = const {},
+    this.status = ContentStatus.available,
+    this.tags = const {},
   });
 
   factory ContentMetadata.fromJson(Map<String, dynamic> json) {
@@ -142,12 +142,10 @@ final class ContentMetadata {
     final rawVocab = json['vocabulary'] as List<dynamic>? ?? const [];
     final rawCritical =
         json['curriculumCriticalVocabulary'] as List<dynamic>? ?? const [];
+    final rawTags = json['tags'] as List<dynamic>? ?? const [];
 
     final typeStr = json['type'] as String;
-    final type = ContentType.values.firstWhere(
-      (t) => t.name == typeStr,
-      orElse: () => ContentType.story,
-    );
+    final type = ContentType.fromName(typeStr);
 
     return ContentMetadata(
       id: json['id'] as ContentId,
@@ -158,6 +156,8 @@ final class ContentMetadata {
       difficultyEstimate: json['difficultyEstimate'] as int? ?? 1,
       vocabulary: rawVocab.cast<String>().toSet(),
       curriculumCriticalVocabulary: rawCritical.cast<String>().toSet(),
+      status: ContentStatus.fromName(json['status'] as String? ?? 'available'),
+      tags: rawTags.cast<String>().toSet(),
     );
   }
 
@@ -180,6 +180,13 @@ final class ContentMetadata {
   /// Curriculum-critical vocabulary IDs to prioritize for acquisition.
   final Set<VocabId> curriculumCriticalVocabulary;
 
+  /// Availability of this item in the running corpus. The repository
+  /// filters on it; the selector never sees non-available items.
+  final ContentStatus status;
+
+  /// Free-form editorial tags (thematic path, branch hints, series).
+  final Set<String> tags;
+
   Map<String, dynamic> toJson() => {
     'id': id,
     'title': title,
@@ -190,6 +197,8 @@ final class ContentMetadata {
     if (vocabulary.isNotEmpty) 'vocabulary': vocabulary.toList(),
     if (curriculumCriticalVocabulary.isNotEmpty)
       'curriculumCriticalVocabulary': curriculumCriticalVocabulary.toList(),
+    if (status != ContentStatus.available) 'status': status.name,
+    if (tags.isNotEmpty) 'tags': tags.toList(),
   };
 }
 
@@ -216,7 +225,9 @@ final class ContentItem {
   String get title => metadata.title;
   ContentType get type => metadata.type;
 
-  /// Derives candidate metadata for the ContentSelector without loading full text/media.
+  /// Derives candidate metadata for the ContentSelector without loading
+  /// full text/media. Vocabulary falls back to sentence tokens when the
+  /// author did not declare it explicitly.
   CandidateContent toCandidateContent() {
     // If metadata vocabulary is empty, derive from all sentence tokens
     final vocab = metadata.vocabulary.isNotEmpty
@@ -229,9 +240,12 @@ final class ContentItem {
 
     return CandidateContent(
       id: metadata.id,
+      type: metadata.type,
       curriculumOrder: metadata.curriculumOrder,
       prerequisiteIds: metadata.prerequisiteIds,
+      difficulty: metadata.difficultyEstimate,
       vocabulary: vocab,
+      criticalVocabulary: metadata.curriculumCriticalVocabulary,
     );
   }
 

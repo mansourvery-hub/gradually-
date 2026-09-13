@@ -107,6 +107,12 @@ final class LearnerState {
   bool isContentCompleted(ContentId contentId) =>
       progress[contentId]?.isCompleted ?? false;
 
+  /// Vocabulary the learner has explicitly encountered (bounded exposure
+  /// aggregates). This is the *seen* signal — it exists before any review
+  /// or mastery evidence, so selection can be exposure-driven during the
+  /// pure-exposure phase (LEARNING_ENGINE.md §2 allowed inputs).
+  Set<VocabId> get seenVocabulary => exposure.keys.toSet();
+
   /// Returns a copy with the given fields replaced.
   LearnerState copyWith({
     Set<VocabId>? knownVocabulary,

@@ -22,4 +22,13 @@ abstract interface class ContentRepository {
 
   /// Saves progress for a content item.
   Future<void> saveProgress(ContentProgress progress);
+
+  /// Registers a content item at runtime (dictionary entries, later
+  /// imported content). Availability filtering happens at registration.
+  void register(ContentItem item);
+
+  /// The stable identifier of the first item in the corpus (startup
+  /// fallback for empty selections; never a curriculum assumption in
+  /// the caller — the repository owns ordering).
+  Future<ContentId?> firstItemId();
 }
