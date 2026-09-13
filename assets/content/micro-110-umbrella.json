@@ -1,0 +1,191 @@
+{
+  "metadata": {
+    "id": "micro-110-umbrella",
+    "title": "雨伞",
+    "type": "microStory",
+    "curriculumOrder": 113,
+    "difficultyEstimate": 3,
+    "vocabulary": [
+      "我",
+      "家",
+      "下雨",
+      "了",
+      "妈妈",
+      "一",
+      "雨伞"
+    ],
+    "curriculumCriticalVocabulary": [
+      "我",
+      "家",
+      "了",
+      "雨伞"
+    ],
+    "tags": [
+      "core"
+    ]
+  },
+  "sections": [
+    {
+      "id": "sec-1",
+      "text": "我回家的时候，天下雨了。妈妈给了我一把雨伞。我拿着雨伞，快快回家。",
+      "sentences": [
+        {
+          "id": "s1-1",
+          "text": "我回家的时候，天下雨了。",
+          "tokens": [
+            {
+              "vocabId": "我",
+              "surface": "我",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "回",
+              "surface": "回",
+              "start": 1,
+              "end": 2
+            },
+            {
+              "vocabId": "家",
+              "surface": "家",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "的",
+              "surface": "的",
+              "start": 3,
+              "end": 4
+            },
+            {
+              "vocabId": "时",
+              "surface": "时",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "候",
+              "surface": "候",
+              "start": 5,
+              "end": 6
+            },
+            {
+              "vocabId": "天",
+              "surface": "天",
+              "start": 7,
+              "end": 8
+            },
+            {
+              "vocabId": "下雨",
+              "surface": "下雨",
+              "start": 8,
+              "end": 10
+            },
+            {
+              "vocabId": "了",
+              "surface": "了",
+              "start": 10,
+              "end": 11
+            }
+          ]
+        },
+        {
+          "id": "s1-2",
+          "text": "妈妈给了我一把雨伞。",
+          "tokens": [
+            {
+              "vocabId": "妈妈",
+              "surface": "妈妈",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "vocabId": "给",
+              "surface": "给",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "了",
+              "surface": "了",
+              "start": 3,
+              "end": 4
+            },
+            {
+              "vocabId": "我",
+              "surface": "我",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "一",
+              "surface": "一",
+              "start": 5,
+              "end": 6
+            },
+            {
+              "vocabId": "把",
+              "surface": "把",
+              "start": 6,
+              "end": 7
+            },
+            {
+              "vocabId": "雨伞",
+              "surface": "雨伞",
+              "start": 7,
+              "end": 9
+            }
+          ]
+        },
+        {
+          "id": "s1-3",
+          "text": "我拿着雨伞，快快回家。",
+          "tokens": [
+            {
+              "vocabId": "我",
+              "surface": "我",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "拿着",
+              "surface": "拿着",
+              "start": 1,
+              "end": 3
+            },
+            {
+              "vocabId": "雨伞",
+              "surface": "雨伞",
+              "start": 3,
+              "end": 5
+            },
+            {
+              "vocabId": "快",
+              "surface": "快",
+              "start": 6,
+              "end": 7
+            },
+            {
+              "vocabId": "快",
+              "surface": "快",
+              "start": 7,
+              "end": 8
+            },
+            {
+              "vocabId": "回",
+              "surface": "回",
+              "start": 8,
+              "end": 9
+            },
+            {
+              "vocabId": "家",
+              "surface": "家",
+              "start": 9,
+              "end": 10
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

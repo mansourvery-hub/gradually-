@@ -1,0 +1,186 @@
+{
+  "metadata": {
+    "id": "micro-107-my-cat",
+    "title": "我的小猫",
+    "type": "microStory",
+    "curriculumOrder": 110,
+    "difficultyEstimate": 2,
+    "vocabulary": [
+      "我",
+      "有",
+      "一",
+      "只",
+      "小",
+      "猫",
+      "是",
+      "好",
+      "朋友",
+      "我们",
+      "一起",
+      "跑",
+      "看",
+      "书",
+      "喝",
+      "茶"
+    ],
+    "curriculumCriticalVocabulary": [
+      "我",
+      "一起"
+    ],
+    "tags": [
+      "core"
+    ]
+  },
+  "sections": [
+    {
+      "id": "sec-1",
+      "text": "我有一只小猫。它是我的好朋友。我们一起跑，一起看书，一起喝茶。",
+      "sentences": [
+        {
+          "id": "s1-1",
+          "text": "我有一只小猫。",
+          "tokens": [
+            {
+              "vocabId": "我",
+              "surface": "我",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "有",
+              "surface": "有",
+              "start": 1,
+              "end": 2
+            },
+            {
+              "vocabId": "一",
+              "surface": "一",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "只",
+              "surface": "只",
+              "start": 3,
+              "end": 4
+            },
+            {
+              "vocabId": "小",
+              "surface": "小",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "猫",
+              "surface": "猫",
+              "start": 5,
+              "end": 6
+            }
+          ]
+        },
+        {
+          "id": "s1-2",
+          "text": "它是我的好朋友。",
+          "tokens": [
+            {
+              "vocabId": "它",
+              "surface": "它",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "是",
+              "surface": "是",
+              "start": 1,
+              "end": 2
+            },
+            {
+              "vocabId": "我",
+              "surface": "我",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "的",
+              "surface": "的",
+              "start": 3,
+              "end": 4
+            },
+            {
+              "vocabId": "好",
+              "surface": "好",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "朋友",
+              "surface": "朋友",
+              "start": 5,
+              "end": 7
+            }
+          ]
+        },
+        {
+          "id": "s1-3",
+          "text": "我们一起跑，一起看书，一起喝茶。",
+          "tokens": [
+            {
+              "vocabId": "我们",
+              "surface": "我们",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "vocabId": "一起",
+              "surface": "一起",
+              "start": 2,
+              "end": 4
+            },
+            {
+              "vocabId": "跑",
+              "surface": "跑",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "一起",
+              "surface": "一起",
+              "start": 6,
+              "end": 8
+            },
+            {
+              "vocabId": "看",
+              "surface": "看",
+              "start": 8,
+              "end": 9
+            },
+            {
+              "vocabId": "书",
+              "surface": "书",
+              "start": 9,
+              "end": 10
+            },
+            {
+              "vocabId": "一起",
+              "surface": "一起",
+              "start": 11,
+              "end": 13
+            },
+            {
+              "vocabId": "喝",
+              "surface": "喝",
+              "start": 13,
+              "end": 14
+            },
+            {
+              "vocabId": "茶",
+              "surface": "茶",
+              "start": 14,
+              "end": 15
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

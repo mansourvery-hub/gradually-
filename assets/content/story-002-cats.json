@@ -3,10 +3,7 @@
     "id": "story-002-cats",
     "title": "大猫与小猫",
     "type": "microStory",
-    "curriculumOrder": 51,
-    "prerequisiteIds": [
-      "story-001-drink-tea"
-    ],
+    "curriculumOrder": 101,
     "difficultyEstimate": 2,
     "vocabulary": [
       "这里",
@@ -25,6 +22,7 @@
       "鱼",
       "它们",
       "是",
+      "好",
       "朋友",
       "天天",
       "在",
@@ -32,14 +30,16 @@
       "跑"
     ],
     "curriculumCriticalVocabulary": [
-      "猫",
+      "一",
+      "只",
       "大",
+      "猫",
       "小",
       "看",
-      "要",
-      "鱼",
-      "朋友",
-      "跑"
+      "要"
+    ],
+    "tags": [
+      "bootstrap"
     ]
   },
   "sections": [
@@ -49,7 +49,7 @@
       "visualAsset": "assets/images/stories/story_002_sec1.svg",
       "sentences": [
         {
-          "id": "s2-1",
+          "id": "s1-1",
           "text": "这里有一只大猫和一只小猫。",
           "tokens": [
             {
@@ -118,11 +118,6 @@
               "start": 11,
               "end": 12
             }
-          ],
-          "criticalVocabIds": [
-            "猫",
-            "大",
-            "小"
           ]
         }
       ]
@@ -133,7 +128,7 @@
       "visualAsset": "assets/images/stories/story_002_sec2.svg",
       "sentences": [
         {
-          "id": "s2-2",
+          "id": "s2-1",
           "text": "大猫看小猫，小猫看大猫。",
           "tokens": [
             {
@@ -196,9 +191,6 @@
               "start": 10,
               "end": 11
             }
-          ],
-          "criticalVocabIds": [
-            "看"
           ]
         }
       ]
@@ -209,7 +201,7 @@
       "visualAsset": "assets/images/stories/story_002_sec3.svg",
       "sentences": [
         {
-          "id": "s2-3",
+          "id": "s3-1",
           "text": "小猫要喝水，大猫要吃鱼。",
           "tokens": [
             {
@@ -272,10 +264,6 @@
               "start": 10,
               "end": 11
             }
-          ],
-          "criticalVocabIds": [
-            "要",
-            "鱼"
           ]
         }
       ]
@@ -286,7 +274,7 @@
       "visualAsset": "assets/images/stories/story_002_sec4.svg",
       "sentences": [
         {
-          "id": "s2-4",
+          "id": "s4-1",
           "text": "它们是好朋友，天天在一起跑。",
           "tokens": [
             {
@@ -337,10 +325,6 @@
               "start": 12,
               "end": 13
             }
-          ],
-          "criticalVocabIds": [
-            "朋友",
-            "跑"
           ]
         }
       ]

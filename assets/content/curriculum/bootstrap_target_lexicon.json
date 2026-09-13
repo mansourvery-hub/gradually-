@@ -1,52 +1,322 @@
 {
-  "version": "1.0.0",
-  "description": "Target-led bootstrap vocabulary backward-derived from Stories 1–3 (CHOICES.md §2)",
+  "version": "1.1.0",
+  "description": "Target-led bootstrap vocabulary backward-derived from the story corpus (CHOICES.md §2). Each item maps to its concept visual asset; exposure units are generated from this data, never hardcoded.",
   "totalItems": 45,
   "items": [
-    {"id": "水", "surface": "水", "pinyin": "shuǐ", "concept": "water"},
-    {"id": "茶", "surface": "茶", "pinyin": "chá", "concept": "tea"},
-    {"id": "喝", "surface": "喝", "pinyin": "hē", "concept": "drink"},
-    {"id": "吃", "surface": "吃", "pinyin": "chī", "concept": "eat"},
-    {"id": "米饭", "surface": "米饭", "pinyin": "mǐ fàn", "concept": "rice"},
-    {"id": "我", "surface": "我", "pinyin": "wǒ", "concept": "I / me"},
-    {"id": "想", "surface": "想", "pinyin": "xiǎng", "concept": "want / think"},
-    {"id": "也", "surface": "也", "pinyin": "yě", "concept": "also / too"},
-    {"id": "我们", "surface": "我们", "pinyin": "wǒ men", "concept": "we / us"},
-    {"id": "一起", "surface": "一起", "pinyin": "yì qǐ", "concept": "together"},
-    {"id": "很", "surface": "很", "pinyin": "hěn", "concept": "very"},
-    {"id": "好喝", "surface": "好喝", "pinyin": "hǎo hē", "concept": "delicious to drink"},
-    {"id": "好吃", "surface": "好吃", "pinyin": "hǎo chī", "concept": "delicious to eat"},
-    {"id": "好", "surface": "好", "pinyin": "hǎo", "concept": "good"},
-    {"id": "猫", "surface": "猫", "pinyin": "māo", "concept": "cat"},
-    {"id": "大", "surface": "大", "pinyin": "dà", "concept": "big"},
-    {"id": "小", "surface": "小", "pinyin": "xiǎo", "concept": "small / little"},
-    {"id": "看", "surface": "看", "pinyin": "kàn", "concept": "look / see"},
-    {"id": "要", "surface": "要", "pinyin": "yào", "concept": "want / need"},
-    {"id": "鱼", "surface": "鱼", "pinyin": "yú", "concept": "fish"},
-    {"id": "这里", "surface": "这里", "pinyin": "zhè lǐ", "concept": "here"},
-    {"id": "有", "surface": "有", "pinyin": "yǒu", "concept": "have / there is"},
-    {"id": "一", "surface": "一", "pinyin": "yī", "concept": "one"},
-    {"id": "只", "surface": "只", "pinyin": "zhī", "concept": "measure word for animals"},
-    {"id": "和", "surface": "和", "pinyin": "hé", "concept": "and"},
-    {"id": "它们", "surface": "它们", "pinyin": "tā men", "concept": "they (animals)"},
-    {"id": "是", "surface": "是", "pinyin": "shì", "concept": "is / are"},
-    {"id": "朋友", "surface": "朋友", "pinyin": "péng you", "concept": "friend"},
-    {"id": "天天", "surface": "天天", "pinyin": "tiān tiān", "concept": "every day"},
-    {"id": "在", "surface": "在", "pinyin": "zài", "concept": "at / in"},
-    {"id": "跑", "surface": "跑", "pinyin": "pǎo", "concept": "run"},
-    {"id": "今天", "surface": "今天", "pinyin": "jīn tiān", "concept": "today"},
-    {"id": "天气", "surface": "天气", "pinyin": "tiān qì", "concept": "weather"},
-    {"id": "不", "surface": "不", "pinyin": "bù", "concept": "not"},
-    {"id": "下雨", "surface": "下雨", "pinyin": "xià yǔ", "concept": "rain"},
-    {"id": "了", "surface": "了", "pinyin": "le", "concept": "aspect particle"},
-    {"id": "家", "surface": "家", "pinyin": "jiā", "concept": "home"},
-    {"id": "里", "surface": "里", "pinyin": "lǐ", "concept": "inside"},
-    {"id": "书", "surface": "书", "pinyin": "shū", "concept": "book"},
-    {"id": "热", "surface": "热", "pinyin": "rè", "concept": "hot / warm"},
-    {"id": "爸爸", "surface": "爸爸", "pinyin": "bà ba", "concept": "father"},
-    {"id": "妈妈", "surface": "妈妈", "pinyin": "mā ma", "concept": "mother"},
-    {"id": "回来", "surface": "回来", "pinyin": "huí lai", "concept": "come back"},
-    {"id": "雨伞", "surface": "雨伞", "pinyin": "yǔ sǎn", "concept": "umbrella"},
-    {"id": "冷", "surface": "冷", "pinyin": "lěng", "concept": "cold"}
+    {
+      "id": "水",
+      "surface": "水",
+      "pinyin": "shuǐ",
+      "concept": "water",
+      "asset": "assets/images/concepts/shui.svg"
+    },
+    {
+      "id": "茶",
+      "surface": "茶",
+      "pinyin": "chá",
+      "concept": "tea",
+      "asset": "assets/images/concepts/cha.svg"
+    },
+    {
+      "id": "喝",
+      "surface": "喝",
+      "pinyin": "hē",
+      "concept": "drink",
+      "asset": "assets/images/concepts/he.svg"
+    },
+    {
+      "id": "吃",
+      "surface": "吃",
+      "pinyin": "chī",
+      "concept": "eat",
+      "asset": "assets/images/concepts/chi.svg"
+    },
+    {
+      "id": "米饭",
+      "surface": "米饭",
+      "pinyin": "mǐ fàn",
+      "concept": "rice",
+      "asset": "assets/images/concepts/mi-fan.svg"
+    },
+    {
+      "id": "我",
+      "surface": "我",
+      "pinyin": "wǒ",
+      "concept": "I / me",
+      "asset": "assets/images/concepts/wo.svg"
+    },
+    {
+      "id": "想",
+      "surface": "想",
+      "pinyin": "xiǎng",
+      "concept": "want / think",
+      "asset": "assets/images/concepts/xiang.svg"
+    },
+    {
+      "id": "也",
+      "surface": "也",
+      "pinyin": "yě",
+      "concept": "also / too",
+      "asset": "assets/images/concepts/ye.svg"
+    },
+    {
+      "id": "我们",
+      "surface": "我们",
+      "pinyin": "wǒ men",
+      "concept": "we / us",
+      "asset": "assets/images/concepts/wo-men.svg"
+    },
+    {
+      "id": "一起",
+      "surface": "一起",
+      "pinyin": "yì qǐ",
+      "concept": "together",
+      "asset": "assets/images/concepts/yi-qi.svg"
+    },
+    {
+      "id": "很",
+      "surface": "很",
+      "pinyin": "hěn",
+      "concept": "very",
+      "asset": "assets/images/concepts/hen.svg"
+    },
+    {
+      "id": "好喝",
+      "surface": "好喝",
+      "pinyin": "hǎo hē",
+      "concept": "delicious to drink",
+      "asset": "assets/images/concepts/hao-he.svg"
+    },
+    {
+      "id": "好吃",
+      "surface": "好吃",
+      "pinyin": "hǎo chī",
+      "concept": "delicious to eat",
+      "asset": "assets/images/concepts/hao-chi.svg"
+    },
+    {
+      "id": "好",
+      "surface": "好",
+      "pinyin": "hǎo",
+      "concept": "good",
+      "asset": "assets/images/concepts/hao.svg"
+    },
+    {
+      "id": "猫",
+      "surface": "猫",
+      "pinyin": "māo",
+      "concept": "cat",
+      "asset": "assets/images/concepts/mao.svg"
+    },
+    {
+      "id": "大",
+      "surface": "大",
+      "pinyin": "dà",
+      "concept": "big",
+      "asset": "assets/images/concepts/da.svg"
+    },
+    {
+      "id": "小",
+      "surface": "小",
+      "pinyin": "xiǎo",
+      "concept": "small / little",
+      "asset": "assets/images/concepts/xiao.svg"
+    },
+    {
+      "id": "看",
+      "surface": "看",
+      "pinyin": "kàn",
+      "concept": "look / see",
+      "asset": "assets/images/concepts/kan.svg"
+    },
+    {
+      "id": "要",
+      "surface": "要",
+      "pinyin": "yào",
+      "concept": "want / need",
+      "asset": "assets/images/concepts/yao.svg"
+    },
+    {
+      "id": "鱼",
+      "surface": "鱼",
+      "pinyin": "yú",
+      "concept": "fish",
+      "asset": "assets/images/concepts/yu.svg"
+    },
+    {
+      "id": "这里",
+      "surface": "这里",
+      "pinyin": "zhè lǐ",
+      "concept": "here",
+      "asset": "assets/images/concepts/zhe-li.svg"
+    },
+    {
+      "id": "有",
+      "surface": "有",
+      "pinyin": "yǒu",
+      "concept": "have / there is",
+      "asset": "assets/images/concepts/you.svg"
+    },
+    {
+      "id": "一",
+      "surface": "一",
+      "pinyin": "yī",
+      "concept": "one",
+      "asset": "assets/images/concepts/yi.svg"
+    },
+    {
+      "id": "只",
+      "surface": "只",
+      "pinyin": "zhī",
+      "concept": "measure word for animals",
+      "asset": "assets/images/concepts/zhi.svg"
+    },
+    {
+      "id": "和",
+      "surface": "和",
+      "pinyin": "hé",
+      "concept": "and",
+      "asset": "assets/images/concepts/he-2.svg"
+    },
+    {
+      "id": "它们",
+      "surface": "它们",
+      "pinyin": "tā men",
+      "concept": "they (animals)",
+      "asset": "assets/images/concepts/ta-men.svg"
+    },
+    {
+      "id": "是",
+      "surface": "是",
+      "pinyin": "shì",
+      "concept": "is / are",
+      "asset": "assets/images/concepts/shi.svg"
+    },
+    {
+      "id": "朋友",
+      "surface": "朋友",
+      "pinyin": "péng you",
+      "concept": "friend",
+      "asset": "assets/images/concepts/peng-you.svg"
+    },
+    {
+      "id": "天天",
+      "surface": "天天",
+      "pinyin": "tiān tiān",
+      "concept": "every day",
+      "asset": "assets/images/concepts/tian-tian.svg"
+    },
+    {
+      "id": "在",
+      "surface": "在",
+      "pinyin": "zài",
+      "concept": "at / in",
+      "asset": "assets/images/concepts/zai.svg"
+    },
+    {
+      "id": "跑",
+      "surface": "跑",
+      "pinyin": "pǎo",
+      "concept": "run",
+      "asset": "assets/images/concepts/pao.svg"
+    },
+    {
+      "id": "今天",
+      "surface": "今天",
+      "pinyin": "jīn tiān",
+      "concept": "today",
+      "asset": "assets/images/concepts/jin-tian.svg"
+    },
+    {
+      "id": "天气",
+      "surface": "天气",
+      "pinyin": "tiān qì",
+      "concept": "weather",
+      "asset": "assets/images/concepts/tian-qi.svg"
+    },
+    {
+      "id": "不",
+      "surface": "不",
+      "pinyin": "bù",
+      "concept": "not",
+      "asset": "assets/images/concepts/bu.svg"
+    },
+    {
+      "id": "下雨",
+      "surface": "下雨",
+      "pinyin": "xià yǔ",
+      "concept": "rain",
+      "asset": "assets/images/concepts/xia-yu.svg"
+    },
+    {
+      "id": "了",
+      "surface": "了",
+      "pinyin": "le",
+      "concept": "aspect particle",
+      "asset": "assets/images/concepts/le.svg"
+    },
+    {
+      "id": "家",
+      "surface": "家",
+      "pinyin": "jiā",
+      "concept": "home",
+      "asset": "assets/images/concepts/jia.svg"
+    },
+    {
+      "id": "里",
+      "surface": "里",
+      "pinyin": "lǐ",
+      "concept": "inside",
+      "asset": "assets/images/concepts/li.svg"
+    },
+    {
+      "id": "书",
+      "surface": "书",
+      "pinyin": "shū",
+      "concept": "book",
+      "asset": "assets/images/concepts/shu.svg"
+    },
+    {
+      "id": "热",
+      "surface": "热",
+      "pinyin": "rè",
+      "concept": "hot / warm",
+      "asset": "assets/images/concepts/re.svg"
+    },
+    {
+      "id": "爸爸",
+      "surface": "爸爸",
+      "pinyin": "bà ba",
+      "concept": "father",
+      "asset": "assets/images/concepts/ba-ba.svg"
+    },
+    {
+      "id": "妈妈",
+      "surface": "妈妈",
+      "pinyin": "mā ma",
+      "concept": "mother",
+      "asset": "assets/images/concepts/ma-ma.svg"
+    },
+    {
+      "id": "回来",
+      "surface": "回来",
+      "pinyin": "huí lai",
+      "concept": "come back",
+      "asset": "assets/images/concepts/hui-lai.svg"
+    },
+    {
+      "id": "雨伞",
+      "surface": "雨伞",
+      "pinyin": "yǔ sǎn",
+      "concept": "umbrella",
+      "asset": "assets/images/concepts/yu-san.svg"
+    },
+    {
+      "id": "冷",
+      "surface": "冷",
+      "pinyin": "lěng",
+      "concept": "cold",
+      "asset": "assets/images/concepts/leng.svg"
+    }
   ]
 }

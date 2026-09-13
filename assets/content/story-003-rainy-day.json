@@ -3,45 +3,38 @@
     "id": "story-003-rainy-day",
     "title": "今天下雨",
     "type": "microStory",
-    "curriculumOrder": 52,
-    "prerequisiteIds": [
-      "story-002-cats"
-    ],
+    "curriculumOrder": 102,
     "difficultyEstimate": 3,
     "vocabulary": [
-      "下雨",
-      "不",
-      "书",
-      "了",
       "今天",
-      "冷",
-      "喝",
-      "回来",
-      "在",
       "天气",
+      "不",
       "好",
-      "妈妈",
-      "家",
-      "很",
+      "下雨",
+      "了",
       "我",
-      "热",
-      "爸爸",
-      "看",
-      "茶",
+      "在",
+      "家",
       "里",
-      "雨伞"
+      "看",
+      "书",
+      "喝",
+      "热",
+      "茶",
+      "爸爸",
+      "妈妈",
+      "回来",
+      "雨伞",
+      "很",
+      "冷"
     ],
     "curriculumCriticalVocabulary": [
-      "今天",
-      "天气",
-      "下雨",
-      "家",
-      "书",
-      "热",
-      "爸爸",
-      "妈妈",
-      "雨伞",
-      "冷"
+      "了",
+      "喝",
+      "茶"
+    ],
+    "tags": [
+      "bootstrap"
     ]
   },
   "sections": [
@@ -51,7 +44,7 @@
       "visualAsset": "assets/images/stories/story_003_sec1.svg",
       "sentences": [
         {
-          "id": "s3-1",
+          "id": "s1-1",
           "text": "今天天气不好，天下雨了。",
           "tokens": [
             {
@@ -79,6 +72,12 @@
               "end": 6
             },
             {
+              "vocabId": "天",
+              "surface": "天",
+              "start": 7,
+              "end": 8
+            },
+            {
               "vocabId": "下雨",
               "surface": "下雨",
               "start": 8,
@@ -90,11 +89,6 @@
               "start": 10,
               "end": 11
             }
-          ],
-          "criticalVocabIds": [
-            "今天",
-            "天气",
-            "下雨"
           ]
         }
       ]
@@ -105,7 +99,7 @@
       "visualAsset": "assets/images/stories/story_003_sec2.svg",
       "sentences": [
         {
-          "id": "s3-2",
+          "id": "s2-1",
           "text": "我在家里看书，喝热茶。",
           "tokens": [
             {
@@ -162,11 +156,6 @@
               "start": 9,
               "end": 10
             }
-          ],
-          "criticalVocabIds": [
-            "家",
-            "书",
-            "热"
           ]
         }
       ]
@@ -177,7 +166,7 @@
       "visualAsset": "assets/images/stories/story_003_sec3.svg",
       "sentences": [
         {
-          "id": "s3-3",
+          "id": "s3-1",
           "text": "爸爸妈妈回来了，他们拿着雨伞。",
           "tokens": [
             {
@@ -222,11 +211,6 @@
               "start": 12,
               "end": 14
             }
-          ],
-          "criticalVocabIds": [
-            "爸爸",
-            "妈妈",
-            "雨伞"
           ]
         }
       ]
@@ -237,7 +221,7 @@
       "visualAsset": "assets/images/stories/story_003_sec4.svg",
       "sentences": [
         {
-          "id": "s3-4",
+          "id": "s4-1",
           "text": "外面很冷，快来喝茶。",
           "tokens": [
             {
@@ -282,9 +266,6 @@
               "start": 8,
               "end": 9
             }
-          ],
-          "criticalVocabIds": [
-            "冷"
           ]
         }
       ]

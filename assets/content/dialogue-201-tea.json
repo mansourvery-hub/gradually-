@@ -1,0 +1,188 @@
+{
+  "metadata": {
+    "id": "dialogue-201-tea",
+    "title": "你想喝茶吗",
+    "type": "dialogue",
+    "curriculumOrder": 120,
+    "difficultyEstimate": 2,
+    "vocabulary": [
+      "想",
+      "喝",
+      "茶",
+      "今天",
+      "很",
+      "冷",
+      "我",
+      "也",
+      "我们",
+      "一起"
+    ],
+    "curriculumCriticalVocabulary": [
+      "想",
+      "喝",
+      "茶"
+    ],
+    "tags": [
+      "core",
+      "dialogue"
+    ]
+  },
+  "sections": [
+    {
+      "id": "sec-1",
+      "text": "——你想喝茶吗？——想喝茶。今天很冷。——我也想喝茶。我们一起喝茶。",
+      "sentences": [
+        {
+          "id": "s1-1",
+          "text": "——你想喝茶吗？",
+          "tokens": [
+            {
+              "vocabId": "你",
+              "surface": "你",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "想",
+              "surface": "想",
+              "start": 3,
+              "end": 4
+            },
+            {
+              "vocabId": "喝",
+              "surface": "喝",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "茶",
+              "surface": "茶",
+              "start": 5,
+              "end": 6
+            },
+            {
+              "vocabId": "吗",
+              "surface": "吗",
+              "start": 6,
+              "end": 7
+            }
+          ]
+        },
+        {
+          "id": "s1-2",
+          "text": "——想喝茶。",
+          "tokens": [
+            {
+              "vocabId": "想",
+              "surface": "想",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "喝",
+              "surface": "喝",
+              "start": 3,
+              "end": 4
+            },
+            {
+              "vocabId": "茶",
+              "surface": "茶",
+              "start": 4,
+              "end": 5
+            }
+          ]
+        },
+        {
+          "id": "s1-3",
+          "text": "今天很冷。",
+          "tokens": [
+            {
+              "vocabId": "今天",
+              "surface": "今天",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "vocabId": "很",
+              "surface": "很",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "冷",
+              "surface": "冷",
+              "start": 3,
+              "end": 4
+            }
+          ]
+        },
+        {
+          "id": "s1-4",
+          "text": "——我也想喝茶。",
+          "tokens": [
+            {
+              "vocabId": "我",
+              "surface": "我",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "也",
+              "surface": "也",
+              "start": 3,
+              "end": 4
+            },
+            {
+              "vocabId": "想",
+              "surface": "想",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "喝",
+              "surface": "喝",
+              "start": 5,
+              "end": 6
+            },
+            {
+              "vocabId": "茶",
+              "surface": "茶",
+              "start": 6,
+              "end": 7
+            }
+          ]
+        },
+        {
+          "id": "s1-5",
+          "text": "我们一起喝茶。",
+          "tokens": [
+            {
+              "vocabId": "我们",
+              "surface": "我们",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "vocabId": "一起",
+              "surface": "一起",
+              "start": 2,
+              "end": 4
+            },
+            {
+              "vocabId": "喝",
+              "surface": "喝",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "茶",
+              "surface": "茶",
+              "start": 5,
+              "end": 6
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

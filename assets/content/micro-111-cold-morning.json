@@ -1,0 +1,175 @@
+{
+  "metadata": {
+    "id": "micro-111-cold-morning",
+    "title": "早上下雨",
+    "type": "microStory",
+    "curriculumOrder": 114,
+    "difficultyEstimate": 3,
+    "vocabulary": [
+      "天气",
+      "很",
+      "冷",
+      "小",
+      "猫",
+      "不",
+      "想",
+      "妈妈",
+      "回来",
+      "喝",
+      "茶"
+    ],
+    "curriculumCriticalVocabulary": [
+      "很",
+      "冷"
+    ],
+    "tags": [
+      "core"
+    ]
+  },
+  "sections": [
+    {
+      "id": "sec-1",
+      "text": "早上天气很冷。小猫不想起床。妈妈说：\"外面很冷，快回来喝茶。\"",
+      "sentences": [
+        {
+          "id": "s1-1",
+          "text": "早上天气很冷。",
+          "tokens": [
+            {
+              "vocabId": "早",
+              "surface": "早",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "上",
+              "surface": "上",
+              "start": 1,
+              "end": 2
+            },
+            {
+              "vocabId": "天气",
+              "surface": "天气",
+              "start": 2,
+              "end": 4
+            },
+            {
+              "vocabId": "很",
+              "surface": "很",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "冷",
+              "surface": "冷",
+              "start": 5,
+              "end": 6
+            }
+          ]
+        },
+        {
+          "id": "s1-2",
+          "text": "小猫不想起床。",
+          "tokens": [
+            {
+              "vocabId": "小",
+              "surface": "小",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "猫",
+              "surface": "猫",
+              "start": 1,
+              "end": 2
+            },
+            {
+              "vocabId": "不",
+              "surface": "不",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "想",
+              "surface": "想",
+              "start": 3,
+              "end": 4
+            },
+            {
+              "vocabId": "起",
+              "surface": "起",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "床",
+              "surface": "床",
+              "start": 5,
+              "end": 6
+            }
+          ]
+        },
+        {
+          "id": "s1-3",
+          "text": "妈妈说：\"外面很冷，快回来喝茶。",
+          "tokens": [
+            {
+              "vocabId": "妈妈",
+              "surface": "妈妈",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "vocabId": "说",
+              "surface": "说",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "外面",
+              "surface": "外面",
+              "start": 5,
+              "end": 7
+            },
+            {
+              "vocabId": "很",
+              "surface": "很",
+              "start": 7,
+              "end": 8
+            },
+            {
+              "vocabId": "冷",
+              "surface": "冷",
+              "start": 8,
+              "end": 9
+            },
+            {
+              "vocabId": "快",
+              "surface": "快",
+              "start": 10,
+              "end": 11
+            },
+            {
+              "vocabId": "回来",
+              "surface": "回来",
+              "start": 11,
+              "end": 13
+            },
+            {
+              "vocabId": "喝",
+              "surface": "喝",
+              "start": 13,
+              "end": 14
+            },
+            {
+              "vocabId": "茶",
+              "surface": "茶",
+              "start": 14,
+              "end": 15
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

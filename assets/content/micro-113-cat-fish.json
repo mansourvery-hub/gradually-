@@ -1,0 +1,173 @@
+{
+  "metadata": {
+    "id": "micro-113-cat-fish",
+    "title": "小猫和鱼",
+    "type": "microStory",
+    "curriculumOrder": 116,
+    "difficultyEstimate": 2,
+    "vocabulary": [
+      "小",
+      "猫",
+      "和",
+      "鱼",
+      "是",
+      "朋友",
+      "天天",
+      "看",
+      "今天",
+      "它们",
+      "一起",
+      "喝",
+      "水"
+    ],
+    "curriculumCriticalVocabulary": [
+      "小",
+      "猫",
+      "鱼",
+      "一起"
+    ],
+    "tags": [
+      "core"
+    ]
+  },
+  "sections": [
+    {
+      "id": "sec-1",
+      "text": "小猫和鱼是朋友吗？小猫天天看鱼。今天它们一起喝水，一起玩。",
+      "sentences": [
+        {
+          "id": "s1-1",
+          "text": "小猫和鱼是朋友吗？",
+          "tokens": [
+            {
+              "vocabId": "小",
+              "surface": "小",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "猫",
+              "surface": "猫",
+              "start": 1,
+              "end": 2
+            },
+            {
+              "vocabId": "和",
+              "surface": "和",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "鱼",
+              "surface": "鱼",
+              "start": 3,
+              "end": 4
+            },
+            {
+              "vocabId": "是",
+              "surface": "是",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "朋友",
+              "surface": "朋友",
+              "start": 5,
+              "end": 7
+            },
+            {
+              "vocabId": "吗",
+              "surface": "吗",
+              "start": 7,
+              "end": 8
+            }
+          ]
+        },
+        {
+          "id": "s1-2",
+          "text": "小猫天天看鱼。",
+          "tokens": [
+            {
+              "vocabId": "小",
+              "surface": "小",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "猫",
+              "surface": "猫",
+              "start": 1,
+              "end": 2
+            },
+            {
+              "vocabId": "天天",
+              "surface": "天天",
+              "start": 2,
+              "end": 4
+            },
+            {
+              "vocabId": "看",
+              "surface": "看",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "鱼",
+              "surface": "鱼",
+              "start": 5,
+              "end": 6
+            }
+          ]
+        },
+        {
+          "id": "s1-3",
+          "text": "今天它们一起喝水，一起玩。",
+          "tokens": [
+            {
+              "vocabId": "今天",
+              "surface": "今天",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "vocabId": "它们",
+              "surface": "它们",
+              "start": 2,
+              "end": 4
+            },
+            {
+              "vocabId": "一起",
+              "surface": "一起",
+              "start": 4,
+              "end": 6
+            },
+            {
+              "vocabId": "喝",
+              "surface": "喝",
+              "start": 6,
+              "end": 7
+            },
+            {
+              "vocabId": "水",
+              "surface": "水",
+              "start": 7,
+              "end": 8
+            },
+            {
+              "vocabId": "一起",
+              "surface": "一起",
+              "start": 9,
+              "end": 11
+            },
+            {
+              "vocabId": "玩",
+              "surface": "玩",
+              "start": 11,
+              "end": 12
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

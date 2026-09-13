@@ -1,0 +1,194 @@
+{
+  "metadata": {
+    "id": "dialogue-203-rain",
+    "title": "下雨了",
+    "type": "dialogue",
+    "curriculumOrder": 122,
+    "difficultyEstimate": 3,
+    "vocabulary": [
+      "今天",
+      "下雨",
+      "了",
+      "想",
+      "我",
+      "在",
+      "家",
+      "里",
+      "看",
+      "书",
+      "喝",
+      "茶",
+      "好",
+      "我们",
+      "一起"
+    ],
+    "curriculumCriticalVocabulary": [
+      "想",
+      "在",
+      "家",
+      "里"
+    ],
+    "tags": [
+      "core",
+      "dialogue"
+    ]
+  },
+  "sections": [
+    {
+      "id": "sec-1",
+      "text": "——今天下雨了，你想去哪里？——我想在家里看书，喝茶。——好，我们一起在家里。",
+      "sentences": [
+        {
+          "id": "s1-1",
+          "text": "——今天下雨了，你想去哪里？",
+          "tokens": [
+            {
+              "vocabId": "今天",
+              "surface": "今天",
+              "start": 2,
+              "end": 4
+            },
+            {
+              "vocabId": "下雨",
+              "surface": "下雨",
+              "start": 4,
+              "end": 6
+            },
+            {
+              "vocabId": "了",
+              "surface": "了",
+              "start": 6,
+              "end": 7
+            },
+            {
+              "vocabId": "你",
+              "surface": "你",
+              "start": 8,
+              "end": 9
+            },
+            {
+              "vocabId": "想",
+              "surface": "想",
+              "start": 9,
+              "end": 10
+            },
+            {
+              "vocabId": "去",
+              "surface": "去",
+              "start": 10,
+              "end": 11
+            },
+            {
+              "vocabId": "哪里",
+              "surface": "哪里",
+              "start": 11,
+              "end": 13
+            }
+          ]
+        },
+        {
+          "id": "s1-2",
+          "text": "——我想在家里看书，喝茶。",
+          "tokens": [
+            {
+              "vocabId": "我",
+              "surface": "我",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "想",
+              "surface": "想",
+              "start": 3,
+              "end": 4
+            },
+            {
+              "vocabId": "在",
+              "surface": "在",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "家",
+              "surface": "家",
+              "start": 5,
+              "end": 6
+            },
+            {
+              "vocabId": "里",
+              "surface": "里",
+              "start": 6,
+              "end": 7
+            },
+            {
+              "vocabId": "看",
+              "surface": "看",
+              "start": 7,
+              "end": 8
+            },
+            {
+              "vocabId": "书",
+              "surface": "书",
+              "start": 8,
+              "end": 9
+            },
+            {
+              "vocabId": "喝",
+              "surface": "喝",
+              "start": 10,
+              "end": 11
+            },
+            {
+              "vocabId": "茶",
+              "surface": "茶",
+              "start": 11,
+              "end": 12
+            }
+          ]
+        },
+        {
+          "id": "s1-3",
+          "text": "——好，我们一起在家里。",
+          "tokens": [
+            {
+              "vocabId": "好",
+              "surface": "好",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "我们",
+              "surface": "我们",
+              "start": 4,
+              "end": 6
+            },
+            {
+              "vocabId": "一起",
+              "surface": "一起",
+              "start": 6,
+              "end": 8
+            },
+            {
+              "vocabId": "在",
+              "surface": "在",
+              "start": 8,
+              "end": 9
+            },
+            {
+              "vocabId": "家",
+              "surface": "家",
+              "start": 9,
+              "end": 10
+            },
+            {
+              "vocabId": "里",
+              "surface": "里",
+              "start": 10,
+              "end": 11
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
