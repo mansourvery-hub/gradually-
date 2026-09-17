@@ -279,6 +279,13 @@ class QualityDashboardBuilder {
         ? PipelineHealthStatus.green
         : PipelineHealthStatus.red;
 
+    final metaIngestion =
+        portfolio.metadata['ingestionMetrics'] as Map<String, dynamic>?;
+    final metaCanonical =
+        portfolio.metadata['canonicalMetrics'] as Map<String, dynamic>?;
+    final metaLinguistic =
+        portfolio.metadata['linguisticMetrics'] as Map<String, dynamic>?;
+
     return QualityDashboardReport(
       status: status,
       sourceId: portfolio.sourceId,
@@ -287,14 +294,38 @@ class QualityDashboardBuilder {
       ingestionMetrics: {
         'sourceId': portfolio.sourceId,
         'pipelineVersion': portfolio.pipelineVersion,
+        'chaptersCount': metaIngestion?['chaptersCount'] ?? 'N/A',
+        'rawCharacters':
+            metaIngestion?['rawCharacters'] ??
+            metaIngestion?['totalCharacters'] ??
+            'N/A',
+        'totalSegments': metaIngestion?['totalSegments'] ?? 'N/A',
+        'encoding': metaIngestion?['encoding'] ?? 'utf-8',
       },
       canonicalMetrics: {
+        'totalEntities': metaCanonical?['totalEntities'] ?? 'N/A',
+        'totalEvents':
+            metaCanonical?['totalEvents'] ??
+            ladder.levels.expand((l) => l.introducedEvents).toSet().length,
+        'totalRelationships': metaCanonical?['totalRelationships'] ?? 'N/A',
+        'groundingPassed': metaCanonical?['groundingPassed'] ?? true,
         'eventsCovered': ladder.levels
             .expand((l) => l.introducedEvents)
             .toSet()
             .length,
       },
       linguisticMetrics: {
+        'totalTokens': metaLinguistic?['totalTokens'] ?? 'N/A',
+        'uniqueWords':
+            metaLinguistic?['uniqueWords'] ??
+            (ladder.levels.isNotEmpty
+                ? ladder.levels.last.cumulativeKnownWords.length
+                : 0),
+        'uniqueHanzi':
+            metaLinguistic?['uniqueHanzi'] ??
+            (ladder.levels.isNotEmpty
+                ? ladder.levels.last.cumulativeKnownCharacters.length
+                : 0),
         'cumulativeWords': ladder.levels.isNotEmpty
             ? ladder.levels.last.cumulativeKnownWords.length
             : 0,

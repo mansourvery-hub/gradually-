@@ -101,6 +101,21 @@ void main(List<String> args) async {
     pipelineVersion: '3.0.0',
     createdAt: DateTime.now().toIso8601String(),
     ladder: ladder,
+    metadata: {
+      'ingestionMetrics': {
+        'sourceId': sourceId,
+        'chaptersCount': artifact.chapters.length,
+        'totalCharacters': artifact.rawText.length,
+        'totalSegments': artifact.totalSegments,
+        'encoding': artifact.encoding,
+      },
+      'canonicalMetrics': {
+        'totalEntities': canonicalModel.entities.length,
+        'totalEvents': canonicalModel.events.length,
+        'totalRelationships': canonicalModel.relationships.length,
+        'groundingPassed': true,
+      },
+    },
   );
 
   final cacheManager = PortfolioCacheManager(storageDirectory: outDir);

@@ -119,6 +119,27 @@ void main() {
           latestSession!.learnerState.narrative.encounteredEvents,
           contains('ev_ch1_2'),
         );
+
+        // Test swipe back / previous navigation
+        await tester.fling(
+          find.byType(GestureDetector).first,
+          const Offset(300, 0),
+          1000,
+        );
+        await tester.pumpAndSettle();
+
+        // Should return to Level 1 Passage 2
+        expect(find.text('贾雨村在风尘之中。'), findsOneWidget);
+
+        // Swipe back again to Level 0 Passage 1
+        await tester.fling(
+          find.byType(GestureDetector).first,
+          const Offset(300, 0),
+          1000,
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.text('这是甄士隐的故事。'), findsOneWidget);
       },
     );
   });

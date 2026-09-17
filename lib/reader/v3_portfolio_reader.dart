@@ -86,6 +86,31 @@ class V3ReaderSessionState {
     }
   }
 
+  /// Navigates to the previous passage or un-completes to review prior material.
+  V3ReaderSessionState previous() {
+    if (completed) {
+      final lastLevelIdx = portfolio.ladder.levels.length - 1;
+      final lastPassageIdx =
+          portfolio.ladder.levels[lastLevelIdx].passages.length - 1;
+      return copyWith(
+        currentLevelIndex: lastLevelIdx,
+        currentPassageIndex: lastPassageIdx,
+        completed: false,
+      );
+    }
+    if (currentPassageIndex > 0) {
+      return copyWith(currentPassageIndex: currentPassageIndex - 1);
+    } else if (currentLevelIndex > 0) {
+      final prevLevelIdx = currentLevelIndex - 1;
+      final prevLevel = portfolio.ladder.levels[prevLevelIdx];
+      return copyWith(
+        currentLevelIndex: prevLevelIdx,
+        currentPassageIndex: prevLevel.passages.length - 1,
+      );
+    }
+    return this;
+  }
+
   V3ReaderSessionState copyWith({
     StoryPortfolio? portfolio,
     int? currentLevelIndex,
@@ -150,6 +175,13 @@ class _V3PortfolioReaderState extends State<V3PortfolioReader> {
     });
   }
 
+  void _handleSwipeRight() {
+    setState(() {
+      _session = _session.previous();
+      widget.onProgress?.call(_session);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final passage = _session.currentPassage;
@@ -157,6 +189,14 @@ class _V3PortfolioReaderState extends State<V3PortfolioReader> {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: _handleTap,
+      onHorizontalDragEnd: (details) {
+        if (details.primaryVelocity != null && details.primaryVelocity! > 200) {
+          _handleSwipeRight();
+        } else if (details.primaryVelocity != null &&
+            details.primaryVelocity! < -200) {
+          _handleTap();
+        }
+      },
       child: Scaffold(
         backgroundColor: const Color(0xFFFBF9F5), // Serene parchment
         body: SafeArea(
