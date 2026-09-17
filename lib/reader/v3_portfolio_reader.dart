@@ -212,6 +212,15 @@ class _V3PortfolioReaderState extends State<V3PortfolioReader> {
                       style: TextStyle(
                         fontSize: 48,
                         fontFamily: 'NotoSerifSC',
+                        fontFamilyFallback: [
+                          'PingFang SC',
+                          'Hiragino Sans GB',
+                          'Microsoft YaHei',
+                          'WenQuanYi Micro Hei',
+                          'Noto Sans CJK SC',
+                          'NotoSansSC',
+                          'serif',
+                        ],
                         color: Color(0xFF2C2C2C),
                       ),
                     )
@@ -228,6 +237,15 @@ class _V3PortfolioReaderState extends State<V3PortfolioReader> {
                             height: 1.8,
                             letterSpacing: 2.0,
                             fontFamily: 'NotoSerifSC',
+                            fontFamilyFallback: [
+                              'PingFang SC',
+                              'Hiragino Sans GB',
+                              'Microsoft YaHei',
+                              'WenQuanYi Micro Hei',
+                              'Noto Sans CJK SC',
+                              'NotoSansSC',
+                              'serif',
+                            ],
                             color: Color(0xFF1F1F1F),
                           ),
                         ),

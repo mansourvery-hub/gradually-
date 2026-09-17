@@ -85,3 +85,20 @@ RUNTIME READING EXPERIENCE (Flutter reader consuming verified portfolio, updatin
 - **Adapt:** `lib/content/` (provenance schemas), `lib/learner/learner_state.dart` (dual state), `lib/selector/` (portfolio selector), `tool/validate_curriculum.dart` (validation orchestrator).
 - **Replace:** Manual authoring tools (`tool/author_story.dart`) and hardcoded bootstrap JSON curricula with automated Mother-Story pipeline (`tool/pipeline/`).
 - **Archive:** Legacy V1/V2 design blueprints and hand-authored roadmap graphs moved to `docs/archive/v1_v2/`.
+
+## 5. Long-Term Generalization Roadmap (Post-MVP)
+
+While the V3 MVP is grounded on 《红楼梦》 as the canonical reference stress test, the pipeline is designed to be fully story-agnostic. The following long-term expansions are planned for future milestones:
+
+1. **Universal Canonical Entity Extraction:**
+   - Generalize `CanonicalStoryExtractor` by replacing novel-specific character name heuristics with universal Hundred Family Surnames (百家姓) and compound surnames (e.g. 诸葛, 司马, 欧阳).
+   - Leverage Jieba POS/NER tags (`nr` person names, `ns` place names, `nt` titles) and cross-chapter frequency clustering for automatic entity discovery.
+
+2. **Resilient Source Ingestion & Fallback Chunking:**
+   - Expand `SourceIngester` chapter pattern matching beyond classical回/章 to support numerical headers (`01`, `Chapter 1`), Markdown headings (`# ...`), and unstructured novellas/essays via dynamic semantic scene chunking.
+
+3. **Native EPUB Ingestion Support:**
+   - Provide an EPUB parser adapter reading `META-INF/container.xml` and the OPF spine, extracting chapter XHTML content, and converting it into clean `SourceArtifact` segments with exact character offsets.
+
+4. **Multi-Story Portfolio Hub:**
+   - Expand `StoryPortfolio` caching and runtime selection to support multiple concurrent Mother Stories (e.g. 《西游记》, 《三国演义》, or modern literature) selectable within the app shell.

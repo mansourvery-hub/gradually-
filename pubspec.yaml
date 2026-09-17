@@ -37,6 +37,7 @@ flutter:
     - assets/images/concepts/
     - assets/images/stories/
     - assets/images/manifests/
+    - assets/portfolio/
 
   fonts:
     - family: NotoSansSC

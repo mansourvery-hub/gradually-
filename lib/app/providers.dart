@@ -28,6 +28,7 @@ import '../dictionary/lookup.dart';
 import '../learner/exposure_gate.dart';
 import '../learner/learner_repository.dart';
 import '../learner/learner_state.dart';
+import '../pipeline/portfolio/portfolio_manager.dart';
 import '../reader/audio_controller.dart';
 import '../review/fsrs_review_system.dart';
 import '../review/review.dart';
@@ -312,5 +313,20 @@ final dictionaryProvider = FutureProvider<MonolingualDictionary>((ref) async {
       debugPrint('dictionaryProvider: using empty dictionary ($e)');
     }
     return MonolingualDictionary.empty();
+  }
+});
+
+/// Provides the verified V3 Mother-Story Portfolio (e.g. 红楼梦).
+final v3PortfolioProvider = FutureProvider<StoryPortfolio?>((ref) async {
+  try {
+    const assetPath = 'assets/portfolio/portfolio_红楼梦.json';
+    final jsonString = await rootBundle.loadString(assetPath);
+    final json = jsonDecode(jsonString) as Map<String, dynamic>;
+    return StoryPortfolio.fromJson(json);
+  } catch (e) {
+    if (kDebugMode) {
+      debugPrint('v3PortfolioProvider: unable to load portfolio asset ($e)');
+    }
+    return null;
   }
 });
