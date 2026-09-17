@@ -1,23 +1,21 @@
-# 渐入 — Chinese Immersion App
+# 渐入 (JianRu V3) — Automated Mother-Story Pipeline
 
-A zero-friction, inherently monolingual Chinese immersion app. It continuously
-answers one question — **given everything the learner knows, which piece of
-Chinese should come next?** — and progressively removes its own scaffolding
-until the learner no longer needs it.
+An end-to-end automated platform whose only required source input is a Chinese literary TXT file (such as 《红楼梦》).
+JianRu constructs a progressively accessible path into the original work by decoupling **what piece of the story should be revealed next** from **how to express that piece at the learner's current linguistic level**.
 
-Platform: Flutter — iOS, Android, Web. Offline-first core.
+Zero human Chinese authoring. Zero manual Chinese QA. Full provenance and independent multi-layer validation built in.
 
-## Documents (read in order — narrow to the task at hand)
+## Authoritative Documentation
 
-| File | Read when… |
+| File | Purpose |
 |---|---|
-| `AGENTS.md` | **Every task.** Entry point, authority hierarchy, operating loop, hard rules. |
-| `PRODUCT.md` | Need the product intent, users, journeys, non-goals, constraints. |
-| `MVP.md` | Deciding what is in scope right now vs deferred. |
-| `ARCHITECTURE.md` | Touching subsystem boundaries, persistence, tokenizer, tests. |
-| `QUALITY.md` | Need to know which invariants must remain true. |
-| `TEST_STRATEGY.md` | Need to know how an invariant is mechanically verified. |
-| `IMPLEMENTATION_PLAN.md` | Selecting the next ready task. |
+| `docs/v3-architecture.md` | Authoritative V3 architecture, explicit boundaries, Contracts 1–16 |
+| `PRODUCT.md` | V3 Product intent, invariants, core principles |
+| `ARCHITECTURE.md` | Technical component map (Pipeline + Flutter Reader) |
+| `IMPLEMENTATION_PLAN.md` | Contract status, dependencies, and execution plan |
+| `QUALITY.md` | System invariants (provenance, monolingual, validation, privacy) |
+| `TEST_STRATEGY.md` | Automated mechanical verification rules |
+| `AGENTS.md` | Operating loop and hard rules for development agents |
 | `docs/domain/LEARNING_ENGINE.md` | Touching learner model, acquisition, SRS/review, selection. |
 | `docs/domain/CONTENT.md` | Touching content schema, curriculum data, media, reader presentation. |
 | `docs/domain/CHOICES.md` | Numerical parameters, target-led vocabulary, asset pipelines. |

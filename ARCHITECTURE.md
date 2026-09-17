@@ -1,9 +1,42 @@
-# Architecture
+# Architecture — JianRu V3
 
-Subsystem boundaries, code layout, persistence, tokenizer, and tests. Read
-with `AGENTS.md`. Requirements unless marked [PROPOSED].
+Subsystem boundaries, code layout, persistence, tokenizer, pipeline, and tests.
+The authoritative architectural specification is defined in `docs/v3-architecture.md`.
 
-## 1. Component map
+## 1. V3 End-to-End System Map
+
+```text
+ONE INPUT: Raw Chinese Literary TXT (e.g., 红楼梦.txt)
+                     │
+                     ▼
+             Source Ingestion (tool/pipeline/ingestion/)
+                     │
+                     ▼
+         Canonical Mother Story Extraction (tool/pipeline/extraction/)
+                     │
+          ┌──────────┴──────────┐
+          ▼                     ▼
+Canonical Narrative Graph   Linguistic Representation
+          │                     │
+          └──────────┬──────────┘
+                     ▼
+         Progressive Narrative Planner (tool/pipeline/planner/)
+                     │   (Driven by Decoupled Learner State:
+                     │    Linguistic State + Narrative State)
+                     ▼
+         Controlled Generator (tool/pipeline/generation/)
+                     │
+                     ▼
+         Independent Multi-Layer Validator (tool/pipeline/validation/)
+                     │
+                     ▼
+         Verified Story Portfolio (assets/content/portfolio/)
+                     │
+                     ▼
+         Runtime Flutter Reader (lib/reader/ + lib/learner/)
+```
+
+## 2. Component map (Runtime App)
 
 ```text
                  Learner State (learner/)

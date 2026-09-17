@@ -7,13 +7,13 @@ methodology or the requirements themselves.
 ## 1. Authority hierarchy
 
 ```text
-PRODUCT.md        → what the product is and must do
-MVP.md            → current scope (what "right now" means)
-ARCHITECTURE.md   → technical structure and boundaries
-QUALITY.md        → invariants that must remain true (P/A/D/R/C codes)
-TEST_STRATEGY.md  → how each invariant is mechanically verified
-IMPLEMENTATION_PLAN.md → current tasks, dependencies, status
-AGENTS.md         → how to operate (this file)
+PRODUCT.md             → V3 product intent and automated pipeline requirements
+docs/v3-architecture.md→ V3 authoritative architectural design, contracts 1-16
+ARCHITECTURE.md        → technical structure, boundaries, component map
+QUALITY.md             → invariants that must remain true (P/A/D/R/C codes)
+TEST_STRATEGY.md       → how each invariant is mechanically verified
+IMPLEMENTATION_PLAN.md → current V3 pipeline contracts, dependencies, status
+AGENTS.md              → how to operate (this file)
 ```
 
 Specialized documents (read on demand):

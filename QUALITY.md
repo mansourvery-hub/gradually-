@@ -4,6 +4,17 @@
 enforced (see `TEST_STRATEGY.md` for the how). Violations block a task from
 being declared complete.
 
+## V3 Pipeline Invariants (V3-xx)
+
+| # | Invariant |
+|---|---|
+| V3-01 | TXT-only source: The pipeline requires only a Chinese literary TXT file. No hand-authored metadata, summaries, or entity graphs. |
+| V3-02 | No manual Chinese audit: The pipeline assumes operators have zero Chinese proficiency. Correctness and quality are mechanically validated. |
+| V3-03 | Provenance everywhere: Every extracted entity, event, relationship, and generated passage must be traceable to source offsets or marked as an inference. |
+| V3-04 | Layered independent validation: The generator is never its own judge. Multi-layer validation (deterministic, linguistic, grounding, coherence, judge). |
+| V3-05 | Fail-closed generation: Generation failing any validation check is rejected, never silently accepted or logged without failure. |
+| V3-06 | Decoupled states: Linguistic learner state and narrative learner state evolve independently and are never conflated. |
+
 ## Product invariants (P-xx)
 
 | # | Invariant |

@@ -1,31 +1,78 @@
-# Implementation Plan
+# Implementation Plan — JianRu V3
 
-Task definitions, dependency graph, and execution status. A task is
-**READY** when all its dependencies are complete. Work top-to-bottom by
-readiness; never start a task whose dependencies are incomplete.
+This plan tracks the 16 contracts of the V3 Automated Mother-Story Pipeline.
+A contract is **READY** when all its dependencies are complete. Work sequentially.
+**Never proceed to the next contract until the current contract's verification gate passes.**
 
-## Status legend
+## V3 Pipeline Contracts Status
 
 ```text
-[COMPLETE]  shipped + guarded by tests
-[READY]     dependencies complete; may be selected next
-[BLOCKED]   waiting on dependencies or a decision
-[DEFERRED]  out of current scope (see MVP.md / ROADMAP.md)
-[DECISION]  requires human input (art direction, audio sourcing)
+[COMPLETE] Contract 1: Repository + Architecture Reset
+[READY]    Contract 2: Source Ingestion
+[BLOCKED]  Contract 3: Canonical Story Extraction
+[BLOCKED]  Contract 4: Linguistic Knowledge Extraction
+[BLOCKED]  Contract 5: Learner State + Narrative State
+[BLOCKED]  Contract 6: Narrative Planner
+[BLOCKED]  Contract 7: Controlled Generation
+[BLOCKED]  Contract 8: Independent Validation Stack
+[BLOCKED]  Contract 9: End-to-End Red Chamber Fixture
+[BLOCKED]  Contract 10: Progressive Ladder Generation
+[BLOCKED]  Contract 11: Portfolio / Caching Model
+[BLOCKED]  Contract 12: Runtime Application
+[BLOCKED]  Contract 13: Failure Handling
+[BLOCKED]  Contract 14: Automated Quality Dashboard / Report
+[BLOCKED]  Contract 15: Full Pipeline Regression Suite
+[BLOCKED]  Contract 16: Final Product Gate
 ```
 
-## Current focus: Phase 4 — corpus expansion (ROADMAP.md)
-
-The content-architecture milestone (Phases 1–3) is complete and guarded.
-Remaining work, in priority order:
+## Contract Dependency Flow
 
 ```text
-T12 LEXICON_GROWTH ──→ T13 CORPUS_100 ──→ T14 SEQUENCING_V3   [content/editorial]
-[DECISION] audio sourcing ──→ T1 AUDIO_ASSETS ──→ T2 PLAYBACK_CADENCE  [media, parked]
-[DECISION] Chinese art style ──→ T3 ART_SWAP                        [media, parked]
-T4 REREAD_EVIDENCE ──→ T5 LONG_TERM_EXPOSURE        [DEFERRED: post-MVP evidence]
-T6 DICTIONARY_SCHEMA ──→ T7 LEVELED_LOOKUP_DEPTH    [DEFERRED: post-MVP dictionary]
-T8 IMPORT_PIPELINE ──→ T9 IMPORT_SELECTION          [DEFERRED: post-MVP importing]
+Contract 1 (Reset)
+    │
+    ▼
+Contract 2 (Source Ingestion)
+    │
+    ├─────────────────────────────┐
+    ▼                             ▼
+Contract 3 (Canonical Extraction) Contract 4 (Linguistic Extraction)
+    │                             │
+    └──────────────┬──────────────┘
+                   ▼
+Contract 5 (Learner State + Narrative State)
+                   │
+                   ▼
+Contract 6 (Narrative Planner)
+                   │
+                   ▼
+Contract 7 (Controlled Generation) ◄───┐
+                   │                   │ (Fail-closed retry)
+                   ▼                   │
+Contract 8 (Validation Stack) ─────────┘
+                   │
+                   ▼
+Contract 9 (End-to-End Fixture: 红楼梦.txt)
+                   │
+                   ▼
+Contract 10 (Progressive Ladder Generation)
+                   │
+                   ▼
+Contract 11 (Portfolio / Caching Model)
+                   │
+                   ▼
+Contract 12 (Runtime Application)
+                   │
+                   ▼
+Contract 13 (Failure Handling)
+                   │
+                   ▼
+Contract 14 (Automated Quality Dashboard)
+                   │
+                   ▼
+Contract 15 (Full Pipeline Regression Suite)
+                   │
+                   ▼
+Contract 16 (Final Product Gate)
 ```
 
 ## Completed milestone: content architecture (2026-09-13)
