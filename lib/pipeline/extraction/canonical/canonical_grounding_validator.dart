@@ -42,8 +42,13 @@ class CanonicalGroundingValidator {
             ev.rawStartOffset,
             ev.rawEndOffset,
           );
-          if (ev.isDirectQuote && !snippetInSource.contains(entity.name)) {
-            warnings.add(
+          if (ev.snippet.isNotEmpty && !snippetInSource.contains(ev.snippet)) {
+            failures.add(
+              'Entity ${entity.id} (${entity.name}) evidence snippet "${ev.snippet}" does not match snippet in source: "$snippetInSource"',
+            );
+          } else if (ev.isDirectQuote &&
+              !snippetInSource.contains(entity.name)) {
+            failures.add(
               'Direct quote evidence for ${entity.name} does not match text at offset: "$snippetInSource"',
             );
           }
@@ -65,6 +70,16 @@ class CanonicalGroundingValidator {
           failures.add(
             'Event ${event.id} has invalid offset range: [${ev.rawStartOffset}, ${ev.rawEndOffset}]',
           );
+        } else {
+          final snippetInSource = rawText.substring(
+            ev.rawStartOffset,
+            ev.rawEndOffset,
+          );
+          if (ev.snippet.isNotEmpty && !snippetInSource.contains(ev.snippet)) {
+            failures.add(
+              'Event ${event.id} evidence snippet "${ev.snippet}" is not found in source snippet: "$snippetInSource"',
+            );
+          }
         }
       }
     }

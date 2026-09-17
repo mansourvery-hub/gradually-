@@ -21,8 +21,8 @@ A contract is **READY** when all its dependencies are complete. Work sequentiall
 [COMPLETE] Contract 12: Runtime Application
 [COMPLETE] Contract 13: Failure Handling
 [COMPLETE] Contract 14: Automated Quality Dashboard / Report
-[READY]    Contract 15: Full Pipeline Regression Suite
-[BLOCKED]  Contract 16: Final Product Gate
+[COMPLETE] Contract 15: Full Pipeline Regression Suite
+[READY]    Contract 16: Final Product Gate
 ```
 
 ## Contract Dependency Flow

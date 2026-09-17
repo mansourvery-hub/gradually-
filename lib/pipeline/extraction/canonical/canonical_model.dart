@@ -265,6 +265,20 @@ class CanonicalStoryModel {
             .toList(),
       );
 
+  CanonicalStoryModel copyWith({
+    String? sourceId,
+    String? sourceHash,
+    List<CanonicalEntity>? entities,
+    List<CanonicalRelationship>? relationships,
+    List<CanonicalEvent>? events,
+  }) => CanonicalStoryModel(
+    sourceId: sourceId ?? this.sourceId,
+    sourceHash: sourceHash ?? this.sourceHash,
+    entities: entities ?? this.entities,
+    relationships: relationships ?? this.relationships,
+    events: events ?? this.events,
+  );
+
   Map<String, dynamic> toReport() {
     final totalObjects = entities.length + relationships.length + events.length;
     final objectsWithProvenance =
