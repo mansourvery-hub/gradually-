@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jianru/learner/v3_learner_state.dart';
-import '../tool/pipeline/extraction/canonical/canonical_model.dart';
-import '../tool/pipeline/generation/controlled_generator.dart';
-import '../tool/pipeline/generation/generated_passage.dart';
-import '../tool/pipeline/planner/narrative_target.dart';
-import '../tool/pipeline/validation/independent_validation_stack.dart';
+import 'package:jianru/pipeline/extraction/canonical/canonical_model.dart';
+import 'package:jianru/pipeline/generation/controlled_generator.dart';
+import 'package:jianru/pipeline/generation/generated_passage.dart';
+import 'package:jianru/pipeline/planner/narrative_target.dart';
+import 'package:jianru/pipeline/validation/independent_validation_stack.dart';
 
 void main() {
   group('Contracts 7 & 8: Controlled Generation & Independent Validation Stack', () {

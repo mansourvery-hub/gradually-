@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jianru/learner/v3_learner_state.dart';
-import '../tool/pipeline/extraction/canonical/canonical_model.dart';
-import '../tool/pipeline/planner/narrative_planner.dart';
+import 'package:jianru/pipeline/extraction/canonical/canonical_model.dart';
+import 'package:jianru/pipeline/planner/narrative_planner.dart';
 
 void main() {
   group('Contract 6: Narrative Planner', () {

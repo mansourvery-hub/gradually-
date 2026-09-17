@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
-import '../tool/pipeline/mother_story_pipeline.dart';
+import 'package:jianru/pipeline/mother_story_pipeline.dart';
 
 void main() {
   group('Contract 9: End-to-End Red Chamber Fixture Pipeline', () {

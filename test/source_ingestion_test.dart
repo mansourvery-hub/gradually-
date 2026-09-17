@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
-import '../tool/pipeline/ingestion/source_ingester.dart';
+import 'package:jianru/pipeline/ingestion/source_ingester.dart';
 
 void main() {
   group('Contract 2: Source Ingestion', () {

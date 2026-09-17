@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
-import '../tool/pipeline/ladder/ladder_model.dart';
-import '../tool/pipeline/portfolio/portfolio_manager.dart';
+import 'package:jianru/pipeline/ladder/ladder_model.dart';
+import 'package:jianru/pipeline/portfolio/portfolio_manager.dart';
 
 void main() {
   group('Contract 11: Portfolio / Caching Model', () {

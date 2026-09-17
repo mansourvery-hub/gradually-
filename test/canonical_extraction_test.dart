@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
-import '../tool/pipeline/extraction/canonical/canonical_extractor.dart';
-import '../tool/pipeline/extraction/canonical/canonical_grounding_validator.dart';
-import '../tool/pipeline/extraction/canonical/canonical_model.dart';
-import '../tool/pipeline/ingestion/source_ingester.dart';
+import 'package:jianru/pipeline/extraction/canonical/canonical_extractor.dart';
+import 'package:jianru/pipeline/extraction/canonical/canonical_grounding_validator.dart';
+import 'package:jianru/pipeline/extraction/canonical/canonical_model.dart';
+import 'package:jianru/pipeline/ingestion/source_ingester.dart';
 
 void main() {
   group('Contract 3: Canonical Story Extraction', () {

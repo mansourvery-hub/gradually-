@@ -18,8 +18,8 @@ A contract is **READY** when all its dependencies are complete. Work sequentiall
 [COMPLETE] Contract 9: End-to-End Red Chamber Fixture
 [COMPLETE] Contract 10: Progressive Ladder Generation
 [COMPLETE] Contract 11: Portfolio / Caching Model
-[READY]    Contract 12: Runtime Application
-[BLOCKED]  Contract 13: Failure Handling
+[COMPLETE] Contract 12: Runtime Application
+[READY]    Contract 13: Failure Handling
 [BLOCKED]  Contract 14: Automated Quality Dashboard / Report
 [BLOCKED]  Contract 15: Full Pipeline Regression Suite
 [BLOCKED]  Contract 16: Final Product Gate
