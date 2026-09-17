@@ -12,9 +12,8 @@ A contract is **READY** when all its dependencies are complete. Work sequentiall
 [COMPLETE] Contract 3: Canonical Story Extraction
 [COMPLETE] Contract 4: Linguistic Knowledge Extraction
 [COMPLETE] Contract 5: Learner State + Narrative State
-[READY]    Contract 6: Narrative Planner
-[BLOCKED]  Contract 7: Controlled Generation
-[BLOCKED]  Contract 7: Controlled Generation
+[COMPLETE] Contract 6: Narrative Planner
+[READY]    Contract 7: Controlled Generation
 [BLOCKED]  Contract 8: Independent Validation Stack
 [BLOCKED]  Contract 9: End-to-End Red Chamber Fixture
 [BLOCKED]  Contract 10: Progressive Ladder Generation
