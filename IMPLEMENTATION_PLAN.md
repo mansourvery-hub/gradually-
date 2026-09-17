@@ -10,8 +10,8 @@ A contract is **READY** when all its dependencies are complete. Work sequentiall
 [COMPLETE] Contract 1: Repository + Architecture Reset
 [COMPLETE] Contract 2: Source Ingestion
 [COMPLETE] Contract 3: Canonical Story Extraction
-[READY]    Contract 4: Linguistic Knowledge Extraction
-[BLOCKED]  Contract 5: Learner State + Narrative State
+[COMPLETE] Contract 4: Linguistic Knowledge Extraction
+[READY]    Contract 5: Learner State + Narrative State
 [BLOCKED]  Contract 6: Narrative Planner
 [BLOCKED]  Contract 7: Controlled Generation
 [BLOCKED]  Contract 8: Independent Validation Stack
