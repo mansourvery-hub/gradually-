@@ -19,8 +19,8 @@ A contract is **READY** when all its dependencies are complete. Work sequentiall
 [COMPLETE] Contract 10: Progressive Ladder Generation
 [COMPLETE] Contract 11: Portfolio / Caching Model
 [COMPLETE] Contract 12: Runtime Application
-[READY]    Contract 13: Failure Handling
-[BLOCKED]  Contract 14: Automated Quality Dashboard / Report
+[COMPLETE] Contract 13: Failure Handling
+[READY]    Contract 14: Automated Quality Dashboard / Report
 [BLOCKED]  Contract 15: Full Pipeline Regression Suite
 [BLOCKED]  Contract 16: Final Product Gate
 ```
