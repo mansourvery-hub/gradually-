@@ -168,6 +168,7 @@ class SourceIngester {
     String sourceId = 'novel_source',
     String encoding = 'utf-8',
     List<String> warnings = const [],
+    int? maxChapters,
   }) {
     final activeWarnings = List<String>.from(warnings);
     final contentHash = sha256.convert(utf8.encode(rawText)).toString();
@@ -205,6 +206,9 @@ class SourceIngester {
             ),
           );
           currentSegments = [];
+          if (maxChapters != null && chapters.length >= maxChapters) {
+            break;
+          }
         }
 
         // Parse numerical or Chinese chapter number if present
