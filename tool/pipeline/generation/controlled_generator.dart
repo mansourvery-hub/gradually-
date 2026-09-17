@@ -74,16 +74,19 @@ class ControlledGenerator {
     required String snippet,
     required double difficulty,
   }) {
+    final phrase = snippet == title || snippet.isEmpty
+        ? title
+        : '$title。$snippet';
     // Format into accessible, grammatically standard Chinese narrative sentences
     if (difficulty < 2.0) {
       // Level 1: Simple subject-action declarative sentence
-      return '这是关于$snippet的故事。我们看到$title。';
+      return '这是$title的故事。';
     } else if (difficulty < 3.5) {
       // Level 2-3: Narrative sentence with setting and characters
-      return '在第章的故事中，$snippet。这一刻发生了$title。';
+      return '在故事中，$phrase。';
     } else {
       // Level 4+: Literary narrative progression
-      return '书中所记：$snippet。此正是$title的因由。';
+      return '书中所记：$phrase。';
     }
   }
 }

@@ -206,9 +206,7 @@ class CanonicalStoryExtractor {
               ),
             ],
             confidence: 0.95,
-            causalPredecessors: temporalCounter > 1
-                ? ['ev_ch${events.last.chapterIndex}_${temporalCounter - 1}']
-                : const [],
+            causalPredecessors: events.isNotEmpty ? [events.last.id] : const [],
           ),
         );
       }

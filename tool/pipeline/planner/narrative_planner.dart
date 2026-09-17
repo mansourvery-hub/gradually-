@@ -95,9 +95,9 @@ class ProgressiveNarrativePlanner {
         .toList();
 
     // Determine level-appropriate linguistic constraints based on linguistic learner state
-    final maxNewWords = learnerState.linguistic.estimatedDifficulty < 2.0
-        ? 3
-        : 5;
+    final maxNewWords = learnerState.linguistic.knownWords.length < 10
+        ? 8
+        : (learnerState.linguistic.estimatedDifficulty < 2.0 ? 6 : 8);
     final maxSentenceDifficulty =
         learnerState.linguistic.estimatedDifficulty + 0.5;
 
