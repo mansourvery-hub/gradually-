@@ -178,7 +178,7 @@ Changes to any of these are learning-system changes and require appropriate regr
 - curated content metadata
 - curriculum ordering
 
-See `ARCHITECTURE.md` for the product-critical test categories.
+See `ARCHITECTURE.md` §7 for the product-critical test categories.
 
 ## 9. Content is code-equivalent
 
@@ -197,6 +197,8 @@ tokenization
 Therefore content changes should be reviewed and tested with the same seriousness as code changes.
 
 Do not casually edit vocabulary metadata, tokenization data, prerequisites, or curriculum ordering.
+
+When a task involves critical decisions that require human intervention—such as selecting which stories, books, or texts to include in the curriculum—agents are free and expected to ask the user, who will respond.
 
 ## 10. Learner data and database safety
 

@@ -1,0 +1,921 @@
+{
+  "portfolioId": "portfolio_红楼梦_v3",
+  "sourceId": "红楼梦",
+  "sourceContentHash": "b22ec7ca8ce99f1e98c7fa0ee21dc0db724f77c96b40c99b7b1bc4e967bbe08d",
+  "pipelineVersion": "3.0.0",
+  "createdAt": "2026-09-17T22:25:05.880768",
+  "ladder": {
+    "sourceId": "红楼梦",
+    "sourceHash": "b22ec7ca8ce99f1e98c7fa0ee21dc0db724f77c96b40c99b7b1bc4e967bbe08d",
+    "levels": [
+      {
+        "levelNumber": 0,
+        "title": "Level 0: Tier 1.0 - 1.8",
+        "difficultyFloor": 1.0,
+        "difficultyCeiling": 1.8,
+        "passages": [
+          {
+            "passageId": "passage_ev_ch1_1",
+            "targetEventId": "ev_ch1_1",
+            "chapterIndex": 1,
+            "generatedText": "这是甄士隐梦幻识通灵的故事。",
+            "sourceRefs": [
+              {
+                "segmentId": "红楼梦_ch1_seg0",
+                "chapterIndex": 1,
+                "rawStartOffset": 0,
+                "rawEndOffset": 21,
+                "snippet": "甄士隐梦幻识通灵",
+                "isDirectQuote": true
+              }
+            ],
+            "newWords": [
+              "这是",
+              "甄士隐",
+              "梦幻",
+              "识通灵",
+              "的",
+              "故事"
+            ],
+            "newCharacters": [
+              "这",
+              "是",
+              "甄",
+              "士",
+              "隐",
+              "梦",
+              "幻",
+              "识",
+              "通",
+              "灵",
+              "的",
+              "故",
+              "事"
+            ],
+            "difficultyEstimate": 1.8,
+            "generationMetadata": {
+              "generator": "ControlledGenerator_v3",
+              "targetTitle": "甄士隐梦幻识通灵",
+              "tokenCount": 6,
+              "newRatio": 1.0,
+              "timestamp": "2026-09-17T22:25:05.834736"
+            }
+          },
+          {
+            "passageId": "passage_ev_ch1_2",
+            "targetEventId": "ev_ch1_2",
+            "chapterIndex": 1,
+            "generatedText": "这是贾雨村风尘怀闺秀的故事。",
+            "sourceRefs": [
+              {
+                "segmentId": "红楼梦_ch1_seg0",
+                "chapterIndex": 1,
+                "rawStartOffset": 0,
+                "rawEndOffset": 21,
+                "snippet": "贾雨村风尘怀闺秀",
+                "isDirectQuote": true
+              }
+            ],
+            "newWords": [
+              "贾雨村",
+              "风尘",
+              "怀",
+              "闺秀"
+            ],
+            "newCharacters": [
+              "贾",
+              "雨",
+              "村",
+              "风",
+              "尘",
+              "怀",
+              "闺",
+              "秀"
+            ],
+            "difficultyEstimate": 2.257142857142857,
+            "generationMetadata": {
+              "generator": "ControlledGenerator_v3",
+              "targetTitle": "贾雨村风尘怀闺秀",
+              "tokenCount": 7,
+              "newRatio": 0.5714285714285714,
+              "timestamp": "2026-09-17T22:25:05.857980"
+            }
+          }
+        ],
+        "cumulativeKnownWords": [
+          "这是",
+          "甄士隐",
+          "梦幻",
+          "识通灵",
+          "的",
+          "故事",
+          "贾雨村",
+          "风尘",
+          "怀",
+          "闺秀"
+        ],
+        "cumulativeKnownCharacters": [
+          "这",
+          "是",
+          "甄",
+          "士",
+          "隐",
+          "梦",
+          "幻",
+          "识",
+          "通",
+          "灵",
+          "的",
+          "故",
+          "事",
+          "贾",
+          "雨",
+          "村",
+          "风",
+          "尘",
+          "怀",
+          "闺",
+          "秀"
+        ],
+        "introducedEvents": [
+          "ev_ch1_1",
+          "ev_ch1_2"
+        ]
+      },
+      {
+        "levelNumber": 1,
+        "title": "Level 1: Tier 1.8 - 2.6",
+        "difficultyFloor": 1.8,
+        "difficultyCeiling": 2.6,
+        "passages": [
+          {
+            "passageId": "passage_ev_ch2_3",
+            "targetEventId": "ev_ch2_3",
+            "chapterIndex": 2,
+            "generatedText": "这是贾夫人仙逝扬州城的故事。",
+            "sourceRefs": [
+              {
+                "segmentId": "红楼梦_ch2_seg0",
+                "chapterIndex": 2,
+                "rawStartOffset": 6996,
+                "rawEndOffset": 7017,
+                "snippet": "贾夫人仙逝扬州城",
+                "isDirectQuote": true
+              }
+            ],
+            "newWords": [
+              "贾夫人",
+              "仙逝",
+              "扬州",
+              "城"
+            ],
+            "newCharacters": [
+              "夫",
+              "人",
+              "仙",
+              "逝",
+              "扬",
+              "州",
+              "城"
+            ],
+            "difficultyEstimate": 2.257142857142857,
+            "generationMetadata": {
+              "generator": "ControlledGenerator_v3",
+              "targetTitle": "贾夫人仙逝扬州城",
+              "tokenCount": 7,
+              "newRatio": 0.5714285714285714,
+              "timestamp": "2026-09-17T22:25:05.862674"
+            }
+          },
+          {
+            "passageId": "passage_ev_ch2_4",
+            "targetEventId": "ev_ch2_4",
+            "chapterIndex": 2,
+            "generatedText": "在故事中，冷子兴演说荣国府。",
+            "sourceRefs": [
+              {
+                "segmentId": "红楼梦_ch2_seg0",
+                "chapterIndex": 2,
+                "rawStartOffset": 6996,
+                "rawEndOffset": 7017,
+                "snippet": "冷子兴演说荣国府",
+                "isDirectQuote": true
+              }
+            ],
+            "newWords": [
+              "在",
+              "中",
+              "冷子兴",
+              "演说",
+              "荣国府"
+            ],
+            "newCharacters": [
+              "在",
+              "中",
+              "冷",
+              "子",
+              "兴",
+              "演",
+              "说",
+              "荣",
+              "国",
+              "府"
+            ],
+            "difficultyEstimate": 2.923809523809524,
+            "generationMetadata": {
+              "generator": "ControlledGenerator_v3",
+              "targetTitle": "冷子兴演说荣国府",
+              "tokenCount": 6,
+              "newRatio": 0.8333333333333334,
+              "timestamp": "2026-09-17T22:25:05.865844"
+            }
+          }
+        ],
+        "cumulativeKnownWords": [
+          "这是",
+          "甄士隐",
+          "梦幻",
+          "识通灵",
+          "的",
+          "故事",
+          "贾雨村",
+          "风尘",
+          "怀",
+          "闺秀",
+          "贾夫人",
+          "仙逝",
+          "扬州",
+          "城",
+          "在",
+          "中",
+          "冷子兴",
+          "演说",
+          "荣国府"
+        ],
+        "cumulativeKnownCharacters": [
+          "这",
+          "是",
+          "甄",
+          "士",
+          "隐",
+          "梦",
+          "幻",
+          "识",
+          "通",
+          "灵",
+          "的",
+          "故",
+          "事",
+          "贾",
+          "雨",
+          "村",
+          "风",
+          "尘",
+          "怀",
+          "闺",
+          "秀",
+          "夫",
+          "人",
+          "仙",
+          "逝",
+          "扬",
+          "州",
+          "城",
+          "在",
+          "中",
+          "冷",
+          "子",
+          "兴",
+          "演",
+          "说",
+          "荣",
+          "国",
+          "府"
+        ],
+        "introducedEvents": [
+          "ev_ch2_3",
+          "ev_ch2_4"
+        ]
+      },
+      {
+        "levelNumber": 2,
+        "title": "Level 2: Tier 2.6 - 3.4",
+        "difficultyFloor": 2.6,
+        "difficultyCeiling": 3.4000000000000004,
+        "passages": [
+          {
+            "passageId": "passage_ev_ch3_5",
+            "targetEventId": "ev_ch3_5",
+            "chapterIndex": 3,
+            "generatedText": "在故事中，托内兄如海荐西宾。",
+            "sourceRefs": [
+              {
+                "segmentId": "红楼梦_ch3_seg0",
+                "chapterIndex": 3,
+                "rawStartOffset": 12756,
+                "rawEndOffset": 12777,
+                "snippet": "托内兄如海荐西宾",
+                "isDirectQuote": true
+              }
+            ],
+            "newWords": [
+              "托",
+              "内兄",
+              "如海荐",
+              "西宾"
+            ],
+            "newCharacters": [
+              "托",
+              "内",
+              "兄",
+              "如",
+              "海",
+              "荐",
+              "西",
+              "宾"
+            ],
+            "difficultyEstimate": 3.0571428571428574,
+            "generationMetadata": {
+              "generator": "ControlledGenerator_v3",
+              "targetTitle": "托内兄如海荐西宾",
+              "tokenCount": 7,
+              "newRatio": 0.5714285714285714,
+              "timestamp": "2026-09-17T22:25:05.866656"
+            }
+          },
+          {
+            "passageId": "passage_ev_ch3_6",
+            "targetEventId": "ev_ch3_6",
+            "chapterIndex": 3,
+            "generatedText": "在故事中，接外孙贾母惜孤女。",
+            "sourceRefs": [
+              {
+                "segmentId": "红楼梦_ch3_seg0",
+                "chapterIndex": 3,
+                "rawStartOffset": 12756,
+                "rawEndOffset": 12777,
+                "snippet": "接外孙贾母惜孤女",
+                "isDirectQuote": true
+              }
+            ],
+            "newWords": [
+              "接",
+              "外孙",
+              "贾母惜",
+              "孤女"
+            ],
+            "newCharacters": [
+              "接",
+              "外",
+              "孙",
+              "母",
+              "惜",
+              "孤",
+              "女"
+            ],
+            "difficultyEstimate": 3.5142857142857147,
+            "generationMetadata": {
+              "generator": "ControlledGenerator_v3",
+              "targetTitle": "接外孙贾母惜孤女",
+              "tokenCount": 7,
+              "newRatio": 0.5714285714285714,
+              "timestamp": "2026-09-17T22:25:05.872244"
+            }
+          }
+        ],
+        "cumulativeKnownWords": [
+          "这是",
+          "甄士隐",
+          "梦幻",
+          "识通灵",
+          "的",
+          "故事",
+          "贾雨村",
+          "风尘",
+          "怀",
+          "闺秀",
+          "贾夫人",
+          "仙逝",
+          "扬州",
+          "城",
+          "在",
+          "中",
+          "冷子兴",
+          "演说",
+          "荣国府",
+          "托",
+          "内兄",
+          "如海荐",
+          "西宾",
+          "接",
+          "外孙",
+          "贾母惜",
+          "孤女"
+        ],
+        "cumulativeKnownCharacters": [
+          "这",
+          "是",
+          "甄",
+          "士",
+          "隐",
+          "梦",
+          "幻",
+          "识",
+          "通",
+          "灵",
+          "的",
+          "故",
+          "事",
+          "贾",
+          "雨",
+          "村",
+          "风",
+          "尘",
+          "怀",
+          "闺",
+          "秀",
+          "夫",
+          "人",
+          "仙",
+          "逝",
+          "扬",
+          "州",
+          "城",
+          "在",
+          "中",
+          "冷",
+          "子",
+          "兴",
+          "演",
+          "说",
+          "荣",
+          "国",
+          "府",
+          "托",
+          "内",
+          "兄",
+          "如",
+          "海",
+          "荐",
+          "西",
+          "宾",
+          "接",
+          "外",
+          "孙",
+          "母",
+          "惜",
+          "孤",
+          "女"
+        ],
+        "introducedEvents": [
+          "ev_ch3_5",
+          "ev_ch3_6"
+        ]
+      },
+      {
+        "levelNumber": 3,
+        "title": "Level 3: Tier 3.4 - 4.2",
+        "difficultyFloor": 3.4000000000000004,
+        "difficultyCeiling": 4.2,
+        "passages": [
+          {
+            "passageId": "passage_ev_ch4_7",
+            "targetEventId": "ev_ch4_7",
+            "chapterIndex": 4,
+            "generatedText": "在故事中，薄命女偏逢簿命郎。",
+            "sourceRefs": [
+              {
+                "segmentId": "红楼梦_ch4_seg0",
+                "chapterIndex": 4,
+                "rawStartOffset": 20753,
+                "rawEndOffset": 20774,
+                "snippet": "薄命女偏逢簿命郎",
+                "isDirectQuote": true
+              }
+            ],
+            "newWords": [
+              "薄命",
+              "女",
+              "偏逢",
+              "簿",
+              "命郎"
+            ],
+            "newCharacters": [
+              "薄",
+              "命",
+              "偏",
+              "逢",
+              "簿",
+              "郎"
+            ],
+            "difficultyEstimate": 3.9000000000000004,
+            "generationMetadata": {
+              "generator": "ControlledGenerator_v3",
+              "targetTitle": "薄命女偏逢簿命郎",
+              "tokenCount": 8,
+              "newRatio": 0.625,
+              "timestamp": "2026-09-17T22:25:05.874227"
+            }
+          },
+          {
+            "passageId": "passage_ev_ch4_8",
+            "targetEventId": "ev_ch4_8",
+            "chapterIndex": 4,
+            "generatedText": "书中所记：葫芦僧判断葫芦案。",
+            "sourceRefs": [
+              {
+                "segmentId": "红楼梦_ch4_seg0",
+                "chapterIndex": 4,
+                "rawStartOffset": 20753,
+                "rawEndOffset": 20774,
+                "snippet": "葫芦僧判断葫芦案",
+                "isDirectQuote": true
+              }
+            ],
+            "newWords": [
+              "书中",
+              "所记",
+              "葫芦",
+              "僧",
+              "判断",
+              "案"
+            ],
+            "newCharacters": [
+              "书",
+              "所",
+              "记",
+              "葫",
+              "芦",
+              "僧",
+              "判",
+              "断",
+              "案"
+            ],
+            "difficultyEstimate": 4.585714285714286,
+            "generationMetadata": {
+              "generator": "ControlledGenerator_v3",
+              "targetTitle": "葫芦僧判断葫芦案",
+              "tokenCount": 7,
+              "newRatio": 0.8571428571428571,
+              "timestamp": "2026-09-17T22:25:05.876037"
+            }
+          }
+        ],
+        "cumulativeKnownWords": [
+          "这是",
+          "甄士隐",
+          "梦幻",
+          "识通灵",
+          "的",
+          "故事",
+          "贾雨村",
+          "风尘",
+          "怀",
+          "闺秀",
+          "贾夫人",
+          "仙逝",
+          "扬州",
+          "城",
+          "在",
+          "中",
+          "冷子兴",
+          "演说",
+          "荣国府",
+          "托",
+          "内兄",
+          "如海荐",
+          "西宾",
+          "接",
+          "外孙",
+          "贾母惜",
+          "孤女",
+          "薄命",
+          "女",
+          "偏逢",
+          "簿",
+          "命郎",
+          "书中",
+          "所记",
+          "葫芦",
+          "僧",
+          "判断",
+          "案"
+        ],
+        "cumulativeKnownCharacters": [
+          "这",
+          "是",
+          "甄",
+          "士",
+          "隐",
+          "梦",
+          "幻",
+          "识",
+          "通",
+          "灵",
+          "的",
+          "故",
+          "事",
+          "贾",
+          "雨",
+          "村",
+          "风",
+          "尘",
+          "怀",
+          "闺",
+          "秀",
+          "夫",
+          "人",
+          "仙",
+          "逝",
+          "扬",
+          "州",
+          "城",
+          "在",
+          "中",
+          "冷",
+          "子",
+          "兴",
+          "演",
+          "说",
+          "荣",
+          "国",
+          "府",
+          "托",
+          "内",
+          "兄",
+          "如",
+          "海",
+          "荐",
+          "西",
+          "宾",
+          "接",
+          "外",
+          "孙",
+          "母",
+          "惜",
+          "孤",
+          "女",
+          "薄",
+          "命",
+          "偏",
+          "逢",
+          "簿",
+          "郎",
+          "书",
+          "所",
+          "记",
+          "葫",
+          "芦",
+          "僧",
+          "判",
+          "断",
+          "案"
+        ],
+        "introducedEvents": [
+          "ev_ch4_7",
+          "ev_ch4_8"
+        ]
+      },
+      {
+        "levelNumber": 4,
+        "title": "Level 4: Tier 4.2 - 5.0",
+        "difficultyFloor": 4.2,
+        "difficultyCeiling": 5.0,
+        "passages": [
+          {
+            "passageId": "passage_ev_ch5_9",
+            "targetEventId": "ev_ch5_9",
+            "chapterIndex": 5,
+            "generatedText": "书中所记：贾宝玉神游太虚境。",
+            "sourceRefs": [
+              {
+                "segmentId": "红楼梦_ch5_seg0",
+                "chapterIndex": 5,
+                "rawStartOffset": 26183,
+                "rawEndOffset": 26204,
+                "snippet": "贾宝玉神游太虚境",
+                "isDirectQuote": true
+              }
+            ],
+            "newWords": [
+              "贾宝玉",
+              "神游",
+              "太虚",
+              "境"
+            ],
+            "newCharacters": [
+              "宝",
+              "玉",
+              "神",
+              "游",
+              "太",
+              "虚",
+              "境"
+            ],
+            "difficultyEstimate": 4.733333333333333,
+            "generationMetadata": {
+              "generator": "ControlledGenerator_v3",
+              "targetTitle": "贾宝玉神游太虚境",
+              "tokenCount": 6,
+              "newRatio": 0.6666666666666666,
+              "timestamp": "2026-09-17T22:25:05.876828"
+            }
+          },
+          {
+            "passageId": "passage_ev_ch5_10",
+            "targetEventId": "ev_ch5_10",
+            "chapterIndex": 5,
+            "generatedText": "书中所记：警幻仙曲演红楼梦。",
+            "sourceRefs": [
+              {
+                "segmentId": "红楼梦_ch5_seg0",
+                "chapterIndex": 5,
+                "rawStartOffset": 26183,
+                "rawEndOffset": 26204,
+                "snippet": "警幻仙曲演红楼梦",
+                "isDirectQuote": true
+              }
+            ],
+            "newWords": [
+              "警幻",
+              "仙曲演",
+              "红楼梦"
+            ],
+            "newCharacters": [
+              "警",
+              "曲",
+              "红",
+              "楼"
+            ],
+            "difficultyEstimate": 5.213333333333333,
+            "generationMetadata": {
+              "generator": "ControlledGenerator_v3",
+              "targetTitle": "警幻仙曲演红楼梦",
+              "tokenCount": 5,
+              "newRatio": 0.6,
+              "timestamp": "2026-09-17T22:25:05.877625"
+            }
+          }
+        ],
+        "cumulativeKnownWords": [
+          "这是",
+          "甄士隐",
+          "梦幻",
+          "识通灵",
+          "的",
+          "故事",
+          "贾雨村",
+          "风尘",
+          "怀",
+          "闺秀",
+          "贾夫人",
+          "仙逝",
+          "扬州",
+          "城",
+          "在",
+          "中",
+          "冷子兴",
+          "演说",
+          "荣国府",
+          "托",
+          "内兄",
+          "如海荐",
+          "西宾",
+          "接",
+          "外孙",
+          "贾母惜",
+          "孤女",
+          "薄命",
+          "女",
+          "偏逢",
+          "簿",
+          "命郎",
+          "书中",
+          "所记",
+          "葫芦",
+          "僧",
+          "判断",
+          "案",
+          "贾宝玉",
+          "神游",
+          "太虚",
+          "境",
+          "警幻",
+          "仙曲演",
+          "红楼梦"
+        ],
+        "cumulativeKnownCharacters": [
+          "这",
+          "是",
+          "甄",
+          "士",
+          "隐",
+          "梦",
+          "幻",
+          "识",
+          "通",
+          "灵",
+          "的",
+          "故",
+          "事",
+          "贾",
+          "雨",
+          "村",
+          "风",
+          "尘",
+          "怀",
+          "闺",
+          "秀",
+          "夫",
+          "人",
+          "仙",
+          "逝",
+          "扬",
+          "州",
+          "城",
+          "在",
+          "中",
+          "冷",
+          "子",
+          "兴",
+          "演",
+          "说",
+          "荣",
+          "国",
+          "府",
+          "托",
+          "内",
+          "兄",
+          "如",
+          "海",
+          "荐",
+          "西",
+          "宾",
+          "接",
+          "外",
+          "孙",
+          "母",
+          "惜",
+          "孤",
+          "女",
+          "薄",
+          "命",
+          "偏",
+          "逢",
+          "簿",
+          "郎",
+          "书",
+          "所",
+          "记",
+          "葫",
+          "芦",
+          "僧",
+          "判",
+          "断",
+          "案",
+          "宝",
+          "玉",
+          "神",
+          "游",
+          "太",
+          "虚",
+          "境",
+          "警",
+          "曲",
+          "红",
+          "楼"
+        ],
+        "introducedEvents": [
+          "ev_ch5_9",
+          "ev_ch5_10"
+        ]
+      }
+    ],
+    "metadata": {
+      "totalLevels": 5,
+      "totalPassages": 10,
+      "cumulativeVocabularySize": 45,
+      "cumulativeCharacterCount": 79,
+      "timestamp": "2026-09-17T22:25:05.879898"
+    },
+    "totalPassages": 10,
+    "isMonotonicallyIncreasing": true,
+    "hasNarrativeContinuity": true
+  },
+  "fingerprint": "5adb7f95cbfbf1417da876a0c4a63dd535cff4b3f2140900566adef6a1c1ba0f",
+  "metadata": {
+    "ingestionMetrics": {
+      "sourceId": "红楼梦",
+      "chaptersCount": 5,
+      "totalCharacters": 861994,
+      "totalSegments": 231,
+      "encoding": "utf-8"
+    },
+    "canonicalMetrics": {
+      "totalEntities": 317,
+      "totalEvents": 10,
+      "totalRelationships": 60,
+      "groundingPassed": true
+    }
+  }
+}

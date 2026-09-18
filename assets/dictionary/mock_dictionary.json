@@ -1,0 +1,366 @@
+{
+  "version": "0.2.0-mock",
+  "description": "Mock monolingual dictionary: full bootstrap-lexicon coverage for lookup development (T_UI_040). Chinese definitions only — no translations (AGENTS.md §3.1).",
+  "entries": [
+    {
+      "vocabId": "水",
+      "surface": "水",
+      "definition": "人要天天喝的东西。没有颜色。",
+      "examples": [
+        "我想喝水。"
+      ]
+    },
+    {
+      "vocabId": "茶",
+      "surface": "茶",
+      "definition": "用很热的水做的一种喝的东西，很好喝。",
+      "examples": [
+        "我也想喝茶。"
+      ]
+    },
+    {
+      "vocabId": "喝",
+      "surface": "喝",
+      "definition": "水和茶，我们用口喝。",
+      "examples": [
+        "小猫要喝水。"
+      ]
+    },
+    {
+      "vocabId": "吃",
+      "surface": "吃",
+      "definition": "米饭和鱼，我们天天吃。",
+      "examples": [
+        "大猫要吃鱼。"
+      ]
+    },
+    {
+      "vocabId": "米饭",
+      "surface": "米饭",
+      "definition": "我们天天吃的东西，很好吃。",
+      "examples": [
+        "我们一起吃米饭。"
+      ]
+    },
+    {
+      "vocabId": "我",
+      "surface": "我",
+      "definition": "说的话里的自己。",
+      "examples": [
+        "我想喝水。"
+      ]
+    },
+    {
+      "vocabId": "想",
+      "surface": "想",
+      "definition": "心里要说的话：我想要……",
+      "examples": [
+        "我想喝茶。"
+      ]
+    },
+    {
+      "vocabId": "也",
+      "surface": "也",
+      "definition": "一样的东西，再一次：我喝茶，猫也喝茶。",
+      "examples": [
+        "我也想喝茶。"
+      ]
+    },
+    {
+      "vocabId": "我们",
+      "surface": "我们",
+      "definition": "我和朋友，一起说我们。",
+      "examples": [
+        "我们一起喝茶。"
+      ]
+    },
+    {
+      "vocabId": "一起",
+      "surface": "一起",
+      "definition": "你和我，同一个时间，同一个地方。",
+      "examples": [
+        "我们一起跑。"
+      ]
+    },
+    {
+      "vocabId": "很",
+      "surface": "很",
+      "definition": "太多了，太大了：很大，很小，很好喝。",
+      "examples": [
+        "茶很好喝。"
+      ]
+    },
+    {
+      "vocabId": "好喝",
+      "surface": "好喝",
+      "definition": "喝的东西很好，我们爱喝。",
+      "examples": [
+        "茶很好喝。"
+      ]
+    },
+    {
+      "vocabId": "好吃",
+      "surface": "好吃",
+      "definition": "吃的东西很好，我们爱吃。",
+      "examples": [
+        "米饭很好吃。"
+      ]
+    },
+    {
+      "vocabId": "好",
+      "surface": "好",
+      "definition": "很好的东西：好喝，好吃，好朋友。",
+      "examples": [
+        "今天天气很好。"
+      ]
+    },
+    {
+      "vocabId": "猫",
+      "surface": "猫",
+      "definition": "一种小动物，爱鱼，会跑。",
+      "examples": [
+        "这里有一只小猫。"
+      ]
+    },
+    {
+      "vocabId": "大",
+      "surface": "大",
+      "definition": "大猫很大，大房子很大。",
+      "examples": [
+        "大猫看小猫。"
+      ]
+    },
+    {
+      "vocabId": "小",
+      "surface": "小",
+      "definition": "小猫很小，小鱼很小。",
+      "examples": [
+        "小猫看大猫。"
+      ]
+    },
+    {
+      "vocabId": "看",
+      "surface": "看",
+      "definition": "眼睛在看：看书，看猫。",
+      "examples": [
+        "我在家里看书。"
+      ]
+    },
+    {
+      "vocabId": "要",
+      "surface": "要",
+      "definition": "心里想拿的东西：我要茶。",
+      "examples": [
+        "小猫要喝水。"
+      ]
+    },
+    {
+      "vocabId": "鱼",
+      "surface": "鱼",
+      "definition": "在水里的动物，猫爱鱼。",
+      "examples": [
+        "大猫要吃鱼。"
+      ]
+    },
+    {
+      "vocabId": "这里",
+      "surface": "这里",
+      "definition": "手在说：东西在这里。",
+      "examples": [
+        "这里有一只大猫。"
+      ]
+    },
+    {
+      "vocabId": "有",
+      "surface": "有",
+      "definition": "一个东西在这里。",
+      "examples": [
+        "这里有一只大猫。"
+      ]
+    },
+    {
+      "vocabId": "一",
+      "surface": "一",
+      "definition": "数字的开始：一只猫，一杯茶。",
+      "examples": [
+        "这里有一只小猫。"
+      ]
+    },
+    {
+      "vocabId": "只",
+      "surface": "只",
+      "definition": "说小动物的字：一只猫，一只鱼。",
+      "examples": [
+        "这里有一只大猫。"
+      ]
+    },
+    {
+      "vocabId": "和",
+      "surface": "和",
+      "definition": "你和我，茶和米饭。",
+      "examples": [
+        "大猫和小猫。"
+      ]
+    },
+    {
+      "vocabId": "它们",
+      "surface": "它们",
+      "definition": "说小动物：它们是猫。",
+      "examples": [
+        "它们是好朋友。"
+      ]
+    },
+    {
+      "vocabId": "是",
+      "surface": "是",
+      "definition": "一个东西等于另一个东西：猫是动物。",
+      "examples": [
+        "它们是好朋友。"
+      ]
+    },
+    {
+      "vocabId": "朋友",
+      "surface": "朋友",
+      "definition": "一起玩的人：好朋友天天在一起。",
+      "examples": [
+        "它们是好朋友。"
+      ]
+    },
+    {
+      "vocabId": "天天",
+      "surface": "天天",
+      "definition": "每一天：天天喝茶，天天跑。",
+      "examples": [
+        "它们天天在一起跑。"
+      ]
+    },
+    {
+      "vocabId": "在",
+      "surface": "在",
+      "definition": "东西在地方里：猫在家里。",
+      "examples": [
+        "我在家里看书。"
+      ]
+    },
+    {
+      "vocabId": "跑",
+      "surface": "跑",
+      "definition": "很快地走，猫会跑。",
+      "examples": [
+        "我们一起跑。"
+      ]
+    },
+    {
+      "vocabId": "今天",
+      "surface": "今天",
+      "definition": "说话的这一天。",
+      "examples": [
+        "今天天气很好。"
+      ]
+    },
+    {
+      "vocabId": "天气",
+      "surface": "天气",
+      "definition": "天的情况：下雨是天气。",
+      "examples": [
+        "今天天气不好。"
+      ]
+    },
+    {
+      "vocabId": "不",
+      "surface": "不",
+      "definition": "不是好，是不 好。",
+      "examples": [
+        "今天天气不好。"
+      ]
+    },
+    {
+      "vocabId": "下雨",
+      "surface": "下雨",
+      "definition": "天上有很多水，下来了。",
+      "examples": [
+        "天下雨了。"
+      ]
+    },
+    {
+      "vocabId": "了",
+      "surface": "了",
+      "definition": "话的结尾：下雨了，回来了。",
+      "examples": [
+        "天下雨了。"
+      ]
+    },
+    {
+      "vocabId": "家",
+      "surface": "家",
+      "definition": "爸爸、妈妈和我住的地方。",
+      "examples": [
+        "我在家里看书。"
+      ]
+    },
+    {
+      "vocabId": "里",
+      "surface": "里",
+      "definition": "在里面：家里，水里。",
+      "examples": [
+        "我在家里。"
+      ]
+    },
+    {
+      "vocabId": "书",
+      "surface": "书",
+      "definition": "有很多字，我们看书。",
+      "examples": [
+        "我在家里看书。"
+      ]
+    },
+    {
+      "vocabId": "热",
+      "surface": "热",
+      "definition": "很烫的：热茶是热的。",
+      "examples": [
+        "我喝热茶。"
+      ]
+    },
+    {
+      "vocabId": "爸爸",
+      "surface": "爸爸",
+      "definition": "家里的男人，爸爸回来了。",
+      "examples": [
+        "爸爸妈妈回来了。"
+      ]
+    },
+    {
+      "vocabId": "妈妈",
+      "surface": "妈妈",
+      "definition": "家里的女人，妈妈回来了。",
+      "examples": [
+        "爸爸妈妈回来了。"
+      ]
+    },
+    {
+      "vocabId": "回来",
+      "surface": "回来",
+      "definition": "走了，又回家了。",
+      "examples": [
+        "爸爸妈妈回来了。"
+      ]
+    },
+    {
+      "vocabId": "雨伞",
+      "surface": "雨伞",
+      "definition": "下雨的时候，手拿的东西。",
+      "examples": [
+        "他们拿着雨伞。"
+      ]
+    },
+    {
+      "vocabId": "冷",
+      "surface": "冷",
+      "definition": "天气很冷，我们喝茶。",
+      "examples": [
+        "外面很冷。"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "metadata": {
+    "id": "micro-101-tea-water",
+    "title": "我想喝水",
+    "type": "microStory",
+    "curriculumOrder": 104,
+    "difficultyEstimate": 1,
+    "vocabulary": [
+      "我",
+      "想",
+      "喝",
+      "水",
+      "也",
+      "茶",
+      "很",
+      "好喝"
+    ],
+    "curriculumCriticalVocabulary": [
+      "我",
+      "想",
+      "喝",
+      "水",
+      "也",
+      "茶",
+      "很",
+      "好喝"
+    ],
+    "tags": [
+      "core"
+    ]
+  },
+  "sections": [
+    {
+      "id": "sec-1",
+      "text": "我想喝水。我也想喝茶。茶很好喝，水也很好喝。",
+      "sentences": [
+        {
+          "id": "s1-1",
+          "text": "我想喝水。",
+          "tokens": [
+            {
+              "vocabId": "我",
+              "surface": "我",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "想",
+              "surface": "想",
+              "start": 1,
+              "end": 2
+            },
+            {
+              "vocabId": "喝",
+              "surface": "喝",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "水",
+              "surface": "水",
+              "start": 3,
+              "end": 4
+            }
+          ]
+        },
+        {
+          "id": "s1-2",
+          "text": "我也想喝茶。",
+          "tokens": [
+            {
+              "vocabId": "我",
+              "surface": "我",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "也",
+              "surface": "也",
+              "start": 1,
+              "end": 2
+            },
+            {
+              "vocabId": "想",
+              "surface": "想",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "喝",
+              "surface": "喝",
+              "start": 3,
+              "end": 4
+            },
+            {
+              "vocabId": "茶",
+              "surface": "茶",
+              "start": 4,
+              "end": 5
+            }
+          ]
+        },
+        {
+          "id": "s1-3",
+          "text": "茶很好喝，水也很好喝。",
+          "tokens": [
+            {
+              "vocabId": "茶",
+              "surface": "茶",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "很",
+              "surface": "很",
+              "start": 1,
+              "end": 2
+            },
+            {
+              "vocabId": "好喝",
+              "surface": "好喝",
+              "start": 2,
+              "end": 4
+            },
+            {
+              "vocabId": "水",
+              "surface": "水",
+              "start": 5,
+              "end": 6
+            },
+            {
+              "vocabId": "也",
+              "surface": "也",
+              "start": 6,
+              "end": 7
+            },
+            {
+              "vocabId": "很",
+              "surface": "很",
+              "start": 7,
+              "end": 8
+            },
+            {
+              "vocabId": "好喝",
+              "surface": "好喝",
+              "start": 8,
+              "end": 10
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

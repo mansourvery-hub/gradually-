@@ -1,0 +1,183 @@
+{
+  "metadata": {
+    "id": "micro-104-book",
+    "title": "这里有一本书",
+    "type": "microStory",
+    "curriculumOrder": 107,
+    "difficultyEstimate": 1,
+    "vocabulary": [
+      "这里",
+      "有",
+      "一",
+      "书",
+      "里",
+      "小",
+      "猫",
+      "大",
+      "鱼",
+      "我",
+      "很",
+      "看"
+    ],
+    "curriculumCriticalVocabulary": [
+      "有",
+      "书",
+      "猫"
+    ],
+    "tags": [
+      "core"
+    ]
+  },
+  "sections": [
+    {
+      "id": "sec-1",
+      "text": "这里有一本书。书里有小猫，有大猫，有鱼。我很喜欢看书。",
+      "sentences": [
+        {
+          "id": "s1-1",
+          "text": "这里有一本书。",
+          "tokens": [
+            {
+              "vocabId": "这里",
+              "surface": "这里",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "vocabId": "有",
+              "surface": "有",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "一",
+              "surface": "一",
+              "start": 3,
+              "end": 4
+            },
+            {
+              "vocabId": "本",
+              "surface": "本",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "书",
+              "surface": "书",
+              "start": 5,
+              "end": 6
+            }
+          ]
+        },
+        {
+          "id": "s1-2",
+          "text": "书里有小猫，有大猫，有鱼。",
+          "tokens": [
+            {
+              "vocabId": "书",
+              "surface": "书",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "里",
+              "surface": "里",
+              "start": 1,
+              "end": 2
+            },
+            {
+              "vocabId": "有",
+              "surface": "有",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "小",
+              "surface": "小",
+              "start": 3,
+              "end": 4
+            },
+            {
+              "vocabId": "猫",
+              "surface": "猫",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "有",
+              "surface": "有",
+              "start": 6,
+              "end": 7
+            },
+            {
+              "vocabId": "大",
+              "surface": "大",
+              "start": 7,
+              "end": 8
+            },
+            {
+              "vocabId": "猫",
+              "surface": "猫",
+              "start": 8,
+              "end": 9
+            },
+            {
+              "vocabId": "有",
+              "surface": "有",
+              "start": 10,
+              "end": 11
+            },
+            {
+              "vocabId": "鱼",
+              "surface": "鱼",
+              "start": 11,
+              "end": 12
+            }
+          ]
+        },
+        {
+          "id": "s1-3",
+          "text": "我很喜欢看书。",
+          "tokens": [
+            {
+              "vocabId": "我",
+              "surface": "我",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "很",
+              "surface": "很",
+              "start": 1,
+              "end": 2
+            },
+            {
+              "vocabId": "喜",
+              "surface": "喜",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "欢",
+              "surface": "欢",
+              "start": 3,
+              "end": 4
+            },
+            {
+              "vocabId": "看",
+              "surface": "看",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "书",
+              "surface": "书",
+              "start": 5,
+              "end": 6
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

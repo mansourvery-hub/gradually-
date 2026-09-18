@@ -1,0 +1,171 @@
+{
+  "metadata": {
+    "id": "dialogue-206-rice-fish",
+    "title": "吃米饭还是吃鱼",
+    "type": "dialogue",
+    "curriculumOrder": 125,
+    "difficultyEstimate": 2,
+    "vocabulary": [
+      "想",
+      "吃",
+      "米饭",
+      "是",
+      "鱼",
+      "我",
+      "很",
+      "好吃",
+      "好",
+      "我们",
+      "一起"
+    ],
+    "curriculumCriticalVocabulary": [
+      "想",
+      "吃",
+      "米饭"
+    ],
+    "tags": [
+      "core",
+      "dialogue"
+    ]
+  },
+  "sections": [
+    {
+      "id": "sec-1",
+      "text": "——你想吃米饭还是吃鱼？——我想吃米饭，米饭很好吃。——好，我们一起吃。",
+      "sentences": [
+        {
+          "id": "s1-1",
+          "text": "——你想吃米饭还是吃鱼？",
+          "tokens": [
+            {
+              "vocabId": "你",
+              "surface": "你",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "想",
+              "surface": "想",
+              "start": 3,
+              "end": 4
+            },
+            {
+              "vocabId": "吃",
+              "surface": "吃",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "米饭",
+              "surface": "米饭",
+              "start": 5,
+              "end": 7
+            },
+            {
+              "vocabId": "还",
+              "surface": "还",
+              "start": 7,
+              "end": 8
+            },
+            {
+              "vocabId": "是",
+              "surface": "是",
+              "start": 8,
+              "end": 9
+            },
+            {
+              "vocabId": "吃",
+              "surface": "吃",
+              "start": 9,
+              "end": 10
+            },
+            {
+              "vocabId": "鱼",
+              "surface": "鱼",
+              "start": 10,
+              "end": 11
+            }
+          ]
+        },
+        {
+          "id": "s1-2",
+          "text": "——我想吃米饭，米饭很好吃。",
+          "tokens": [
+            {
+              "vocabId": "我",
+              "surface": "我",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "想",
+              "surface": "想",
+              "start": 3,
+              "end": 4
+            },
+            {
+              "vocabId": "吃",
+              "surface": "吃",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "米饭",
+              "surface": "米饭",
+              "start": 5,
+              "end": 7
+            },
+            {
+              "vocabId": "米饭",
+              "surface": "米饭",
+              "start": 8,
+              "end": 10
+            },
+            {
+              "vocabId": "很",
+              "surface": "很",
+              "start": 10,
+              "end": 11
+            },
+            {
+              "vocabId": "好吃",
+              "surface": "好吃",
+              "start": 11,
+              "end": 13
+            }
+          ]
+        },
+        {
+          "id": "s1-3",
+          "text": "——好，我们一起吃。",
+          "tokens": [
+            {
+              "vocabId": "好",
+              "surface": "好",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "我们",
+              "surface": "我们",
+              "start": 4,
+              "end": 6
+            },
+            {
+              "vocabId": "一起",
+              "surface": "一起",
+              "start": 6,
+              "end": 8
+            },
+            {
+              "vocabId": "吃",
+              "surface": "吃",
+              "start": 8,
+              "end": 9
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

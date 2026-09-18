@@ -1,0 +1,185 @@
+{
+  "metadata": {
+    "id": "micro-108-rain-cat",
+    "title": "小猫不想出去",
+    "type": "microStory",
+    "curriculumOrder": 111,
+    "difficultyEstimate": 2,
+    "vocabulary": [
+      "下雨",
+      "了",
+      "小",
+      "猫",
+      "不",
+      "想",
+      "在",
+      "家",
+      "里",
+      "看",
+      "书",
+      "我",
+      "喝",
+      "茶"
+    ],
+    "curriculumCriticalVocabulary": [
+      "在",
+      "家",
+      "里"
+    ],
+    "tags": [
+      "core"
+    ]
+  },
+  "sections": [
+    {
+      "id": "sec-1",
+      "text": "外面下雨了。小猫不想出去。它在家里看书，我在家里喝茶。",
+      "sentences": [
+        {
+          "id": "s1-1",
+          "text": "外面下雨了。",
+          "tokens": [
+            {
+              "vocabId": "外面",
+              "surface": "外面",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "vocabId": "下雨",
+              "surface": "下雨",
+              "start": 2,
+              "end": 4
+            },
+            {
+              "vocabId": "了",
+              "surface": "了",
+              "start": 4,
+              "end": 5
+            }
+          ]
+        },
+        {
+          "id": "s1-2",
+          "text": "小猫不想出去。",
+          "tokens": [
+            {
+              "vocabId": "小",
+              "surface": "小",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "猫",
+              "surface": "猫",
+              "start": 1,
+              "end": 2
+            },
+            {
+              "vocabId": "不",
+              "surface": "不",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "想",
+              "surface": "想",
+              "start": 3,
+              "end": 4
+            },
+            {
+              "vocabId": "出",
+              "surface": "出",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "去",
+              "surface": "去",
+              "start": 5,
+              "end": 6
+            }
+          ]
+        },
+        {
+          "id": "s1-3",
+          "text": "它在家里看书，我在家里喝茶。",
+          "tokens": [
+            {
+              "vocabId": "它",
+              "surface": "它",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "在",
+              "surface": "在",
+              "start": 1,
+              "end": 2
+            },
+            {
+              "vocabId": "家",
+              "surface": "家",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "里",
+              "surface": "里",
+              "start": 3,
+              "end": 4
+            },
+            {
+              "vocabId": "看",
+              "surface": "看",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "书",
+              "surface": "书",
+              "start": 5,
+              "end": 6
+            },
+            {
+              "vocabId": "我",
+              "surface": "我",
+              "start": 7,
+              "end": 8
+            },
+            {
+              "vocabId": "在",
+              "surface": "在",
+              "start": 8,
+              "end": 9
+            },
+            {
+              "vocabId": "家",
+              "surface": "家",
+              "start": 9,
+              "end": 10
+            },
+            {
+              "vocabId": "里",
+              "surface": "里",
+              "start": 10,
+              "end": 11
+            },
+            {
+              "vocabId": "喝",
+              "surface": "喝",
+              "start": 11,
+              "end": 12
+            },
+            {
+              "vocabId": "茶",
+              "surface": "茶",
+              "start": 12,
+              "end": 13
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+# Core lint rules for 渐入.
+# Domain packages (core/, learner/, content/, tokenizer/, acquisition/,
+# selector/, review/) must stay pure Dart with no Flutter/Riverpod imports.
+
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  language:
+    strict-casts: true
+    strict-raw-types: true
+    strict-inference: true
+  errors:
+    invalid_annotation_target: ignore
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - linux/**
+
+linter:
+  rules:
+    - always_declare_return_types
+    - avoid_dynamic_calls
+    - prefer_const_constructors
+    - prefer_final_locals
+    - unawaited_futures
+    - directives_ordering
+    - prefer_single_quotes
+    - unnecessary_string_interpolations

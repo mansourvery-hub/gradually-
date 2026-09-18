@@ -1,0 +1,152 @@
+{
+  "metadata": {
+    "id": "dialogue-204-cold",
+    "title": "今天很冷",
+    "type": "dialogue",
+    "curriculumOrder": 123,
+    "difficultyEstimate": 2,
+    "vocabulary": [
+      "妈妈",
+      "今天",
+      "很",
+      "冷",
+      "好",
+      "我们",
+      "一起",
+      "喝",
+      "茶",
+      "好喝"
+    ],
+    "curriculumCriticalVocabulary": [
+      "妈妈",
+      "很",
+      "茶"
+    ],
+    "tags": [
+      "core",
+      "dialogue"
+    ]
+  },
+  "sections": [
+    {
+      "id": "sec-1",
+      "text": "——妈妈，今天很冷。——好，我们一起喝茶。——茶很好喝。谢谢妈妈！",
+      "sentences": [
+        {
+          "id": "s1-1",
+          "text": "——妈妈，今天很冷。",
+          "tokens": [
+            {
+              "vocabId": "妈妈",
+              "surface": "妈妈",
+              "start": 2,
+              "end": 4
+            },
+            {
+              "vocabId": "今天",
+              "surface": "今天",
+              "start": 5,
+              "end": 7
+            },
+            {
+              "vocabId": "很",
+              "surface": "很",
+              "start": 7,
+              "end": 8
+            },
+            {
+              "vocabId": "冷",
+              "surface": "冷",
+              "start": 8,
+              "end": 9
+            }
+          ]
+        },
+        {
+          "id": "s1-2",
+          "text": "——好，我们一起喝茶。",
+          "tokens": [
+            {
+              "vocabId": "好",
+              "surface": "好",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "我们",
+              "surface": "我们",
+              "start": 4,
+              "end": 6
+            },
+            {
+              "vocabId": "一起",
+              "surface": "一起",
+              "start": 6,
+              "end": 8
+            },
+            {
+              "vocabId": "喝",
+              "surface": "喝",
+              "start": 8,
+              "end": 9
+            },
+            {
+              "vocabId": "茶",
+              "surface": "茶",
+              "start": 9,
+              "end": 10
+            }
+          ]
+        },
+        {
+          "id": "s1-3",
+          "text": "——茶很好喝。",
+          "tokens": [
+            {
+              "vocabId": "茶",
+              "surface": "茶",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "很",
+              "surface": "很",
+              "start": 3,
+              "end": 4
+            },
+            {
+              "vocabId": "好喝",
+              "surface": "好喝",
+              "start": 4,
+              "end": 6
+            }
+          ]
+        },
+        {
+          "id": "s1-4",
+          "text": "谢谢妈妈！",
+          "tokens": [
+            {
+              "vocabId": "谢",
+              "surface": "谢",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "谢",
+              "surface": "谢",
+              "start": 1,
+              "end": 2
+            },
+            {
+              "vocabId": "妈妈",
+              "surface": "妈妈",
+              "start": 2,
+              "end": 4
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

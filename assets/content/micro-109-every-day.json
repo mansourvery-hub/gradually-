@@ -1,0 +1,164 @@
+{
+  "metadata": {
+    "id": "micro-109-every-day",
+    "title": "天天",
+    "type": "microStory",
+    "curriculumOrder": 112,
+    "difficultyEstimate": 2,
+    "vocabulary": [
+      "小",
+      "猫",
+      "天天",
+      "喝",
+      "水",
+      "大",
+      "茶",
+      "它们",
+      "在",
+      "一起",
+      "很"
+    ],
+    "curriculumCriticalVocabulary": [
+      "猫",
+      "天天",
+      "喝"
+    ],
+    "tags": [
+      "core"
+    ]
+  },
+  "sections": [
+    {
+      "id": "sec-1",
+      "text": "小猫天天喝水。大猫天天喝茶。它们天天在一起，天天很快乐。",
+      "sentences": [
+        {
+          "id": "s1-1",
+          "text": "小猫天天喝水。",
+          "tokens": [
+            {
+              "vocabId": "小",
+              "surface": "小",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "猫",
+              "surface": "猫",
+              "start": 1,
+              "end": 2
+            },
+            {
+              "vocabId": "天天",
+              "surface": "天天",
+              "start": 2,
+              "end": 4
+            },
+            {
+              "vocabId": "喝",
+              "surface": "喝",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "水",
+              "surface": "水",
+              "start": 5,
+              "end": 6
+            }
+          ]
+        },
+        {
+          "id": "s1-2",
+          "text": "大猫天天喝茶。",
+          "tokens": [
+            {
+              "vocabId": "大",
+              "surface": "大",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "猫",
+              "surface": "猫",
+              "start": 1,
+              "end": 2
+            },
+            {
+              "vocabId": "天天",
+              "surface": "天天",
+              "start": 2,
+              "end": 4
+            },
+            {
+              "vocabId": "喝",
+              "surface": "喝",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "茶",
+              "surface": "茶",
+              "start": 5,
+              "end": 6
+            }
+          ]
+        },
+        {
+          "id": "s1-3",
+          "text": "它们天天在一起，天天很快乐。",
+          "tokens": [
+            {
+              "vocabId": "它们",
+              "surface": "它们",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "vocabId": "天天",
+              "surface": "天天",
+              "start": 2,
+              "end": 4
+            },
+            {
+              "vocabId": "在",
+              "surface": "在",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "一起",
+              "surface": "一起",
+              "start": 5,
+              "end": 7
+            },
+            {
+              "vocabId": "天天",
+              "surface": "天天",
+              "start": 8,
+              "end": 10
+            },
+            {
+              "vocabId": "很",
+              "surface": "很",
+              "start": 10,
+              "end": 11
+            },
+            {
+              "vocabId": "快",
+              "surface": "快",
+              "start": 11,
+              "end": 12
+            },
+            {
+              "vocabId": "乐",
+              "surface": "乐",
+              "start": 12,
+              "end": 13
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

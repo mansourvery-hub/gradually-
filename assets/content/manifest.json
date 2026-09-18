@@ -1,0 +1,30 @@
+{
+  "version": "2.0.0",
+  "description": "Story/dialogue corpus items loaded at runtime. Beginner exposure units are NOT listed here: they are generated from the target lexicon (assets/content/curriculum/bootstrap_target_lexicon.json). Add a story = add a JSON file + a line here; no code changes.",
+  "items": [
+    "assets/content/micro-101-tea-water.json",
+    "assets/content/micro-102-cat-eat.json",
+    "assets/content/micro-103-good-day.json",
+    "assets/content/micro-104-book.json",
+    "assets/content/micro-105-no-water.json",
+    "assets/content/micro-106-hot-day.json",
+    "assets/content/micro-107-my-cat.json",
+    "assets/content/micro-108-rain-cat.json",
+    "assets/content/micro-109-every-day.json",
+    "assets/content/micro-110-umbrella.json",
+    "assets/content/micro-111-cold-morning.json",
+    "assets/content/micro-112-read-together.json",
+    "assets/content/micro-113-cat-fish.json",
+    "assets/content/micro-114-hot-cold.json",
+    "assets/content/story-001-drink-tea.json",
+    "assets/content/story-002-cats.json",
+    "assets/content/story-003-rainy-day.json",
+    "assets/content/story-children-001-cat-day.json",
+    "assets/content/dialogue-201-tea.json",
+    "assets/content/dialogue-202-big-cat.json",
+    "assets/content/dialogue-203-rain.json",
+    "assets/content/dialogue-204-cold.json",
+    "assets/content/dialogue-205-book.json",
+    "assets/content/dialogue-206-rice-fish.json"
+  ]
+}

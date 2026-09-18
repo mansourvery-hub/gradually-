@@ -1,0 +1,147 @@
+{
+  "metadata": {
+    "id": "micro-102-cat-eat",
+    "title": "小猫和大猫",
+    "type": "microStory",
+    "curriculumOrder": 105,
+    "difficultyEstimate": 1,
+    "vocabulary": [
+      "小",
+      "猫",
+      "想",
+      "喝",
+      "水",
+      "大",
+      "吃",
+      "鱼",
+      "它们",
+      "一起"
+    ],
+    "curriculumCriticalVocabulary": [
+      "猫",
+      "想",
+      "喝",
+      "吃",
+      "一起"
+    ],
+    "tags": [
+      "core"
+    ]
+  },
+  "sections": [
+    {
+      "id": "sec-1",
+      "text": "小猫想喝水。大猫想吃鱼。它们一起吃，一起喝。",
+      "sentences": [
+        {
+          "id": "s1-1",
+          "text": "小猫想喝水。",
+          "tokens": [
+            {
+              "vocabId": "小",
+              "surface": "小",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "猫",
+              "surface": "猫",
+              "start": 1,
+              "end": 2
+            },
+            {
+              "vocabId": "想",
+              "surface": "想",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "喝",
+              "surface": "喝",
+              "start": 3,
+              "end": 4
+            },
+            {
+              "vocabId": "水",
+              "surface": "水",
+              "start": 4,
+              "end": 5
+            }
+          ]
+        },
+        {
+          "id": "s1-2",
+          "text": "大猫想吃鱼。",
+          "tokens": [
+            {
+              "vocabId": "大",
+              "surface": "大",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "猫",
+              "surface": "猫",
+              "start": 1,
+              "end": 2
+            },
+            {
+              "vocabId": "想",
+              "surface": "想",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "吃",
+              "surface": "吃",
+              "start": 3,
+              "end": 4
+            },
+            {
+              "vocabId": "鱼",
+              "surface": "鱼",
+              "start": 4,
+              "end": 5
+            }
+          ]
+        },
+        {
+          "id": "s1-3",
+          "text": "它们一起吃，一起喝。",
+          "tokens": [
+            {
+              "vocabId": "它们",
+              "surface": "它们",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "vocabId": "一起",
+              "surface": "一起",
+              "start": 2,
+              "end": 4
+            },
+            {
+              "vocabId": "吃",
+              "surface": "吃",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "一起",
+              "surface": "一起",
+              "start": 6,
+              "end": 8
+            },
+            {
+              "vocabId": "喝",
+              "surface": "喝",
+              "start": 8,
+              "end": 9
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

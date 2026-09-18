@@ -1,0 +1,217 @@
+{
+  "metadata": {
+    "id": "micro-114-hot-cold",
+    "title": "热天和冷天",
+    "type": "microStory",
+    "curriculumOrder": 117,
+    "difficultyEstimate": 3,
+    "vocabulary": [
+      "热",
+      "里",
+      "小",
+      "猫",
+      "想",
+      "喝",
+      "水",
+      "冷",
+      "茶",
+      "妈妈"
+    ],
+    "curriculumCriticalVocabulary": [
+      "热",
+      "里",
+      "小",
+      "猫",
+      "想",
+      "喝",
+      "水",
+      "冷",
+      "茶"
+    ],
+    "tags": [
+      "core"
+    ]
+  },
+  "sections": [
+    {
+      "id": "sec-1",
+      "text": "热天里，小猫想喝水。冷天里，小猫想喝茶。妈妈说，热天喝水，冷天喝茶。",
+      "sentences": [
+        {
+          "id": "s1-1",
+          "text": "热天里，小猫想喝水。",
+          "tokens": [
+            {
+              "vocabId": "热",
+              "surface": "热",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "天",
+              "surface": "天",
+              "start": 1,
+              "end": 2
+            },
+            {
+              "vocabId": "里",
+              "surface": "里",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "小",
+              "surface": "小",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "猫",
+              "surface": "猫",
+              "start": 5,
+              "end": 6
+            },
+            {
+              "vocabId": "想",
+              "surface": "想",
+              "start": 6,
+              "end": 7
+            },
+            {
+              "vocabId": "喝",
+              "surface": "喝",
+              "start": 7,
+              "end": 8
+            },
+            {
+              "vocabId": "水",
+              "surface": "水",
+              "start": 8,
+              "end": 9
+            }
+          ]
+        },
+        {
+          "id": "s1-2",
+          "text": "冷天里，小猫想喝茶。",
+          "tokens": [
+            {
+              "vocabId": "冷",
+              "surface": "冷",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "天",
+              "surface": "天",
+              "start": 1,
+              "end": 2
+            },
+            {
+              "vocabId": "里",
+              "surface": "里",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "小",
+              "surface": "小",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "猫",
+              "surface": "猫",
+              "start": 5,
+              "end": 6
+            },
+            {
+              "vocabId": "想",
+              "surface": "想",
+              "start": 6,
+              "end": 7
+            },
+            {
+              "vocabId": "喝",
+              "surface": "喝",
+              "start": 7,
+              "end": 8
+            },
+            {
+              "vocabId": "茶",
+              "surface": "茶",
+              "start": 8,
+              "end": 9
+            }
+          ]
+        },
+        {
+          "id": "s1-3",
+          "text": "妈妈说，热天喝水，冷天喝茶。",
+          "tokens": [
+            {
+              "vocabId": "妈妈",
+              "surface": "妈妈",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "vocabId": "说",
+              "surface": "说",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "热",
+              "surface": "热",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "vocabId": "天",
+              "surface": "天",
+              "start": 5,
+              "end": 6
+            },
+            {
+              "vocabId": "喝",
+              "surface": "喝",
+              "start": 6,
+              "end": 7
+            },
+            {
+              "vocabId": "水",
+              "surface": "水",
+              "start": 7,
+              "end": 8
+            },
+            {
+              "vocabId": "冷",
+              "surface": "冷",
+              "start": 9,
+              "end": 10
+            },
+            {
+              "vocabId": "天",
+              "surface": "天",
+              "start": 10,
+              "end": 11
+            },
+            {
+              "vocabId": "喝",
+              "surface": "喝",
+              "start": 11,
+              "end": 12
+            },
+            {
+              "vocabId": "茶",
+              "surface": "茶",
+              "start": 12,
+              "end": 13
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

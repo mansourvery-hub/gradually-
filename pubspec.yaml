@@ -1,0 +1,45 @@
+name: jianru
+description: 渐入 — a zero-friction, monolingual Chinese reading-immersion app.
+publish_to: none
+version: 0.1.0
+
+environment:
+  sdk: ^3.9.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  drift: ^2.34.4
+  drift_flutter: ^0.3.1
+  dart_jieba: ^1.0.1
+  flutter_riverpod: ^3.4.3
+  flutter_svg: ^2.2.0
+  fsrs: ^2.0.1
+  crypto: ^3.0.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.4.13
+  drift_dev: ^2.34.6
+
+flutter:
+  uses-material-design: true
+  generate: true
+  assets:
+    - assets/dict.dgz
+    - assets/content/
+    - assets/dictionary/
+    - assets/fonts/
+    - assets/images/concepts/
+    - assets/images/stories/
+    - assets/images/manifests/
+    - assets/portfolio/
+
+  fonts:
+    - family: NotoSansSC
+      fonts:
+        - asset: assets/fonts/NotoSansSC-Regular-subset.ttf

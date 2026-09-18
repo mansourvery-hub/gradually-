@@ -1,0 +1,165 @@
+{
+  "metadata": {
+    "id": "micro-105-no-water",
+    "title": "小猫想喝水",
+    "type": "microStory",
+    "curriculumOrder": 108,
+    "difficultyEstimate": 2,
+    "vocabulary": [
+      "小",
+      "猫",
+      "想",
+      "喝",
+      "水",
+      "这里",
+      "有",
+      "和",
+      "我们",
+      "一起",
+      "家"
+    ],
+    "curriculumCriticalVocabulary": [
+      "小",
+      "猫",
+      "喝",
+      "水"
+    ],
+    "tags": [
+      "core"
+    ]
+  },
+  "sections": [
+    {
+      "id": "sec-1",
+      "text": "小猫想喝水。这里没有水。小猫和我们一起回家喝水。",
+      "sentences": [
+        {
+          "id": "s1-1",
+          "text": "小猫想喝水。",
+          "tokens": [
+            {
+              "vocabId": "小",
+              "surface": "小",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "猫",
+              "surface": "猫",
+              "start": 1,
+              "end": 2
+            },
+            {
+              "vocabId": "想",
+              "surface": "想",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "喝",
+              "surface": "喝",
+              "start": 3,
+              "end": 4
+            },
+            {
+              "vocabId": "水",
+              "surface": "水",
+              "start": 4,
+              "end": 5
+            }
+          ]
+        },
+        {
+          "id": "s1-2",
+          "text": "这里没有水。",
+          "tokens": [
+            {
+              "vocabId": "这里",
+              "surface": "这里",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "vocabId": "没",
+              "surface": "没",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "有",
+              "surface": "有",
+              "start": 3,
+              "end": 4
+            },
+            {
+              "vocabId": "水",
+              "surface": "水",
+              "start": 4,
+              "end": 5
+            }
+          ]
+        },
+        {
+          "id": "s1-3",
+          "text": "小猫和我们一起回家喝水。",
+          "tokens": [
+            {
+              "vocabId": "小",
+              "surface": "小",
+              "start": 0,
+              "end": 1
+            },
+            {
+              "vocabId": "猫",
+              "surface": "猫",
+              "start": 1,
+              "end": 2
+            },
+            {
+              "vocabId": "和",
+              "surface": "和",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "vocabId": "我们",
+              "surface": "我们",
+              "start": 3,
+              "end": 5
+            },
+            {
+              "vocabId": "一起",
+              "surface": "一起",
+              "start": 5,
+              "end": 7
+            },
+            {
+              "vocabId": "回",
+              "surface": "回",
+              "start": 7,
+              "end": 8
+            },
+            {
+              "vocabId": "家",
+              "surface": "家",
+              "start": 8,
+              "end": 9
+            },
+            {
+              "vocabId": "喝",
+              "surface": "喝",
+              "start": 9,
+              "end": 10
+            },
+            {
+              "vocabId": "水",
+              "surface": "水",
+              "start": 10,
+              "end": 11
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

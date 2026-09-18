@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# Complete local quality gate for 渐入 (JianRu).
+#
+# Mirrors CI (analyze + test + format) and adds the curriculum/asset
+# validator so a task can't be declared complete with broken content data.
+#
+# Honors fvm when available; falls back to bare flutter/dart otherwise.
+# Exit non-zero on the first failure.
+
+set -euo pipefail
+cd "$(dirname "$0")"
+
+if command -v fvm >/dev/null 2>&1; then
+  FLUTTER=(fvm flutter)
+  DART=(fvm dart)
+else
+  FLUTTER=(flutter)
+  DART=(dart)
+fi
+
+step() { printf '\n==> %s\n' "$1"; }
+
+step "format"
+# Format and verify the tree is canonical (CI enforces too).
+"${DART[@]}" format lib test tool
+"${DART[@]}" format --output=none --set-exit-if-changed lib test tool
+
+step "analyze"
+# Use `dart analyze` (CLI analyzer) — `flutter analyze` boots the LSP server
+# which crashes on non-ASCII project paths. The CLI analyzer gives the same
+# diagnostics over the same workspace and is what CI uses on Linux runners.
+"${DART[@]}" analyze
+
+step "test"
+"${FLUTTER[@]}" test
+
+step "curriculum validator"
+"${DART[@]}" run tool/validate_curriculum.dart
+
+printf '\n==> verify: PASS\n'
