@@ -20,6 +20,7 @@ import '../core/token.dart';
 import '../dictionary/lookup.dart';
 import '../learner/known.dart';
 import '../review/review.dart';
+import 'v3_portfolio_reader.dart';
 import 'widgets/context_lookup_sheet.dart';
 
 /// The primary screen of 渐入.
@@ -144,6 +145,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final dueCardsAsync = ref.watch(dueReviewCardsProvider);
+    final v3PortfolioAsync = ref.watch(v3PortfolioProvider);
     final nextExperienceAsync = ref.watch(nextExperienceProvider);
 
     // 1. Post-exposure phase: If an SRS card is due, present review card
@@ -162,7 +164,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       );
     }
 
-    // 2. Immersion flow: render active content with zero-delay fallback
+    // 2. V3 Mother-Story Portfolio flow (if portfolio asset is available)
+    final v3Portfolio = v3PortfolioAsync.value;
+    if (v3Portfolio != null) {
+      return V3PortfolioReader(portfolio: v3Portfolio);
+    }
+
+    // 3. Immersion flow: render active content with zero-delay fallback
     final contentItem = nextExperienceAsync.value;
 
     // Resume mid-story position when the selector switches items (T_UI_030).

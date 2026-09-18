@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../learner/v3_learner_state.dart';
 import '../pipeline/generation/generated_passage.dart';
 import '../pipeline/ladder/ladder_model.dart';
@@ -186,56 +187,47 @@ class _V3PortfolioReaderState extends State<V3PortfolioReader> {
   Widget build(BuildContext context) {
     final passage = _session.currentPassage;
 
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: _handleTap,
-      onHorizontalDragEnd: (details) {
-        if (details.primaryVelocity != null && details.primaryVelocity! > 200) {
-          _handleSwipeRight();
-        } else if (details.primaryVelocity != null &&
-            details.primaryVelocity! < -200) {
-          _handleTap();
-        }
+    return Shortcuts(
+      shortcuts: const {
+        SingleActivator(LogicalKeyboardKey.space): ActivateIntent(),
+        SingleActivator(LogicalKeyboardKey.enter): ActivateIntent(),
+        SingleActivator(LogicalKeyboardKey.gameButtonA): ActivateIntent(),
       },
-      child: Scaffold(
-        backgroundColor: const Color(0xFFFBF9F5), // Serene parchment
-        body: SafeArea(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 32.0,
-                vertical: 24.0,
-              ),
-              child: _session.completed
-                  ? const Text(
-                      '完',
-                      style: TextStyle(
-                        fontSize: 48,
-                        fontFamily: 'NotoSerifSC',
-                        fontFamilyFallback: [
-                          'PingFang SC',
-                          'Hiragino Sans GB',
-                          'Microsoft YaHei',
-                          'WenQuanYi Micro Hei',
-                          'Noto Sans CJK SC',
-                          'NotoSansSC',
-                          'serif',
-                        ],
-                        color: Color(0xFF2C2C2C),
-                      ),
-                    )
-                  : passage == null
-                  ? const SizedBox.shrink()
-                  : Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          passage.generatedText,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 32,
-                            height: 1.8,
-                            letterSpacing: 2.0,
+      child: Actions(
+        actions: {
+          ActivateIntent: CallbackAction<ActivateIntent>(
+            onInvoke: (_) {
+              _handleTap();
+              return null;
+            },
+          ),
+        },
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: _handleTap,
+          onHorizontalDragEnd: (details) {
+            if (details.primaryVelocity != null &&
+                details.primaryVelocity! > 200) {
+              _handleSwipeRight();
+            } else if (details.primaryVelocity != null &&
+                details.primaryVelocity! < -200) {
+              _handleTap();
+            }
+          },
+          child: Scaffold(
+            backgroundColor: const Color(0xFFFBF9F5), // Serene parchment
+            body: SafeArea(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32.0,
+                    vertical: 24.0,
+                  ),
+                  child: _session.completed
+                      ? const Text(
+                          '完',
+                          style: TextStyle(
+                            fontSize: 48,
                             fontFamily: 'NotoSerifSC',
                             fontFamilyFallback: [
                               'PingFang SC',
@@ -246,11 +238,38 @@ class _V3PortfolioReaderState extends State<V3PortfolioReader> {
                               'NotoSansSC',
                               'serif',
                             ],
-                            color: Color(0xFF1F1F1F),
+                            color: Color(0xFF2C2C2C),
                           ),
+                        )
+                      : passage == null
+                      ? const SizedBox.shrink()
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              passage.generatedText,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 32,
+                                height: 1.8,
+                                letterSpacing: 2.0,
+                                fontFamily: 'NotoSerifSC',
+                                fontFamilyFallback: [
+                                  'PingFang SC',
+                                  'Hiragino Sans GB',
+                                  'Microsoft YaHei',
+                                  'WenQuanYi Micro Hei',
+                                  'Noto Sans CJK SC',
+                                  'NotoSansSC',
+                                  'serif',
+                                ],
+                                color: Color(0xFF1F1F1F),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                ),
+              ),
             ),
           ),
         ),
